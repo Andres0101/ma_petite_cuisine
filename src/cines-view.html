@@ -125,13 +125,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <movies-module title="Estrenos" items="{{estrenos}}" theme="dark"></movies-module>
+    <movies-module title="Notre recommandé" items="{{estrenos}}" theme="dark"></movies-module>
 
     <div class="cartelera cards_container layout vertical center">
       <div class="module_title">
-        <div class="module_title_title paper-font-headline">En cartelera</div>
+        <div class="module_title_title paper-font-headline">Titre</div>
         <!-- TODO: Enviar un subtítulo desde el backend -->
-        <div class="module_title_subtitle paper-font-body1">Subtítulo complementario</div>
+        <div class="module_title_subtitle paper-font-body1">Sous-titre</div>
       </div>
       <div class="app-grid">
         <template is="dom-repeat" items="{{estrenos}}" as="estreno">
@@ -147,38 +147,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div class="recomendado layout vertical center">
       <div class="cards_container module_title layout vertical center">
-        <div class="module_title_title dark paper-font-headline">Nuestro recomendado</div>
+        <div class="module_title_title dark paper-font-headline">Nom recette</div>
         <!-- TODO: Enviar un subtítulo desde el backend -->
-        <div class="module_title_subtitle paper-font-body1">Subtítulo complementario</div>
+        <div class="module_title_subtitle paper-font-body1">Sous-titre</div>
       </div>
       <div class="cards_container layout vertical center">
         <google-youtube
           id="trailer"
-          video-id="Ek_b9o3RezM"
+          video-id="wvyy3K_q6dg"
           iv_load_policy="3"
           rel="0"
           showinfo="0"
           fluid>
         </google-youtube>
         <div id="recomendado_info" class="layout horizontal center-justified">
-          <iron-image id="cover" src="http://assets1.ignimgs.com/2017/03/24/spider-man-homecoming-1490381333042_610w.jpg" preload fade sizing="cover"></iron-image>
+          <iron-image id="cover" src="http://www.carrefour.fr/sites/default/files/public/images/reseaux-sociaux/bouillon-de-saint-jacques-au-celeri-og.jpg" preload fade sizing="cover"></iron-image>
           <div id="recomendado_texto" class="layout vertical">
-            <div id="categoria" class="paper-font-body1">Acción / Superhéroes</div>
-            <div id="titulo" class="paper-font-headline">Spiderman: Homecoming</div>
-            <div id="sinopsis_titulo" class="paper-font-subhead">Sinopsis</div>
-            <div id="sinopsis" class="paper-font-body1">Un joven Peter Parker/Spiderman (Tom Holland), que hizo su sensacional debut en Capitán América: Civil War, empieza a controlar su recién hallada identidad como el superhéroe lanzarredes en Spider-Man: Homecoming. Emocionado por su experiencia con los Vengadores, Peter regresa a casa, donde vive con su Tía May (Marisa Tomei), bajo el ojo atento de su nuevo mentor Tony Stark (Robert Downey Jr.). Peter intenta volver a su rutina diaria normal, distraído por los pensamientos de probarse a sí mismo que es más que simplemente tu amistoso vecino Spiderman, pero cuando el Buitre (Michael Keaton) emerge como un nuevo villano, todo lo que Peter considera importante será amenazado.</div>
-            <div id="buttons" class="layout horizontal">
+            <div id="categoria" class="paper-font-body1">Débutant / Sportif</div>
+            <div id="titulo" class="paper-font-headline">Bouillon de Saint-Jacques au céleri</div>
+            <div id="sinopsis_titulo" class="paper-font-subhead">Description</div>
+            <div id="sinopsis" class="paper-font-body1">Que vais-je faire à manger ce soir ? Les recettes les plus faciles du monde, le nouveau programme court de cuisine qui va vous changer la vie ! Découvrez chaque semaine une (ou plusieurs) nouvelle recette de cuisine facile en vous abonnant à notre chaîne ici :</div>
+            <!-- <div id="sinopsis" class="paper-font-body1">Un joven Peter Parker/Spiderman (Tom Holland), que hizo su sensacional debut en Capitán América: Civil War, empieza a controlar su recién hallada identidad como el superhéroe lanzarredes en Spider-Man: Homecoming. Emocionado por su experiencia con los Vengadores, Peter regresa a casa, donde vive con su Tía May (Marisa Tomei), bajo el ojo atento de su nuevo mentor Tony Stark (Robert Downey Jr.). Peter intenta volver a su rutina diaria normal, distraído por los pensamientos de probarse a sí mismo que es más que simplemente tu amistoso vecino Spiderman, pero cuando el Buitre (Michael Keaton) emerge como un nuevo villano, todo lo que Peter considera importante será amenazado.</div> -->
+            <!-- <div id="buttons" class="layout horizontal">
               <paper-button raised class="raised_button">Ver horarios</paper-button>
               <paper-button class="transparent_button">Recordarme</paper-button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
 
-    <movies-module title="Cine independiente" items="{{estrenos}}" theme="light"></movies-module>
+    <movies-module title="Titre" items="{{estrenos}}" theme="light"></movies-module>
 
-    <movies-module title="Próximos estrenos" items="{{estrenos}}" theme="dark"></movies-module>
+    <!-- <movies-module title="Próximos estrenos" items="{{estrenos}}" theme="dark"></movies-module> -->
   </template>
 
   <script>
