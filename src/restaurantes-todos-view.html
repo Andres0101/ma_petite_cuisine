@@ -109,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <iron-ajax
       id="ajax"
-      url="[[_getAPIEndpoint(page)]]"
+      url="../data/restaurants.json"
       handle-as="json"
       loading="{{isLoading}}"
       on-response="handleResponse">
@@ -118,20 +118,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="cards_container">
       <div class="module_title layout horizontal center">
         <div>
-          <div class="module_title_title paper-font-headline">Todos los restaurantes</div>
-          <div class="module_title_subtitle paper-font-body1">Deleita tu paladar con una de estas opciones</div>
+          <div class="module_title_title paper-font-headline">Toutes nos recettes "Sportifs"</div>
+          <div class="module_title_subtitle paper-font-body1">Petite discription des recettes</div>
         </div>
         <span class="flex"></span>
         <paper-menu-button horizontal-align="right">
           <paper-button class="dropdown-trigger" tabindex="0">
             <iron-icon icon="sort"></iron-icon>
-            <span class="textOrderBy">Ordenar por</span>
+            <span class="textOrderBy">Trier par</span>
           </paper-button>
 
           <paper-menu class="dropdown-content" attr-for-selected="value" on-iron-select="sortSelected">
-            <paper-item value="rating">Más populares</paper-item>
-            <paper-item value="cheapest">Menor precio</paper-item>
-            <paper-item value="expensive">Mayor precio</paper-item>
+            <paper-item value="rating">Difficulté</paper-item>
+            <paper-item value="cheapest">Temps</paper-item>
+            <paper-item value="expensive">Prix</paper-item>
           </paper-menu>
         </paper-menu-button>
       </div>
@@ -216,7 +216,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.fire('show-progress', false);
 
         var self = this;
-        var data = e.detail.response.response.data;
+        var data = e.detail.response;
 
         if (!data) {
           return;
