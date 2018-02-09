@@ -1,0 +1,174 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
+<link rel="import" href="elements/placeholder-card.html">
+<link rel="import" href="elements/module-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="restaurantes-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        position: relative;
+        --app-grid-columns: 5;
+        --app-grid-gutter: 8px;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        padding: 0 !important;
+      }
+      .items_placeholder{
+        margin-top: 88px;
+      }
+      #all_restaurants {
+        width: 100%;
+      }
+
+      @media (max-width: 900px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+      }
+      @media (max-width: 500px) {
+        :host {
+          --app-grid-columns: 2;
+          --app-grid-gutter: 5px;
+        }
+      }
+    </style>
+
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+    <iron-pages id="all_restaurants" selected="{{page}}" attr-for-selected="name" fallback-selection="error">
+      <section name="" class="layout vertical center">
+        <iron-ajax
+          url="../data/restaurants.json"
+          auto
+          handle-as="json"
+          on-response="handleResponse">
+        </iron-ajax>
+
+        <!-- Montrer un placeholder du module en obtenant les résultats -->
+        <template is="dom-if" if="{{loadingData}}" restamp="true">
+          <div class="app-grid items_placeholder">
+            <template is="dom-repeat-n" count="5">
+              <placeholder-card></placeholder-card>
+            </template>
+          </div>
+        </template>
+
+        <template is="dom-repeat" items="{{restaurantData}}" as="module">
+          <module-element
+            has-title="[[_hasTitle(module.template)]]"
+            parallax="[[_isParallax(module.template)]]"
+            recomendado="[[_moduleRecomendado(module.template)]]"
+            data="[[module]]">
+          </module-element>
+        </template>
+      </section>
+      <restaurantes-todos-view name="todos"></restaurantes-todos-view>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'restaurantes-view',
+
+      properties: {
+        restaurantData: {
+          type: Object,
+          value: []
+        },
+        loadingData: {
+          type: Boolean,
+          value: true
+        },
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      _routeChanged: function (route) {
+        if (route.path == '') {
+          window.scrollTo(0, 0);
+          this.set('routeData.page', '');
+        }
+      },
+
+      _routePageChanged: function(page) {
+        this.page = page || '';
+      },
+
+      _pageChanged: function(page) {
+        window.scrollTo(0, 0);
+        if (page != "") {
+          if (page == "todos") {
+            // Load page import on demand. Show 404 page if fails
+            var resolvedPageUrl = this.resolveUrl('restaurantes-todos-view.html');
+            this.importHref(resolvedPageUrl, null, this._showPage404, true);
+          }else {
+            if (this.route.prefix == '/restaurantes') {
+              this.fire("show-404");
+            }
+          }
+        }
+      },
+
+      ready: function() {
+        this.fire('show-progress', true);
+
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+
+      _hasTitle: function (template) {
+        if (template == 0 || template == 2) {
+          return true;
+        }
+      },
+      _moduleRecomendado: function(template) {
+        return template === 1;
+      },
+      _isParallax: function (template) {
+        if (template == 3) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      handleResponse: function (data) {
+        this.restaurantData = data.detail.response;
+        this.loadingData = false;
+        this.fire('show-progress', false);
+      }
+    });
+  </script>
+</dom-module>

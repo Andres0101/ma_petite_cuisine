@@ -1,0 +1,1503 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+
+<link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../bower_components/paper-autocomplete/paper-autocomplete.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+
+<link rel="import" href="../bower_components/bottom-nav/bottom-nav.html">
+<link rel="import" href="../bower_components/byutv-jsonp/byutv-jsonp.html">
+<link rel="import" href="../bower_components/moment-element/moment-element.html">
+<link rel="import" href="../bower_components/moment-element/moment-with-locales-import.html">
+
+<link rel="import" href="my-icons.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="plan-ciudad">
+  <template>
+    <style include="shared-styles">
+
+      /*Header*/
+      #header_layout {
+        background-color: var(--app-primary-color);
+      }
+
+      #header{
+        background: linear-gradient(rgba(40, 40, 40, 0.7), rgba(40, 40, 40, 0.7)), url('http://source.unsplash.com/1350x266/?food') no-repeat center center;
+        background-size: cover;
+        color: #fff;
+      }
+
+      /*Buscador*/
+      #autocomplete_wrapper {
+        position: relative;
+        @apply(--shadow-elevation-2dp);
+        background-color: white;
+        color: var(--secondary-text-color);
+        width: 80%;
+        max-width: 500px;
+        border-radius: 3px;
+        will-change: transform;
+      }
+      #search_input {
+        --paper-input-container: {
+          padding: 0;
+        }
+        --paper-input-container-input: {
+          padding: 12px 0;
+        }
+        --paper-input-container-label:{
+          padding-top: 12px;
+        }
+        --paper-input-container-underline:{
+          border-color: white;
+        }
+      }
+      #search_toolbar iron-icon[prefix] {
+        color: #9B9B9B;
+        padding: 8px;
+        margin-left: 8px;
+      }
+      #search_clear {
+        color: #9B9B9B;
+        --paper-icon-button-ink-color: #888;
+      }
+      #search_button{
+        margin: 0;
+        padding: 8px 24px;
+        border-radius: 0;
+      }
+
+      #buttons_toolbar{
+        height: 58px;
+      }
+      #logo_toolbar{
+        margin-bottom: 20px;
+      }
+      #search_toolbar{
+        height: 50px;
+        margin-bottom: 20px;
+      }
+      app-toolbar paper-button{
+        margin: 2px 4px;
+      }
+      #main_logo{
+        width: 280px;
+        height: 70px;
+        margin-bottom: 10px;
+      }
+      #header_logo_narrow{
+        width: 210px;
+        height: 45px;
+        display: none;
+        margin-top: 6px;
+      }
+      #header_logo_icon{
+        width: 45px;
+        height: 40px;
+        display: none;
+        margin-top: 6px;
+      }
+
+      #edit_dashboard_button {
+        background-color: #404040;
+        color: white;
+      }
+
+      /* Dashboard */
+      #dashboard_header {
+        height: 100%;
+      }
+      #dashboard_logo{
+        width: 210px;
+        height: 45px;
+        margin-top: 6px;
+      }
+      #user_picture{
+        background-color: #eee;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        will-change: transform;
+      }
+      #user_full_name{
+        margin: 10px 0;
+        text-align: center;
+      }
+      #user_bio{
+        max-width: 250px;
+        width: 80%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      #user_social_links{
+        margin: 12px 0;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      #user_social_inputs{
+        width: 80%;
+        max-width: 380px;
+        margin: 12px 0;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      /* -> Editar dashboard */
+      #dashboard_name_input{
+        text-align: center;
+        max-width: 280px;
+        width: 80%;
+        --paper-input-container-input-color: white;
+        --paper-input-container-color: rgba(255,255,255,0.6);
+        --paper-input-container-input:{
+          @apply(--paper-font-headline);
+        }
+        --paper-input-container-label:{
+          @apply(--paper-font-headline);
+        }
+      }
+      #dashboard_bio_input {
+        text-align: center;
+        max-width: 250px;
+        width: 80%;
+        --paper-input-container-input-color: rgba(255, 255, 255, 0.9);
+        --paper-input-container-color: rgba(255,255,255,0.8);
+        --paper-input-container-input:{
+          @apply(--paper-font-body1);
+        }
+        --paper-input-container-label:{
+          @apply(--paper-font-body1);
+          margin-top: 10px;
+        }
+      }
+      #user_social_inputs paper-input {
+        width: 180px;
+        --paper-input-container-input-color: rgba(255, 255, 255, 0.9);
+        --paper-input-container-color: rgba(255,255,255,0.7);
+        --paper-input-container-label:{
+          margin-top: 5px;
+        }
+        --paper-input-prefix:{
+          width: 18px;
+          height: 18px;
+          color: rgba(255, 255, 255, 0.8);
+          padding: 8px;
+        }
+      }
+      #preferences_button{
+        margin-top: 8px;
+        margin-bottom: 24px;
+      }
+
+      /* Dashboard tabs */
+      #dashboard_tabs{
+        padding: 0 20%;
+      }
+      #dashboard_tabs paper-tabs {
+        width: 100%;
+        min-height: 54px;
+        @apply(--paper-font-button);
+        --paper-tabs-selection-bar:{
+          border-bottom: 3px solid var(--app-secondary-color);
+        }
+      }
+      #dashboard_tabs paper-tab {
+        --paper-tab-ink: #aaa;
+        width: 100%;
+      }
+
+      /* Usuario con sesión activa */
+      #logged_user{
+        margin: 0px;
+        padding: 3px 6px;
+        text-transform: none;
+      }
+      #logged_user iron-image{
+        width: 35px;
+        height: 35px;
+        margin-right: 8px;
+        background-color: var(--app-primary-color);
+        border-radius: 50%;
+        will-change: transform;
+      }
+      #logged_off_user span {
+        display: inline;
+      }
+      #user_dropdown{
+        --paper-menu-button-content:{
+          cursor: pointer;
+          width: auto;
+        }
+      }
+      #logout_button{
+        margin: 8px;
+      }
+
+      #logout_button iron-icon{
+        display: none;
+        margin-right: 0;
+      }
+
+      paper-spinner-lite {
+        width: 24px;
+        height: 24px;
+        --paper-spinner-color: white;
+      }
+
+      /*Tabs*/
+      #header_tabs{
+        padding: 0 20%;
+      }
+      #header_tabs paper-tabs {
+        width: 100%;
+        min-height: 54px;
+        @apply(--paper-font-button);
+        --paper-tabs-selection-bar:{
+          border-bottom: 3px solid var(--app-secondary-color);
+        }
+      }
+      #header_tabs paper-tab {
+        --paper-tab-ink: #aaa;
+        width: 100%;
+      }
+
+      /*Progress bar*/
+      #site_progress {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      bottom-nav {
+        background-color: var(--app-primary-color);
+        display: none;
+      }
+      #bottom_nav_toolbar{
+        height: 50px;
+      }
+      bottom-tab {
+        text-transform: uppercase;
+        --bottom-tab-content:{
+          font-size: 10px !important;
+          color: white;
+        }
+        --bottom-tab-content-unselected:{
+          color: rgba(255,255,255,0.5);
+        }
+      }
+      bottom-tab a {
+        height: 0 !important;
+      }
+
+      /*Contenido*/
+      #main_pages{
+        background-color: var(--app-background-color);
+      }
+      #main_pages *{
+        padding-bottom: 50px;
+      }
+
+      /*Diálogo de inicio de sesión*/
+      #pc_toast {
+        z-index: 999 !important;
+      }
+      paper-dialog-scrollable{
+        margin: 0 !important;
+        --paper-dialog-scrollable:{
+          padding: 0 !important;
+          overflow-x: hidden;
+          overflow-y: auto;
+        }
+      }
+      #close_login_dialog_icon{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+      }
+      #login_button{
+        margin: 24px 0;
+        background-color: #e8e8e8;
+      }
+      .dialog_image{
+        background-color: #eee;
+        width: 100%;
+        height: 300px;
+      }
+      .dialog_container{
+        padding: 24px;
+        line-height: 1.2em;
+      }
+      .dialog_button{
+        margin: 16px 0;
+      }
+      .terms_and_conditions_link{
+        color: var(--app-secondary-color);
+        line-height: 1em;
+      }
+      #signupPassword paper-icon-button {
+        width: 32px;
+        height: 32px;
+        padding: 4px;
+        color: #888;
+      }
+      #promotions_checkbox{
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+
+      /* Diálogo de preferencias del usuario */
+      #preferences_dialog h3{
+        margin-top: 24px;
+      }
+      #preferences_checkboxes{
+        height: 150px;
+      }
+
+      #interests_container{
+        color: var(--disabled-text-color);
+      }
+      #interests_container[has-newsletter]{
+        color: var(--primary-text-color);
+      }
+
+      /*Footer*/
+      footer {
+        padding: 30px 100px;
+        box-sizing: border-box;
+        width: 100%;
+        background-color: var(--app-primary-color);
+        color: #BBB;
+      }
+      footer a {
+        text-decoration: none;
+        color: #777;
+      }
+      footer a:hover {
+        color: #555;
+      }
+      footer span {
+        color: #777;
+      }
+      #footer_logo {
+        width: 80px;
+        height: 30px;
+        margin-bottom: 16px;
+      }
+
+      @media (max-width: 960px) {
+        #header_tabs,
+        #dashboard_tabs{
+          padding: 0 24px;
+        }
+      }
+      @media (max-width: 600px) {
+        app-toolbar{
+          padding: 0 5px;
+        }
+        app-toolbar.middle {
+          margin-bottom: 40px;
+          margin-top: 20px;
+          padding: 0;
+          height: 100px;
+        }
+        #dashboard_header{
+          margin-bottom: 0;
+        }
+        #logo_toolbar{
+          display: none;
+        }
+        #header_logo_narrow{
+          display: inline-block;
+        }
+        #header_tabs paper-tabs {
+          display: none;
+        }
+        #header_tabs,
+        #dashboard_tabs{
+          padding: 0;
+        }
+        #logged_off_user iron-icon {
+          margin-right: 0;
+        }
+        #logged_off_user span {
+          display: none;
+        }
+
+        /*Ocultar nombre del usuario en el dropdown*/
+        #user_dropdown{
+          padding: 0;
+        }
+        #logged_user iron-image{
+          margin-right: 0;
+        }
+        #logged_user div{
+          display: none;
+        }
+
+        #logout_button iron-icon{
+          display: inline-block;
+        }
+        #logout_button span{
+          display: none;
+        }
+
+        #autocomplete_wrapper {
+          width: 100%;
+        }
+        #search_toolbar{
+          margin-bottom: 5px;
+        }
+        #search_button{
+          padding: 8px;
+        }
+
+        #main_pages {
+          padding: 0px;
+        }
+
+        bottom-nav {
+          display: block;
+          box-shadow: 0 -2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+          padding: 20px;
+          padding-bottom: 80px;
+        }
+      }
+
+      @media (max-width: 450px) {
+        #dashboard_logo{
+          display: none;
+        }
+        #header_tabs paper-tabs,
+        #dashboard_tabs paper-tabs {
+          font-size: 12px;
+        }
+        #header_logo_narrow{
+          display: none;
+        }
+        #header_logo_icon{
+          display: inline-block;
+        }
+      }
+      @media (max-width: 300px) {
+        #header_tabs paper-tabs,
+        #dashboard_tabs paper-tabs {
+          font-size: 10px;
+        }
+        .dialog_container{
+          padding: 10px;
+        }
+        .dialog_container paper-button{
+          font-size: 12px;
+        }
+      }
+    </style>
+
+    <iron-localstorage
+      id="localstorage"
+      name="my-app-storage"
+      value="{{userInfo}}"
+      on-iron-localstorage-load-empty="_onLocalStorageEmpty">
+    </iron-localstorage>
+
+    <!-- Ajax para el autocompletado -->
+    <byutv-jsonp
+      id="ajax"
+      url="https://clients1.google.com/complete/search"
+      on-response="handleResponse">
+    </byutv-jsonp>
+
+    <!-- Ajax para actualizar perfil del usuario -->
+    <iron-ajax
+      id="updateUser"
+      method="PUT"
+      url="http://localhost:8000/api/v1/user-update"
+      on-response="handleResponseUpdateUser">
+    </iron-ajax>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+    <div id="header_layout">
+      <!-- Header del sitio -->
+      <template is="dom-if" if="{{!userDashboard}}" restamp="true">
+        <template is="dom-if" if="{{!hideHeader}}" restamp="true">
+          <div id="header">
+            <!-- Fila de botones del header -->
+            <app-toolbar id="buttons_toolbar">
+              <a href="/">
+                <iron-image id="header_logo_narrow" src="../images/logo.svg" preload sizing="contain"></iron-image>
+                <iron-image id="header_logo_icon" src="../images/logo_icon.svg" preload sizing="contain"></iron-image>
+              </a>
+              <span class="flex"></span>
+
+              <!-- Sesión iniciada: Mostrar información del usuario con dropdown -->
+              <template is="dom-if" if="{{userLogged}}" restamp="true">
+                <paper-menu-button id="user_dropdown" horizontal-align="right" horizontal-offset="9" vertical-offset="10">
+                  <paper-button id="logged_user" class="transparent_button dropdown-trigger layout horizontal center">
+                    <iron-image src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="cover"></iron-image>
+                    <div class="paper-font-body1">{{_computeFirstName(userInfo.user.name)}}</div>
+                    <iron-icon icon="arrow-drop-down"></iron-icon>
+                  </paper-button>
+                  <paper-menu class="dropdown-content">
+                    <a href="/usuario/publicaciones" class="link">
+                      <paper-item>Perfil</paper-item>
+                    </a>
+                    <hr>
+                    <paper-item on-tap="_userLogout">Cerrar sesión</paper-item>
+                  </paper-menu>
+                </paper-menu-button>
+              </template>
+
+              <!-- Sesión no iniciada: Botón de Ingresar -->
+              <template is="dom-if" if="{{!userLogged}}" restamp="true">
+                <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
+                  <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
+                    <iron-icon icon="social:person"></iron-icon>
+                    <span>Connexion</span>
+                  </template>
+                  <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
+                    <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                  </template>
+                </paper-button>
+              </template>
+            </app-toolbar>
+
+            <!-- Fila del logo del header -->
+            <app-toolbar id="logo_toolbar" class="layout vertical center flex">
+              <a href="/">
+                <h2>Logo</h2>
+                <!-- <iron-image id="main_logo" src="../images/logo.svg" preload sizing="contain"></iron-image> -->
+              </a>
+            </app-toolbar>
+
+            <!-- Key press events
+            <iron-a11y-keys id="a11y" target="[[target]]" keys="enter" on-keys-pressed="_buscar"></iron-a11y-keys>
+            <!-- Fila del buscador del header
+            <app-toolbar id="search_toolbar" class="layout vertical center flex">
+              <div id="autocomplete_wrapper" class="layout horizontal">
+                <div class="flex">
+                  <paper-input id="search_input" label="Eventos, restaurantes, bares..." on-value-changed="_valueChanged" class="flex" no-label-float>
+                    <iron-icon icon="search" prefix></iron-icon>
+                    <!-- Mostrar el botón de limpiar búsqueda cuando hay algo escrito
+                    <template is="dom-if" if="{{showClearButton}}" restamp="true">
+                      <paper-icon-button id="search_clear" icon="clear" on-tap="_clearSearch" suffix></paper-icon-button>
+                    </template>
+                  </paper-input>
+                  <paper-autocomplete-suggestions for="search_input" id="autocomplete" source="[[suggestions]]" on-autocomplete-selected="_buscar"></paper-autocomplete-suggestions>
+                </div>
+                <paper-button id="search_button" on-tap="_buscar">Buscar</paper-button>
+              </div>
+            </app-toolbar> -->
+
+            <!-- Pestañas -->
+            <div id="header_tabs" sticky>
+              <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation">
+                <paper-tab name="eventos" link>
+                  <a class="link" href="/eventos" tabindex="-1">Ongle 1</a>
+                  <!-- <a class="link" href="/eventos" tabindex="-1">Eventos</a> -->
+                </paper-tab>
+                <paper-tab name="restaurantes" link>
+                  <a class="link" href="/restaurantes" tabindex="-1">Ongle 2</a>
+                  <!-- <a class="link" href="/restaurantes" tabindex="-1">Restaurantes</a> -->
+                </paper-tab>
+                <paper-tab name="bares-discotecas" link>
+                  <a class="link" href="/bares-discotecas" tabindex="-1">Ongle 3</a>
+                  <!-- <a class="link" href="/bares-discotecas" tabindex="-1">Bares y Discotecas</a> -->
+                </paper-tab>
+                <paper-tab name="cines" link>
+                  <a class="link" href="/cines" tabindex="-1">Ongle 4</a>
+                  <!-- <a class="link" href="/cines" tabindex="-1">Cines</a> -->
+                </paper-tab>
+              </paper-tabs>
+            </div>
+          </div>
+        </template>
+      </template>
+
+      <!-- Header del perfil del usuario -->
+      <template is="dom-if" if="{{userDashboard}}" restamp="true">
+        <!-- Header -->
+        <div id="header">
+          <app-toolbar id="buttons_toolbar">
+            <a href="/">
+              <iron-image id="dashboard_logo" src="../images/logo.svg" preload sizing="contain"></iron-image>
+              <iron-image id="header_logo_icon" src="../images/logo_icon.svg" preload sizing="contain"></iron-image>
+            </a>
+            <span class="flex"></span>
+
+            <!-- Sesión iniciada: Botones de Editar perfil / Cerrar sesión -->
+            <template is="dom-if" if="{{userLogged}}" restamp="true">
+              <!-- Modo edición: Mostrar botón de guardar la información del usuario / Cancelar -->
+              <template is="dom-if" if="{{editDashboard}}" restamp="true">
+                <paper-button raised class="raised_button" on-tap="_updateUserInfo">Guardar perfil</paper-button>
+                <paper-button class="transparent_button" on-tap="_toggleEditDashboard">Cancelar</paper-button>
+              </template>
+              <!-- Modo visualización: Mostrar botón de editar la información del usuario / Cerrar sesión -->
+              <template is="dom-if" if="{{!editDashboard}}" restamp="true">
+                <paper-button id="edit_dashboard_button" raised class="raised_button" on-tap="_toggleEditDashboard">Editar perfil</paper-button>
+                <paper-button id="logout_button" class="transparent_button" on-tap="_userLogout">
+                  <iron-icon icon="exit-to-app"></iron-icon>
+                  <span>Cerrar sesión</span>
+                </paper-button>
+              </template>
+
+            </template>
+
+            <!-- Sesión no iniciada: Botones de Publicar / Ingresar -->
+            <template is="dom-if" if="{{!userLogged}}" restamp="true">
+              <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
+                <!-- Indicador de carga de información del usuario -->
+                <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
+                  <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                </template>
+                <!-- Botón de ingresar -->
+                <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
+                  <iron-icon icon="social:person"></iron-icon>
+                  <span>Ingresar</span>
+                </template>
+              </paper-button>
+            </template>
+          </app-toolbar>
+
+          <app-toolbar id="dashboard_header" class="middle layout vertical center flex">
+            <!-- Modo edición: Mostrar inputs para editar la información del usuario -->
+            <template is="dom-if" if="{{editDashboard}}" restamp="true">
+              <iron-image id="user_picture" src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="contain"></iron-image>
+              <paper-input id="dashboard_name_input" label="Nombre completo" name="name" value="{{userInfo.user.name}}" no-label-float></paper-input>
+              <paper-textarea id="dashboard_bio_input" label="Biografía" name="description" value="{{userInfo.user.description}}" no-label-float char-counter maxlength="140" max-rows="3"></paper-textarea>
+              <input id="accept_newsletters_update" type="text" name="accept_newsletters" hidden>
+
+              <div id="user_social_inputs" class="layout horizontal around-justified wrap">
+                <paper-input id="dashboard_fb_input" label="Nombre de usuario" name="facebook_profile" value="{{userInfo.user.facebook_profile}}" no-label-float>
+                  <iron-icon icon="my-icons:facebook" prefix></iron-icon>
+                </paper-input>
+                <paper-input id="dashboard_instagram_input" label="Nombre de usuario" name="instagram_profile" value="{{userInfo.user.instagram_profile}}" no-label-float>
+                  <iron-icon icon="my-icons:instagram" prefix></iron-icon>
+                </paper-input>
+                <paper-input id="dashboard_twitter_input" label="Nombre de usuario" name="twitter_profile" value="{{userInfo.user.twitter_profile}}" no-label-float>
+                  <iron-icon icon="my-icons:twitter" prefix></iron-icon>
+                </paper-input>
+                <paper-input id="dashboard_snap_input" label="Nombre de usuario" name="snapchat_profile" value="{{userInfo.user.snapchat_profile}}" no-label-float>
+                  <iron-icon icon="my-icons:snapchat" prefix></iron-icon>
+                </paper-input>
+              </div>
+              <paper-button id="preferences_button" class="transparent_button" on-tap="_showPreferencesDialog">Preferencias</paper-button>
+            </template>
+
+            <!-- Modo visualización: Mostrar la información del usuario -->
+            <template is="dom-if" if="{{!editDashboard}}" restamp="true">
+              <iron-image id="user_picture" src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="contain"></iron-image>
+              <div id="user_full_name" class="paper-font-headline">{{userInfo.user.name}}</div>
+              <div id="user_bio" class="paper-font-body1">{{userInfo.user.description}}</div>
+              <div id="user_social_links">
+                <a href="https://facebook.com/{{userInfo.user.facebook_profile}}" hidden="{{!userInfo.user.facebook_profile}}" target="_blank" rel="noopener" class="link">
+                  <paper-icon-button icon="my-icons:facebook"></paper-icon-button>
+                </a>
+                <a href="https://instagram.com/{{userInfo.user.instagram_profile}}" hidden="{{!userInfo.user.instagram_profile}}" target="_blank" rel="noopener" class="link">
+                  <paper-icon-button icon="my-icons:instagram"></paper-icon-button>
+                </a>
+                <a href="https://twitter.com/{{userInfo.user.twitter_profile}}" hidden="{{!userInfo.user.twitter_profile}}" target="_blank" rel="noopener" class="link">
+                  <paper-icon-button icon="my-icons:twitter"></paper-icon-button>
+                </a>
+                <a href="https://snapchat.com/add/{{userInfo.user.snapchat_profile}}" hidden="{{!userInfo.user.snapchat_profile}}" target="_blank" rel="noopener" class="link">
+                  <paper-icon-button icon="my-icons:snapchat"></paper-icon-button>
+                </a>
+              </div>
+            </template>
+          </app-toolbar>
+
+          <!-- Pestañas -->
+          <div id="dashboard_tabs" sticky>
+            <paper-tabs selected="[[subroute.path]]" attr-for-selected="name" role="navigation">
+              <paper-tab name="/publicaciones" link>
+                <a class="link" href="/usuario/publicaciones" tabindex="-1">Publicaciones</a>
+              </paper-tab>
+              <paper-tab name="/calificaciones" link>
+                <a class="link" href="/usuario/calificaciones" tabindex="-1">Calificaciones</a>
+              </paper-tab>
+              <paper-tab name="/favoritos" link>
+                <a class="link" href="/usuario/favoritos" tabindex="-1">Favoritos</a>
+              </paper-tab>
+            </paper-tabs>
+          </div>
+        </div>
+      </template>
+
+      <!-- Mostrar paper-progress mientras se obtienen los resultados -->
+      <template is="dom-if" if="{{progress}}" restamp="true">
+        <paper-progress id="site_progress" indeterminate></paper-progress>
+      </template>
+
+      <!-- Contenido -->
+      <iron-pages id="main_pages" selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
+        <!-- Home -->
+        <home-view name="home"></home-view>
+        <!-- Subhomes -->
+        <eventos-view name="eventos" route="{{subroute}}"></eventos-view>
+        <restaurantes-view name="restaurantes" route="{{subroute}}"></restaurantes-view>
+        <bares-discotecas-view name="bares-discotecas"  route="{{subroute}}"></bares-discotecas-view>
+        <cines-view name="cines"></cines-view>
+        <!-- Vistas single -->
+        <restaurante-view name="restaurante"></restaurante-view>
+        <bar-view name="bar"></bar-view>
+        <discoteca-view name="discoteca"></discoteca-view>
+        <evento-view name="evento"></evento-view>
+
+        <publicar-view name="publicar" route="{{subroute}}"></publicar-view>
+
+        <usuario-view name="usuario" route="{{subroute}}"></usuario-view>
+        <resultado-view name="resultado"></resultado-view>
+        <error-view name="error"></error-view>
+      </iron-pages>
+
+      <!-- Bottom navigation -->
+      <bottom-nav fixed>
+        <bottom-toolbar id="bottom_nav_toolbar" selected="[[page]]" attr-for-selected="name">
+          <bottom-tab label="Inicio" name="home" icon="home" link>
+            <a href="/"></a>
+          </bottom-tab>
+          <bottom-tab label="Eventos" name="eventos" icon="event" link>
+            <a href="/eventos"></a>
+          </bottom-tab>
+          <bottom-tab label="Restaurantes" name="restaurantes" icon="maps:restaurant" link>
+            <a href="/restaurantes"></a>
+          </bottom-tab>
+          <bottom-tab label="Bares / Discos" name="bares-discotecas" icon="maps:local-bar" link>
+            <a href="/bares-discotecas"></a>
+          </bottom-tab>
+          <bottom-tab label="Cines" name="cines" icon="maps:local-movies" link>
+            <a href="/cines"></a>
+          </bottom-tab>
+        </bottom-toolbar>
+      </bottom-nav>
+
+      <!-- Footer -->
+      <footer class="layout horizontal">
+        <div class="layout vertical flex">
+          <!-- <iron-image id="footer_logo" src="../images/elPais.svg" preload sizing="contain"></iron-image> -->
+          <h2>LOGO</h2>
+          <!-- Términos y Condiciones -->
+          <div class="paper-font-caption">Ma Petite Cuisine | Lyon, France</div>
+          <a href="#" class="paper-font-caption">Politique et traitement des données</a>
+        </div>
+
+        <!-- Redes sociales -->
+        <div class="social_container layout horizontal center-center">
+          <a href="https://facebook.com/planciudad" target="_blank" rel="noopener" tabindex="-1">
+            <paper-icon-button icon="my-icons:facebook" class="social_icon fb"></paper-icon-button>
+          </a>
+          <a href="https://instagram.com/planciudad" target="_blank" rel="noopener" tabindex="-1">
+            <paper-icon-button icon="my-icons:instagram" class="social_icon instagram"></paper-icon-button>
+          </a>
+          <a href="https://twitter.com/planciudad" target="_blank" rel="noopener" tabindex="-1">
+            <paper-icon-button icon="my-icons:twitter" class="social_icon twitter"></paper-icon-button>
+          </a>
+          <a href="https://youtube.com/channel/UC3uS0Ve5iaqhXw55aLk2aYg" target="_blank" rel="noopener" tabindex="-1">
+            <paper-icon-button icon="my-icons:youtube" class="social_icon youtube"></paper-icon-button>
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Diálogo de inicio de sesión -->
+    <paper-dialog id="login_dialog" class="narrow" with-backdrop on-iron-overlay-opened="_disableDocumentScrolling" on-iron-overlay-closed="_restoreDocumentScrolling">
+      <paper-dialog-scrollable>
+        <iron-pages selected="{{login_page}}" attr-for-selected="name">
+          <div name="info">
+            <iron-image class="dialog_image" src="http://source.unsplash.com/random" preload fade sizing="cover"></iron-image>
+            <paper-icon-button id="close_login_dialog_icon" icon="close" dialog-dismiss></paper-icon-button>
+            <div class="dialog_container">
+              <paper-button raised class="fb full_width" on-tap="_openFbSignupDialog">
+                <iron-icon icon="my-icons:facebook"></iron-icon>
+                Registrarse con Facebook
+              </paper-button>
+              <paper-button raised on-tap="_showSignUpForm" class="raised_button full_width">
+                Registrarse con email
+              </paper-button>
+              <paper-button on-tap="_showLoginForm" id="login_button" class="full_width">
+                Iniciar sesión
+              </paper-button>
+              <span class="paper-font-caption layout vertical center">*Al ingresar usted acepta los <a href="#" class="link terms_and_conditions_link">términos y condiciones</a></span>
+            </div>
+          </div>
+
+          <div name="login">
+            <paper-icon-button icon="arrow-back" class="dialog_back_icon" on-tap="_showLoginInfo"></paper-icon-button>
+            <div class="dialog_container">
+              <form is="iron-form" id="login_form" method="post" action="http://localhost:8000/api/v1/auth-user" on-iron-form-response="_loginSuccess" on-iron-form-error="_loginError">
+                <h2>Iniciar sesión</h2>
+                <paper-button raised class="fb full_width" on-tap="_openFbLoginDialog">
+                  <iron-icon icon="my-icons:facebook"></iron-icon>
+                  Continuar con Facebook
+                </paper-button>
+                <h4>o</h4>
+                <div class="inputs">
+                  <input id="kind_login" type="text" name="kind_login" hidden>
+                  <input id="token_short_facebook" type="text" name="token_short_facebook" hidden>
+                  <paper-input id="loginEmail" label="Email" name="email" type="email" error-message="Ingresa un correo válido"></paper-input>
+                  <paper-input id="loginPassword" label="Contraseña" name="password" type="password" error-message="Ingresa tu contraseña"></paper-input>
+                </div>
+                <paper-button raised on-tap="loginUser" class="dialog_button raised_button full_width">
+                  <!-- Indicador de carga de información del usuario -->
+                  <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
+                    <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                  </template>
+                  <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
+                    Iniciar sesión
+                  </template>
+                </paper-button>
+                <a href="#" on-tap="_showRestorePasswordForm" class="paper-font-caption layout vertical center link">¿Olvidaste la contraseña?</a>
+              </form>
+            </div>
+          </div>
+
+          <div name="signup">
+            <paper-icon-button icon="arrow-back" class="dialog_back_icon" on-tap="_showLoginInfo"></paper-icon-button>
+            <div class="dialog_container">
+              <form is="iron-form" id="signup_form" method="post" action="http://localhost:8000/api/v1/user" on-iron-form-response="_registerSuccess" on-iron-form-error="_registerError">
+                <h2>Registrarse</h2>
+                <div class="inputs">
+                  <input id="accept_newsletters" type="text" name="accept_newsletters" hidden>
+                  <input id="accept_terms" type="text" name="accept_terms" hidden>
+                  <input id="kind_register" type="text" name="kind_register" hidden>
+
+                  <!-- Si el registro es con Facebook -->
+                  <template is="dom-if" if="{{isSignupFb}}" restamp="true">
+                    <input id="name_facebook" type="text" name="name" hidden>
+                    <input id="email_facebook" type="text" name="email" hidden>
+                    <input id="avatar_facebook" type="text" name="avatar_facebook" hidden>
+                    <input id="token_short_facebook_register" type="text" name="token_short_facebook" hidden>
+                  </template>
+
+                  <!-- Si el registro es con email -->
+                  <template is="dom-if" if="{{!isSignupFb}}" restamp="true">
+                    <paper-input name="name" label="Nombre completo" required error-message="Ingresa tu nombre completo"></paper-input>
+                    <paper-input label="Email" type="email" name="email" required error-message="Ingresa un correo válido"></paper-input>
+                  </template>
+
+                  <input id="confirm_password" type="text" name="confirm_password" hidden>
+                  <paper-input id="signupPassword" label="Contraseña" type="password" name="password" minlength="6" error-message="Debe contener mínimo 6 caracteres">
+                    <paper-icon-button id="signupPasswordSuffix" suffix icon="visibility-off" title="Contraseña oculta" on-tap="_viewPassword"></paper-icon-button>
+                  </paper-input>
+                  <paper-checkbox id="promotions_checkbox" checked>Deseo recibir información en mi email</paper-checkbox>
+                </div>
+                <paper-button raised on-tap="signupUser" class="dialog_button raised_button full_width">
+                  <!-- Indicador de carga de información del usuario -->
+                  <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
+                    <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                  </template>
+                  <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
+                    Registrarse
+                  </template>
+                </paper-button>
+                <div class="paper-font-caption layout vertical center">*Al registrarse usted acepta los <a href="#" class="link terms_and_conditions_link">términos y condiciones</a></div>
+              </form>
+            </div>
+          </div>
+
+          <div name="restore_password">
+            <paper-icon-button icon="arrow-back" class="dialog_back_icon" on-tap="_showLoginForm"></paper-icon-button>
+            <div class="dialog_container">
+              <form is="iron-form" id="restore_password_form" method="post" action="http://localhost:8000/api/v1/send-email-reset-password" on-iron-form-response="_sendEmailSuccess" on-iron-form-error="_sendEmailError">
+                <h2>Reestablecer contraseña</h2>
+                <p>Ingresa tu email y te enviaremos un enlace para que puedas reestablecer tu contraseña.</p>
+                <div class="inputs">
+                  <paper-input label="Email" type="email" name="email" required error-message="Ingresa un correo válido"></paper-input>
+                </div>
+                <paper-button raised on-tap="restorePassword" class="dialog_button raised_button full_width">Reestablecer contraseña</paper-button>
+              </form>
+            </div>
+          </div>
+        </iron-pages>
+      </paper-dialog-scrollable>
+    </paper-dialog>
+
+    <!-- Diálogo de preferencias del usuario -->
+    <paper-dialog id="preferences_dialog" class="wide" with-backdrop on-iron-overlay-opened="_disableDocumentScrolling" on-iron-overlay-closed="_restoreDocumentScrolling">
+      <paper-dialog-scrollable>
+        <div>
+          <paper-icon-button icon="close" class="dialog_back_icon" dialog-dismiss></paper-icon-button>
+          <div class="dialog_container">
+            <form is="iron-form" id="preferences_form" method="post" action="/form/handler">
+              <h2>Preferencias</h2>
+
+              <h3>Tu cuenta de Plan Ciudad</h3>
+              <p>Actualmente inicias sesión con el correo <strong>{{userInfo.user.email}}</strong>. Si deseas modificarlo, presiona este botón y enviaremos un mensaje de verificación a tu correo actual junto con más información.</p>
+              <paper-button class="transparent_dark_button" on-tap="changeEmail">Cambiar correo</paper-button>
+
+              <h3>Boletín de noticias</h3>
+              <paper-toggle-button checked="{{hasNewsletter}}" on-change="_newsletterChanged">Deseo recibir información en mi email</paper-toggle-button>
+
+              <div id="interests_container" has-newsletter$="{{hasNewsletter}}">
+                <h3>Intereses</h3>
+                <p>Selecciona las categorías de tu interés y recibe semanalmente en tu correo los mejores planes de tu ciudad.</p>
+                <div id="preferences_checkboxes" class="layout vertical wrap">
+                  <paper-checkbox name="cine" disabled="{{!hasNewsletter}}">Cine</paper-checkbox>
+                  <paper-checkbox name="conciertos" disabled="{{!hasNewsletter}}">Conciertos</paper-checkbox>
+                  <paper-checkbox name="cultura" disabled="{{!hasNewsletter}}">Cultura</paper-checkbox>
+                  <paper-checkbox name="deporte" disabled="{{!hasNewsletter}}">Deporte</paper-checkbox>
+                  <paper-checkbox name="gratis" disabled="{{!hasNewsletter}}">Gratis</paper-checkbox>
+                  <paper-checkbox name="rumba" disabled="{{!hasNewsletter}}">Rumba</paper-checkbox>
+                  <paper-checkbox name="semana-santa" disabled="{{!hasNewsletter}}">Semana Santa</paper-checkbox>
+                  <paper-checkbox name="valle" disabled="{{!hasNewsletter}}">Valle</paper-checkbox>
+                  <paper-checkbox name="otros" disabled="{{!hasNewsletter}}">Otros</paper-checkbox>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </paper-dialog-scrollable>
+    </paper-dialog>
+
+    <paper-toast id="pc_toast" on-iron-overlay-opened="_disableDocumentScrolling">
+      <template is="dom-if" if="{{_resetLoginFb}}" restamp="true">
+        <paper-button on-tap="resetToast">Iniciar sesión</paper-button>
+      </template>
+    </paper-toast>
+
+    <!-- key event -->
+    <iron-a11y-keys keys="enter" on-keys-pressed="_updatePressed"></iron-a11y-keys>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'plan-ciudad',
+
+      properties: {
+        userInfo: {
+          type: Object
+        },
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+        userLogged: {
+          type: Boolean,
+          value: false
+        },
+        showClearButton: {
+          type: Boolean,
+          value: false
+        },
+        target: {
+          type: Object,
+          value: function() {
+            return this.$.search_input;
+          }
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      listeners: {
+        'show-404': '_showPage404',
+        'show-progress': '_showProgress'
+      },
+
+      attached: function () {
+        moment.locale('es');
+        var __months = moment.months().map(function (m) {
+          var test = m.charAt(0).toUpperCase() + m.slice(1);
+          return test.substring(0, 3); //Recortar a 3 caracteres
+          return test;
+        });
+        moment.updateLocale('es', { months : __months });
+
+        var self = this;
+        this._resetLoginFb = false;
+        this._passwordVisible = false;
+        this.checkingUserInfo = false; // Spinner
+        this.editDashboard = false;
+        this.isSignupFb = false; // Inputs hidden para Fb
+
+        // Validar si existe el localstorage
+        if (this.userInfo) {
+          this._handleNewsletterInfo();
+
+          this.userLogged = true;
+          this.closeLoginDialog();
+
+          if (this.userInfo.user.kind_register == "facebook") {
+            this.updateFbUserImage();
+          }
+        }
+      },
+
+      _routePageChanged: function(page) {
+        this.page = page || 'home';
+      },
+
+      _pageChanged: function(page) {
+        window.scrollTo(0, 0);
+
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl(page + '-view' + '.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+
+        //Ocultar elementos del header al ingresar a la vista del usuario
+        this.hideHeader = false;
+        if(page == "usuario") {
+          this.async(function () {
+            if (this.userInfo) {
+              this.userDashboard = true;
+            } else {
+              this._showPage404();
+            }
+          });
+        }else {
+          this.userDashboard = false;
+          if (page == "publicar") {
+            this.hideHeader = true;
+          }
+        }
+      },
+
+      _showPage404: function() {
+        this.page = 'error';
+      },
+
+      _showProgress: function (event) {
+        this.progress = event.detail;
+      },
+
+      _showLoginDialog: function () {
+        this._showLoginInfo();
+        this.$.login_dialog.open();
+        this.async(function () {
+          this.$.login_dialog.center();
+        },20);
+      },
+      _showLoginInfo: function () {
+        this.login_page = "info";
+        this.$.login_dialog.center();
+      },
+      _showLoginForm: function () {
+        this.login_page = "login";
+        this.$.login_dialog.center();
+      },
+      _showSignUpForm: function () {
+        this.login_page = "signup";
+        this.$.login_dialog.center();
+      },
+      _showRestorePasswordForm: function () {
+        this.login_page = "restore_password";
+        this.$.login_dialog.center();
+      },
+
+      _showPreferencesDialog: function () {
+        this.$.preferences_dialog.open();
+        this.async(function () {
+          this.$.preferences_dialog.center();
+        },20);
+      },
+
+      // =========================== Acciones de login ==========================
+      // Login con correo
+      loginUser: function () {
+        this.$.loginEmail.required = true;
+        this.$.loginPassword.required = true;
+
+        /* Validar campos */
+        if (!this.$.login_form.validate()) {
+          return;
+        }
+        this.$.kind_login.value = "email";
+        this.$.login_form.submit();
+        this.checkingUserInfo = true; // Spinner
+      },
+      // Login con Facebook
+      _openFbLoginDialog: function () {
+        var self = this;
+        FB.login(function(response) {
+          if (response.status == 'connected') {
+            self._getFbUserData(response.authResponse.accessToken);
+          }
+        }, {scope: 'public_profile,email'});
+      },
+      // Registrar con Facebook
+      _openFbSignupDialog: function () {
+        var self = this;
+        FB.login(function(response) {
+          if (response.status == 'connected') {
+            self.isSignupFb = true;
+            self.signupUserFb(response.authResponse.accessToken);
+          }
+        }, {scope: 'public_profile,email'});
+      },
+
+      // ========================== Respuesta del login =========================
+      _loginSuccess: function (event) {
+        this.closeLoginDialog();
+
+        this.userInfo = event.detail.response; // Setea el localstorage
+        this.userLogged = true;
+        this.checkingUserInfo = false; // Spinner
+
+        this._handleNewsletterInfo();
+
+        if (this.userInfo.user.kind_register == "facebook") {
+          var self = this;
+          FB.getLoginStatus(function(response) {
+            self.userInfo.user.idUserFb = response.authResponse.userID;
+            self.updateFbUserImage();
+          });
+        }
+      },
+      _loginError: function (error) {
+        var response = error.detail.request.response.response;
+        this.$.pc_toast.text = response.message;
+        this.checkingUserInfo = false; // Spinner
+
+        // Si la contraseña es incorrecta borra el input
+        if (response.code_error_login == 3) {
+          this.$.loginPassword.value = "";
+        }
+
+        this.$.pc_toast.show();
+      },
+
+      // ========================== Acciones de registro ========================
+      signupUser: function () {
+        this.$.signupPassword.required = true;
+        this.checkingUserInfo = true; // Spinner
+
+        /* Validar campos */
+        if (!this.$.signup_form.validate()) {
+          return;
+        }
+
+        this.$.kind_register.value = "email";
+        this.$.accept_terms.value = "1";
+        this.$.confirm_password.value = this.$.signupPassword.value;
+        if (this.$.promotions_checkbox.checked) {
+          this.$.accept_newsletters.value = "1";
+        } else {
+          this.$.accept_newsletters.value = "0";
+        }
+
+        this.$.signup_form.submit();
+      },
+      signupUserFb: function (userToken) {
+        var self = this;
+        this.checkingUserInfo = true; // Spinner
+
+        FB.api('/me?fields=name,first_name,picture.height(150),email', function(response) {
+          self.$$('#name_facebook').value = response.name;
+          self.$$('#avatar_facebook').value = response.picture.data.url;
+          self.$$('#email_facebook').value = response.email;
+          self.$$('#kind_register').value = "facebook";
+          self.$$('#signupPassword').value = userToken;
+          self.$$('#token_short_facebook_register').value = userToken;
+
+          self.$.accept_terms.value = "1";
+          if (self.$.promotions_checkbox.checked) {
+            self.$.accept_newsletters.value = "1";
+          } else {
+            self.$.accept_newsletters.value = "0";
+          }
+
+          self.$.signup_form.submit();
+        });
+      },
+
+      // ======================== Respuesta del registro ========================
+      _registerSuccess: function (event) {
+        var form_info = this.$.signup_form.serialize();
+        if (form_info.kind_register == "facebook") {
+          this.isSignupFb = false;
+          this._openFbLoginDialog();
+        } else if (form_info.kind_register == "email") {
+          this.$.loginEmail.value = form_info.email;
+          this.$.loginPassword.value = form_info.password;
+          this.loginUser();
+        }
+
+        this.closeLoginDialog();
+        this.checkingUserInfo = false; // Spinner
+
+        console.log("Respuesta registro", event.detail.response);
+        // TODO: Crear pantalla de validar registro y despues hacer consulta a http://localhost:8000/api/v1/send-email-activate para activar la cuenta
+      },
+      _registerError: function (error) {
+        var response = error.detail.request.response;
+        this.checkingUserInfo = false; // Spinner
+
+        this.$.pc_toast.text = "El email ingresado ya existe";
+        this.$.pc_toast.show();
+      },
+
+      // ====================== Actualizar info de usuario ======================
+      _updateUserInfo: function () {
+        this._toggleEditDashboard();
+
+        if (this.hasNewsletter) {
+          this.$$('#accept_newsletters_update').value = "1";
+        } else {
+          this.$$('#accept_newsletters_update').value = "0";
+        }
+
+        this.$.updateUser.params = {
+          'id': this.userInfo.user.id,
+          'token': this.userInfo.token,
+          'accept_newsletters': this.$$('#accept_newsletters_update').value,
+          'description': this.$$('#dashboard_bio_input').value,
+          'facebook_profile': this.$$('#dashboard_fb_input').value,
+          'instagram_profile': this.$$('#dashboard_instagram_input').value,
+          'name': this.$$('#dashboard_name_input').value,
+          'snapchat_profile': this.$$('#dashboard_snap_input').value,
+          'twitter_profile': this.$$('#dashboard_twitter_input').value
+        };
+        this.$.updateUser.generateRequest();
+      },
+
+      // ====================== Respuesta del update info =======================
+      handleResponseUpdateUser: function (event) {
+        this.set('userInfo.user.accept_newsletters', this.$.updateUser.params.accept_newsletters);
+        this.set('userInfo.user.description', this.$.updateUser.params.description);
+        this.set('userInfo.user.facebook_profile', this.$.updateUser.params.facebook_profile);
+        this.set('userInfo.user.instagram_profile', this.$.updateUser.params.instagram_profile);
+        this.set('userInfo.user.snapchat_profile', this.$.updateUser.params.snapchat_profile);
+        this.set('userInfo.user.twitter_profile', this.$.updateUser.params.twitter_profile);
+        this.set('userInfo.user.name', this.$.updateUser.params.name);
+
+        this.$.pc_toast.text = "Perfil actualizado";
+        this.$.pc_toast.show();
+      },
+
+      // ================ Acción enviar correo de reset password ================
+      restorePassword: function () {
+        if (!this.$.restore_password_form.validate()) {
+          return;
+        }
+        this.$.restore_password_form.submit();
+      },
+
+      // ===================== Respuesta del reset password =====================
+      _sendEmailSuccess: function (event) {
+        var message = event.detail.response;
+        // Validar si tiene cuenta con Facebook
+        if (message.response.indexOf("Facebook") !== -1) {
+          this.$.pc_toast.text = message.response;
+          this.$.pc_toast.duration = 0;
+          this._resetLoginFb = true;
+          this.$.pc_toast.show();
+        } else {
+          console.log("Correo enviado");
+        }
+      },
+      _sendEmailError: function (error) {
+        this.$.pc_toast.text = error.detail.request.response.response;
+        this.$.pc_toast.show();
+      },
+
+      // ============================= localstorage =============================
+      // Cambiar valores en el localstorage
+      updateFbUserImage: function() {
+        var self = this;
+        FB.api('/' + this.userInfo.user.idUserFb + '/picture?type=large', function(response) {
+          self.set('userInfo.user.avatar', response.data.url);
+        });
+      },
+      // Setear cambios en el localstorage realizados externamente
+      _onLocalStorageEmpty: function () {
+        this.userLogged = false;
+      },
+
+      // =============================== Buscador ===============================
+      _buscar: function () {
+        if (this.$$('#search_input').value.length != 0) {
+          this.fire('show-progress', true);
+
+          this.set("route.path", 'resultado');
+          this.$$('resultado-view').searchText = this.$$('#search_input').value;
+        }
+      },
+      _valueChanged: function () {
+        this.async(function(){
+          // Validar el length del value para mostrar el botón clear
+          if (this.$$('#search_input').value.length != 0) {
+            this.showClearButton = true;
+          } else {
+            this.showClearButton = false;
+          }
+
+          this.debounce('doSomething', function () {
+            if (this.$$('#search_input').value.length >= 3) {
+              this.$.ajax.params = {
+                'q': this.$$('#search_input').value,
+                "hl":"en",
+                "client": "partner",
+                "source": "gcsc",
+                "partnerid":"006793829028880044258:oe9ehpmo3eo",
+                "ds":"cse"
+              }
+              this.$.ajax.generateRequest();
+            }
+          }, 400);
+        }.bind(this), 50);
+      },
+      // Obtener la respuesta del ajax jsonp
+      handleResponse: function(response){
+        this.suggestions = [];
+        if (response.detail) {
+          for (var i = 0; i < response.detail[1].length; i++) {
+            this.suggestions.push(response.detail[1][i][0]);
+          }
+        }
+      },
+      _clearSearch: function () {
+        this.async(function(){
+          this.$$('#search_input').value = '';
+          this.$$('#search_input').inputElement.focus();
+          this.$$('#search_input').inputElement.blur();
+        });
+      },
+
+      // ============================ Info Facebook =============================
+      _getFbUserData: function (userToken) {
+        var self = this;
+        this.checkingUserInfo = true; // Spinner
+
+        FB.api('/me?fields=name,first_name,picture.height(150),email', function(response) {
+          self.$.token_short_facebook.value = userToken;
+          self.$.kind_login.value = "facebook";
+          self.$.loginEmail.value = response.email;
+          self.$.login_form.submit();
+        });
+      },
+
+      // ============================ Métodos extra =============================
+      resetToast: function () {
+        this._resetLoginFb = false;
+        this.$.pc_toast.duration = 3000;
+        this.$.pc_toast.close();
+
+        this.closeLoginDialog();
+        this._openFbLoginDialog();
+      },
+
+      closeLoginDialog: function () {
+        // Reset todos los inputs de los forms
+        this.$.restore_password_form.reset();
+        this.$.signup_form.reset();
+        this.$.login_form.reset();
+
+        this.$.login_dialog.close();
+      },
+
+      _viewPassword: function () {
+        this._passwordVisible = !this._passwordVisible;
+        if (this._passwordVisible) {
+          this.$.signupPassword.type = "text";
+          this.$.signupPasswordSuffix.icon = "visibility";
+          this.$.signupPasswordSuffix.title = "Contraseña visible";
+        }else{
+          this.$.signupPassword.type = "password";
+          this.$.signupPasswordSuffix.icon = "visibility-off";
+          this.$.signupPasswordSuffix.title = "Contraseña oculta";
+        }
+      },
+
+      _disableDocumentScrolling: function() {
+        document.body.style.overflow = 'hidden';
+      },
+      _restoreDocumentScrolling: function() {
+        document.body.style.overflow = '';
+      },
+
+      // Validar si el usuario aceptó el newsletter
+      _handleNewsletterInfo: function () {
+        if (this.userInfo.user.accept_newsletters === "1") {
+          this.hasNewsletter = true;
+        } else {
+          this.hasNewsletter = false;
+        }
+      },
+      // Escuchar cada vez que cambia el toggle de newsletter
+      _newsletterChanged: function (event) {
+        this.hasNewsletter = event.target.checked;
+      },
+
+      _generateUserAvatar: function (register, image) {
+        if (register == "facebook") {
+          return image;
+        } else {
+          return "http://localhost:8000" + image;
+        }
+      },
+
+      // Método del key event
+      _updatePressed: function () {
+        if (this.login_page == "signup") {
+          this.signupUser();
+        } else if (this.login_page == "login") {
+          this.loginUser();
+        } else if (this.login_page == "restore_password") {
+          this.restorePassword();
+        }
+      },
+
+      _toggleEditDashboard: function () {
+        this.editDashboard = !this.editDashboard;
+      },
+
+      // ================================ Logout ================================
+      _userLogout: function () {
+        if (this.userInfo.user.kind_register == "facebook") {
+          FB.logout(function(response) {});
+        }
+        this.userLogged = false;
+        this.$.localstorage.value = null;
+      },
+
+      _computeFirstName:function (fullName) {
+        return fullName.split(" ")[0];
+      }
+    });
+  </script>
+</dom-module>

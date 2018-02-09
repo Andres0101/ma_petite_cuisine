@@ -1,0 +1,246 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/places-icons.html">
+
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="basic-info">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 20px;
+      }
+
+      .section_title{
+        color: rgba(0, 0, 0, 0.75);
+        margin: 12px 0;
+      }
+      .section_title iron-icon{
+        margin-right: 12px;
+      }
+      .section_title div{
+        font-weight: 500;
+      }
+      .info_row{
+        @apply(--layout-horizontal);
+      }
+      .info_item{
+        padding: 10px 5px;
+      }
+      .info_item p {
+        width: 100%;
+        max-width: 600px;
+        color: #666;
+      }
+
+      @media (max-width: 600px) {
+        :host {
+          padding: 10px;
+        }
+        .info_row{
+          @apply(--layout-vertical);
+        }
+      }
+    </style>
+
+    <!-- Publicado por -->
+    <template is="dom-if" if="[[_isEvent(type)]]" restamp="true">
+      <div class="info_item">
+        <div class="section_title layout horizontal center">
+          <iron-icon icon="editor:publish"></iron-icon>
+          <div class="paper-font-subhead">Publicado por</div>
+        </div>
+        <a href="http://localhost:8080/usuario/[[publisherId]]" class="link noselect chip_item clickable_chip_item paper-font-body1">
+          [[publisherName]]
+        </a>
+      </div>
+    </template>
+
+    <!-- Descripción -->
+    <div class="info_item">
+      <div class="section_title layout horizontal center">
+        <iron-icon icon="description"></iron-icon>
+        <div class="paper-font-subhead">Descripción</div>
+      </div>
+      <p class="paper-font-body1">[[description]]</p>
+    </div>
+
+    <div class="info_row">
+      <!-- Categoría -->
+      <div class="info_item flex">
+        <div class="section_title layout horizontal center">
+          <iron-icon icon="[[categoryIcon]]"></iron-icon>
+          <div class="paper-font-subhead">[[categoryText]]</div>
+        </div>
+        <div class="layout horizontal wrap">
+          <div class="noselect chip_item paper-font-body1">
+            <iron-icon icon="bookmark"></iron-icon>
+            [[mainCategory]]
+          </div>
+          <template is="dom-repeat" items="[[secondaryCategory]]" as="categoria">
+            <div class="noselect chip_item paper-font-body1">
+              [[categoria.name]]
+            </div>
+          </template>
+        </div>
+      </div>
+      <!-- Información adicional / Menú -->
+      <template is="dom-if" if="[[hasInfo]]">
+        <div class="info_item flex">
+          <div class="section_title layout horizontal center">
+            <iron-icon icon="[[infoIcon]]"></iron-icon>
+            <div class="paper-font-subhead">[[infoText]]</div>
+          </div>
+          <a href="[[hasInfo]]" class="link" download tabindex="-1">
+            <paper-button raised class="raised_button">[[infoDownloadText]]</paper-button>
+          </a>
+        </div>
+      </template>
+    </div>
+
+    <template is="dom-if" if="[[!_isEvent(type)]]" restamp="true">
+      <div class="info_row">
+        <!-- Servicios -->
+        <template is="dom-if" if="[[hasServices]]">
+          <div class="info_item flex">
+            <div class="section_title layout horizontal center">
+              <iron-icon icon="places:room-service"></iron-icon>
+              <div class="paper-font-subhead">Servicios adicionales</div>
+            </div>
+            <div class="layout horizontal wrap">
+              <template is="dom-repeat" items="[[services]]" as="servicio">
+                <div class="noselect chip_item paper-font-body1">
+                  [[servicio]]
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+        <!-- Métodos de pago -->
+        <div class="info_item flex">
+          <div class="section_title layout horizontal center">
+            <iron-icon icon="credit-card"></iron-icon>
+            <div class="paper-font-subhead">Métodos de pago</div>
+          </div>
+          <div class="layout horizontal wrap">
+            <template is="dom-repeat" items="[[payments]]" as="metodoPago">
+              <div class="noselect chip_item paper-font-body1">
+                [[metodoPago]]
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <div class="info_row">
+      <template is="dom-if" if="[[website]]">
+        <!-- Página web -->
+        <div class="info_item flex">
+          <div class="section_title layout horizontal center">
+            <iron-icon icon="language"></iron-icon>
+            <div class="paper-font-subhead">Página web</div>
+          </div>
+          <a href="[[website]]" class="link noselect chip_item clickable_chip_item paper-font-body1" target="_blank" rel="noopener">
+            [[website]]
+          </a>
+        </div>
+      </template>
+      <!-- Redes sociales -->
+      <template is="dom-if" if="[[socialNetwork]]">
+        <div class="info_item flex">
+          <div class="section_title layout horizontal center">
+            <iron-icon icon="[[socialIcon]]"></iron-icon>
+            <div class="paper-font-subhead">[[socialText]]</div>
+          </div>
+
+          <template is="dom-if" if="[[_isEvent(type)]]" restamp="true">
+            <a href="[[socialNetwork]]" class="link" download tabindex="-1">
+              <paper-button raised class="fb">Ver en Facebook</paper-button>
+            </a>
+          </template>
+
+          <template is="dom-if" if="[[!_isEvent(type)]]" restamp="true">
+            <div class="layout horizontal wrap">
+              <template is="dom-repeat" items="[[socialNetworkArray]]" as="socialNetwork">
+                <a href="[[socialNetwork.url]]" class="link noselect chip_item clickable_chip_item paper-font-body1" target="_blank" rel="noopener">
+                  <iron-icon icon="my-icons:[[_getSocialIcon(socialNetwork.name)]]"></iron-icon>
+                  [[socialNetwork.name]]
+                </a>
+              </template>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'basic-info',
+
+      properties: {
+        type: String,
+        publisherId: String,
+        publisherName: String,
+        description: String,
+        categoryIcon: String,
+        categoryText: String,
+        mainCategory: String,
+        secondaryCategory: Array,
+        hasInfo: String,
+        infoIcon: String,
+        infoText: String,
+        infoDownloadText: String,
+        hasServices: String,
+        services: Array,
+        payments: Array,
+        website: String,
+        socialNetwork: String,
+        socialIcon: String,
+        socialText: String,
+        socialNetworkArray: Array
+      },
+
+      _isEvent: function (type) {
+        return type === 'event';
+      },
+      _getSocialIcon: function (socialNetwork) {
+        switch (socialNetwork) {
+          case "Facebook":
+            return "facebook";
+            break;
+          case "Instagram":
+            return "instagram";
+            break;
+          case "Twitter":
+            return "twitter";
+            break;
+          case "YouTube":
+            return "youtube";
+            break;
+          case "Snapchat":
+            return "snapchat";
+            break;
+        }
+      }
+    });
+  </script>
+</dom-module>

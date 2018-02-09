@@ -1,0 +1,230 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="../../bower_components/paper-date-picker-item/paper-datetime-picker-item.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="form-date-card">
+  <template>
+    <style include="shared-styles">
+      /* Fechas */
+      :host {
+        display: block;
+        width: 242px;
+        height: 258px;
+        margin: 4px;
+        @apply(--layout-vertical);
+        @apply(--shadow-elevation-2dp);
+      }
+      :host:first-child #date_box_actions paper-icon-button{
+        display: none;
+      }
+      #date_box_actions{
+        box-sizing: border-box;
+        padding: 5px 12px;
+        padding-right: 5px;
+        height: 50px;
+      }
+      #date_box_actions paper-icon-button{
+        color: #aaa;
+      }
+      #horarios_title{
+        color: #888;
+      }
+      #start_end_dates{
+        width: 100%;
+      }
+      .date_row paper-icon-button{
+        width: 36px;
+        height: 36px;
+        color: #ccc;
+      }
+      .date_title{
+        color: #bbb;
+        padding: 0 16px;
+        margin-top: 8px;
+      }
+      paper-datetime-picker-item{
+        --paper-item-icon-width: 40px;
+        --paper-icon-item:{
+          width: 100%;
+          padding-left: 16px;
+        }
+        --paper-item:{
+          width: 70%;
+          padding: 0px 8px;
+        }
+      }
+      paper-datetime-picker-item:not([disabled]){
+        --secondary-text-color: black;
+      }
+      paper-datetime-picker-item[disabled]{
+        --disabled-text-color: #ccc;
+        --secondary-text-color: #ccc;
+      }
+
+      #time_duration{
+        padding: 0 16px;
+        margin-bottom: 16px;
+      }
+      #time_duration iron-icon{
+        margin-right: 8px;
+        width: 20px;
+        height: 20px;
+      }
+
+      .green{
+        color: var(--paper-green-a700);
+      }
+      .red{
+        color: var(--paper-red-600);
+      }
+    </style>
+
+    <div id="date_box_actions" class="layout horizontal center">
+      <div id="horarios_title" class="paper-font-body1">Horario</div>
+      <span class="flex"></span>
+      <div>
+        <paper-icon-button id="remove_card" icon="delete" on-tap="removeCard"></paper-icon-button>
+        <paper-tooltip for="remove_card" position="top" offset="0" animation-delay="100">Eliminar</paper-tooltip>
+      </div>
+    </div>
+    <div id="start_end_dates" class="flex">
+      <div class="date_row">
+        <div class="date_title paper-font-body1">Inicia</div>
+        <div class="layout horizontal center">
+          <paper-datetime-picker-item
+            class="noselect flex"
+            icon="today"
+            date="{{startDate}}"
+            min-date="{{todayDate}}"
+            placeholder="Agregar fecha y hora"
+            default-time="8:00"
+            cancel-button="Cancelar"
+            ok-button="Aceptar"
+            date-format="MMMM D"
+            time-format="h:mm A"
+            on-date-changed="_dateChanged">
+          </paper-datetime-picker-item>
+          <template is="dom-if" if="{{startDate}}">
+            <paper-icon-button noink></paper-icon-button>
+          </template>
+        </div>
+      </div>
+      <div class="date_row">
+        <div class="date_title paper-font-body1">Finaliza (opcional)</div>
+        <div class="layout horizontal center">
+          <!-- TODO: Cambiar min-date="{{startDate}}" por un startOf("day") con moment en un método -->
+          <paper-datetime-picker-item
+            id="endDatePicker"
+            class="noselect flex"
+            icon="today"
+            date="{{endDate}}"
+            min-date="[[_startOfDate(startDate)]]"
+            max-date="[[_endOfDate(startDate)]]"
+            placeholder="Agregar fecha y hora"
+            default-time="16:00"
+            cancel-button="Cancelar"
+            ok-button="Aceptar"
+            date-format="MMMM D"
+            time-format="h:mm A"
+            on-date-changed="_dateChanged"
+            disabled="[[!validStartDate]]">
+          </paper-datetime-picker-item>
+          <template is="dom-if" if="{{endDate}}">
+            <div>
+              <paper-icon-button id="clear_date" icon="cancel" disabled="[[!validStartDate]]" on-tap="_clearEndDate"></paper-icon-button>
+              <paper-tooltip for="clear_date" position="top" offset="0" animation-delay="100">Limpiar fecha</paper-tooltip>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <template is="dom-if" if="{{durationMessage}}">
+      <div id="time_duration" class$="[[stateColor]] layout horizontal center">
+        <iron-icon icon="schedule"></iron-icon>
+        <div class="paper-font-body1">[[durationMessage]]</div>
+      </div>
+    </template>
+
+  </template>
+  <script>
+    Polymer({
+      is: "form-date-card",
+
+      properties: {
+        image: String,
+        title: String,
+        rating: Number,
+        url: String
+      },
+      attached: function () {
+        this.todayDate = moment().startOf('day').toDate();
+        this.validStartDate = false;
+      },
+      _clearEndDate: function () {
+        this.endDate = null;
+        this.$.endDatePicker._computeHasNoDate(this.endDate);
+      },
+      _dateChanged: function () {
+        this.async(function () {
+          //Validar que la fecha inicial ocurra en el futuro
+          if (this.startDate) {
+            if (moment(this.startDate).diff(moment()) < 0) {
+              this.validStartDate = false;
+              this.stateColor = "red";
+              this.durationMessage = "La fecha ocurre en el pasado";
+              this.updateStyles();
+              return;
+            } else{
+              console.log("test");
+              this.validStartDate = true;
+            }
+          }
+
+          //Valida si existe fecha inicial y final
+          if (this.startDate && this.endDate) {
+
+            //Validar que la fecha final ocurra después de la fecha inicial
+            if (moment(this.endDate).diff(moment(this.startDate)) > 0) {
+              //Si pasa la validación, muestra el tiempo de duración del evento
+              this.stateColor = "green";
+              this.durationMessage = "Duración: " + moment.duration(moment(this.endDate).diff(moment(this.startDate))).humanize();
+            } else{
+              //Si no pasa la validación, se le informa al usuario que la fecha final ocurre primero que la inicial
+              this.stateColor = "red";
+              this.durationMessage = "Finaliza antes de iniciar";
+              this.updateStyles();
+            }
+
+          } else if (this.startDate) { //Si solo existe fecha inicial, el evento tiene duración variable
+            this.stateColor = "green";
+            this.durationMessage = "Duración variable";
+            this.updateStyles();
+          }
+        });
+      },
+      _startOfDate: function (date) {
+        return moment(date).startOf('day').toDate();
+      },
+      _endOfDate: function (date) {
+        return moment(date).add(14, 'days').endOf('day').toDate();
+      },
+      getDates: function () {
+        return {
+          "start": moment(this.startDate).format("YYYY-MM-DDTHH:mm"),
+          "finish": moment(this.endDate).format("YYYY-MM-DDTHH:mm")
+        }
+      },
+      removeCard: function () {
+        this.remove();
+      }
+    })
+  </script>
+</dom-module>

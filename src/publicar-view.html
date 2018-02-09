@@ -1,0 +1,88 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="publicar-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+      section{
+        padding: 40px;
+      }
+    </style>
+
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="error">
+      <section name="">
+        <div class="paper-font-headline">Publicar un evento o establecimiento</div>
+        <a href="/publicar/evento" class="link">
+          <paper-button raised class="raised_button">Evento</paper-button>
+        </a>
+        <a href="/publicar/establecimiento" class="link">
+          <paper-button raised class="raised_button">Establecimiento</paper-button>
+        </a>
+
+      </section>
+      <publicar-evento-view name="evento"></publicar-evento-view>
+      <section name="establecimiento"></section>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'publicar-view',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      _routeChanged: function (route) {
+        if (route.path == '') {
+          window.scrollTo(0, 0);
+          this.page = '';
+        }
+      },
+
+      _routePageChanged: function(page) {
+        this.page = page || '';
+      },
+
+      _pageChanged: function(page) {
+        if (this.route.path != '') {
+          // Load page import on demand. Show 404 page if fails
+          var resolvedPageUrl = this.resolveUrl('publicar-' + page + '-view' + '.html');
+          this.importHref(resolvedPageUrl, null, this._showPage404, true);
+        }
+      },
+
+      _showPage404: function() {
+        this.fire('show-404');
+      },
+    });
+  </script>
+</dom-module>

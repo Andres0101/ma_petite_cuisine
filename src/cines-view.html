@@ -1,0 +1,237 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/paper-rating/paper-rating.html">
+
+<link rel="import" href="../bower_components/google-youtube/google-youtube.html">
+
+<link rel="import" href="elements/movie-card.html">
+<link rel="import" href="elements/movies-module.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="cines-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 0 !important;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+
+        --app-grid-columns: 6;
+        --app-grid-gutter: 8px;
+      }
+      .cartelera{
+        padding-bottom: 50px;
+      }
+      .recomendado{
+        width: 100%;
+        background: linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)), url('https://i2.wp.com/cdn.spidermannews.com/wp-content/uploads/2017/03/Spider-Man-Homecoming-Domestic.jpg') no-repeat center center;
+        background-size: cover;
+        padding-bottom: 50px;
+        color: white;
+      }
+
+      #trailer{
+        width: 80%;
+      }
+      #cover{
+        min-width: 180px;
+        height: 250px;
+        margin-right: 20px;
+      }
+      #recomendado_info{
+        margin-top: 20px;
+        padding: 10px;
+      }
+      #recomendado_texto{
+        width: 60%;
+      }
+      #categoria {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      #titulo {
+        margin-bottom: 14px;
+      }
+      #sinopsis_titulo {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 4px;
+      }
+      #sinopsis {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      #buttons{
+        margin-top: 16px;
+      }
+      #buttons paper-button{
+        margin-right: 6px;
+      }
+      @media (max-width: 1100px) {
+        :host {
+          --app-grid-columns: 5;
+        }
+        #trailer{
+          width: 100%;
+        }
+      }
+      @media (max-width: 900px) {
+        :host {
+          --app-grid-columns: 4;
+        }
+      }
+      @media (max-width: 680px) {
+        :host {
+          --app-grid-columns: 3;
+          --app-grid-gutter: 4px;
+        }
+        #cover{
+          display: none;
+        }
+        #recomendado_texto {
+          width: 100%;
+        }
+        #recomendado_info{
+          padding: 4px;
+        }
+
+        #categoria {
+          font-size: 13px;
+        }
+        #titulo {
+          font-size: 22px;
+        }
+        #sinopsis_titulo {
+          font-size: 16px;
+        }
+        #sinopsis {
+          font-size: 13px;
+          line-height: 16px;
+        }
+      }
+      @media (max-width: 500px) {
+        :host {
+          --app-grid-columns: 2;
+        }
+      }
+    </style>
+
+    <movies-module title="Estrenos" items="{{estrenos}}" theme="dark"></movies-module>
+
+    <div class="cartelera cards_container layout vertical center">
+      <div class="module_title">
+        <div class="module_title_title paper-font-headline">En cartelera</div>
+        <!-- TODO: Enviar un subtítulo desde el backend -->
+        <div class="module_title_subtitle paper-font-body1">Subtítulo complementario</div>
+      </div>
+      <div class="app-grid">
+        <template is="dom-repeat" items="{{estrenos}}" as="estreno">
+          <movie-card
+            image="{{estreno.image}}"
+            title="{{estreno.title}}"
+            rating="{{estreno.rating}}"
+            url="{{estreno.url}}">
+          </movie-card>
+        </template>
+      </div>
+    </div>
+
+    <div class="recomendado layout vertical center">
+      <div class="cards_container module_title layout vertical center">
+        <div class="module_title_title dark paper-font-headline">Nuestro recomendado</div>
+        <!-- TODO: Enviar un subtítulo desde el backend -->
+        <div class="module_title_subtitle paper-font-body1">Subtítulo complementario</div>
+      </div>
+      <div class="cards_container layout vertical center">
+        <google-youtube
+          id="trailer"
+          video-id="Ek_b9o3RezM"
+          iv_load_policy="3"
+          rel="0"
+          showinfo="0"
+          fluid>
+        </google-youtube>
+        <div id="recomendado_info" class="layout horizontal center-justified">
+          <iron-image id="cover" src="http://assets1.ignimgs.com/2017/03/24/spider-man-homecoming-1490381333042_610w.jpg" preload fade sizing="cover"></iron-image>
+          <div id="recomendado_texto" class="layout vertical">
+            <div id="categoria" class="paper-font-body1">Acción / Superhéroes</div>
+            <div id="titulo" class="paper-font-headline">Spiderman: Homecoming</div>
+            <div id="sinopsis_titulo" class="paper-font-subhead">Sinopsis</div>
+            <div id="sinopsis" class="paper-font-body1">Un joven Peter Parker/Spiderman (Tom Holland), que hizo su sensacional debut en Capitán América: Civil War, empieza a controlar su recién hallada identidad como el superhéroe lanzarredes en Spider-Man: Homecoming. Emocionado por su experiencia con los Vengadores, Peter regresa a casa, donde vive con su Tía May (Marisa Tomei), bajo el ojo atento de su nuevo mentor Tony Stark (Robert Downey Jr.). Peter intenta volver a su rutina diaria normal, distraído por los pensamientos de probarse a sí mismo que es más que simplemente tu amistoso vecino Spiderman, pero cuando el Buitre (Michael Keaton) emerge como un nuevo villano, todo lo que Peter considera importante será amenazado.</div>
+            <div id="buttons" class="layout horizontal">
+              <paper-button raised class="raised_button">Ver horarios</paper-button>
+              <paper-button class="transparent_button">Recordarme</paper-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <movies-module title="Cine independiente" items="{{estrenos}}" theme="light"></movies-module>
+
+    <movies-module title="Próximos estrenos" items="{{estrenos}}" theme="dark"></movies-module>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'cines-view',
+      attached: function () {
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+
+        this.estrenos = [{
+          "image":"https://source.unsplash.com/random/200x250",
+          "title": "Eternal Sunshine of the Spotless Mind",
+          "rating": 3,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        },{
+          "image":"https://source.unsplash.com/random/200x251",
+          "title": "The Martian",
+          "rating": 4,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        },{
+          "image":"https://source.unsplash.com/random/200x252",
+          "title": "Interstellar",
+          "rating": 5,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        },{
+          "image":"https://source.unsplash.com/random/200x253",
+          "title": "Inception",
+          "rating": 2,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        },{
+          "image":"https://source.unsplash.com/random/200x254",
+          "title": "2001: A Space Oddysey",
+          "rating": 4,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        },{
+          "image":"https://source.unsplash.com/random/200x255",
+          "title": "The Social Network",
+          "rating": 3,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        },{
+          "image":"https://source.unsplash.com/random/200x256",
+          "title": "American Beauty",
+          "rating": 2,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        },{
+          "image":"https://source.unsplash.com/random/200x257",
+          "title": "The Artist",
+          "rating": 1,
+          "url": "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind"
+        }];
+      }
+    });
+  </script>
+</dom-module>

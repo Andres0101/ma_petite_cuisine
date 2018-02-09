@@ -1,0 +1,483 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-grid/app-grid-style.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-styles/shadow.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!-- shared styles for all views -->
+<dom-module id="shared-styles">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning app-grid-style"></style>
+    <style>
+      :host {
+        --app-primary-color: #333;
+        --app-secondary-color: #e95841;
+        --app-background-color: #F2F2F2;
+
+        --app-event-color: var(--paper-blue-400);
+        --app-bar-disco-color: var(--paper-purple-400);
+        --app-turismo-color: var(--paper-green-400);
+
+        /*Redes sociales*/
+        --social-fb-color: #3B5A9A;
+        --social-instagram-color: #D83074;
+        --social-twitter-color: #3BB1DD;
+        --social-youtube-color: #E62117;
+        --social-whatsapp-color: #25D366;
+        --social-mail-color: #ED4C4C;
+      }
+      /*Default typography styles*/
+      .paper-font-display4 {@apply(--paper-font-display4);}
+      .paper-font-display3 {@apply(--paper-font-display3);}
+      .paper-font-display2 {@apply(--paper-font-display2);}
+      .paper-font-display1 {@apply(--paper-font-display1);}
+      .paper-font-headline {@apply(--paper-font-headline);}
+      .paper-font-title {@apply(--paper-font-title);}
+      .paper-font-subhead {@apply(--paper-font-subhead);}
+      .paper-font-body2 {@apply(--paper-font-body2);}
+      .paper-font-body1 {@apply(--paper-font-body1);}
+      .paper-font-caption {@apply(--paper-font-caption);}
+      .paper-font-menu {@apply(--paper-font-menu);}
+      .paper-font-button {@apply(--paper-font-button);}
+
+      /* Plan Ciudad */
+      .plan_ciudad_color {
+        color: var(--app-secondary-color);
+      }
+      .plan_ciudad_bg_color {
+        background-color: var(--app-secondary-color);
+      }
+
+      /*Quitar el highlight al hacer tap en Chrome*/
+      * {
+    		-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    	}
+
+      /* Redes sociales */
+      .social_container {
+        margin: 16px 0;
+      }
+      .fb {
+        --paper-button:{
+          background-color: var(--social-fb-color);
+          color: white;
+        }
+        --paper-icon-button-hover: {
+          color: var(--social-fb-color);
+        }
+      }
+      .instagram {
+        --paper-icon-button-hover: {
+          color: var(--social-instagram-color);
+        }
+      }
+      .twitter {
+        --paper-icon-button-hover: {
+          color: var(--social-twitter-color);
+        }
+      }
+      .youtube {
+        --paper-icon-button-hover: {
+          color: var(--social-youtube-color);
+        }
+      }
+      .whatsapp {
+        --paper-icon-button-hover: {
+          color: var(--social-whatsapp-color);
+        }
+      }
+      .mail {
+        --paper-icon-button-hover: {
+          color: var(--social-mail-color);
+        }
+      }
+
+      .link {
+        text-decoration: none;
+        color: inherit;
+        display: inline;
+        outline: none;
+      }
+      paper-tab .link{
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+      }
+      .overflow {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      /* Color tarjeta */
+      .event {
+        border-bottom: 2px solid var(--app-event-color);
+      }
+      .restaurant {
+        border-bottom: 2px solid var(--app-secondary-color);
+      }
+      .bar-disco {
+        border-bottom: 2px solid var(--app-bar-disco-color);
+      }
+      .tourism {
+        border-bottom: 2px solid var(--app-turismo-color);
+      }
+      /* Color botón Ver más */
+      .view-more-event {
+        background-color: var(--app-event-color);
+        color: white;
+        --paper-fab-background: var(--app-event-color);
+      }
+      .view-more-restaurant {
+        background-color: var(--app-secondary-color);
+        color: white;
+        --paper-fab-background: var(--app-secondary-color);
+      }
+      .view-more-bar-disco {
+        background-color: var(--app-bar-disco-color);
+        color: white;
+        --paper-fab-background: var(--app-bar-disco-color);
+      }
+      .view-more-tourism {
+        background-color: var(--app-turismo-color);
+        color: white;
+        --paper-fab-background: var(--app-turismo-color);
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      .social_icon {
+        margin: 0 3px;
+        --paper-icon-button: {
+          color: white;
+        }
+      }
+
+      .full_width{
+        width: 100%;
+      }
+
+      .cards_container{
+        width: 100%;
+        max-width: 1200px;
+      }
+
+      /* Módulos home - subhomes */
+      .module_title {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 40px 5px 20px;
+      }
+      .module_title_title{
+        color: #4a4a4a;
+      }
+      .module_title_title.dark{
+        color: #eee;
+      }
+      .module_title_title.light{
+        color: #4a4a4a;
+      }
+      .module_title_subtitle{
+        color: #999;
+      }
+
+      /* Placeholder cards - Contenedor */
+      .items_placeholder{
+        width: 100%;
+        max-width: 1200px;
+        padding-bottom: 50px;
+      }
+
+      /* Tarjeta con fab de ver más */
+      .view_more_card {
+        background-color: white;
+        position: relative;
+        height: 100%;
+        @apply(--shadow-elevation-2dp);
+        @apply(--shadow-transition);
+      }
+      .view_more_card:hover {
+        @apply(--shadow-elevation-6dp);
+      }
+      view-more-card {
+        --view-more-card-image: {
+          background-color: #eee;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .view_more_button_container {
+        background: linear-gradient(rgba(40, 40, 40, 0.7), rgba(40, 40, 40, 0.7));
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .view_more_button_text {
+        margin-top: 10px;
+        color: var(--paper-grey-200);
+        width: 150px;
+        text-align: center;
+        line-height: 20px;
+      }
+
+      /* Info tarjeta */
+      plan-card {
+        --plan-card-image: {
+          background-color: #eee;
+          width: 100%;
+          height: 200px;
+        }
+        --plan-card: {
+          @apply(--layout-vertical);
+        }
+      }
+
+      paper-rating {
+        --paper-rating-active-color: var(--paper-amber-500);
+        --paper-rating-inactive-color: #aaa;
+        --paper-rating-icon:{
+          height: 20px;
+          width: 20px;
+          margin: -2px;
+        };
+      }
+
+      paper-ripple {
+    		color: rgba(0, 0, 0, 0.2);
+    	}
+      paper-ripple.light {
+    		color: rgba(255, 255, 255, 0.5);
+    	}
+
+      .fix_overflow {
+        min-width: 0;
+        width: 100%;
+      }
+
+      /* Botones */
+      paper-button{
+        padding: 8px 12px;
+        margin: 2px 0;
+        @apply(--paper-font-button);
+        min-width: 4.14em;
+      }
+      /* -> Margin del ícono cuando el botón tiene uno adentro */
+      paper-button iron-icon:first-child{
+        margin-right: 10px;
+      }
+      .raised_button{
+        background-color: var(--app-secondary-color);
+        color: white;
+      }
+      .transparent_button{
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .transparent_dark_button{
+        background-color: rgba(40, 40, 40, 0.1);
+      }
+      paper-toggle-button {
+        --paper-toggle-button-checked-bar-color: var(--app-secondary-color);
+        --paper-toggle-button-checked-button-color: var(--app-secondary-color);
+        --paper-toggle-button-checked-ink-color: var(--app-secondary-color);
+        --paper-toggle-button-unchecked-bar-color: #888;
+        cursor: pointer;
+      }
+
+      /* Chips */
+      .chip_item {
+        background-color: var(--paper-grey-200);
+        color: #888;
+        padding: 6px 12px;
+        margin: 2px;
+        border-radius: 20px;
+        cursor: default;
+      }
+      .chip_item_small{
+        padding: 2px 16px;
+        max-width: 60px;
+      }
+      .chip_item_small iron-icon{
+        margin-right: 0 !important;
+      }
+      .clickable_chip_item:hover{
+        background-color: #ddd;
+        cursor: pointer;
+      }
+      .clickable_chip_item:focus{
+        background-color: #ddd;
+      }
+      .chip_item iron-icon{
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+      }
+
+      /* Inputs */
+      paper-input {
+        --paper-input-container-focus-color: var(--app-secondary-color);
+      }
+      paper-textarea {
+        --paper-input-container-focus-color: var(--app-secondary-color);
+      }
+
+      /* Diálogos */
+      paper-dialog {
+        margin: 0;
+        padding: 0;
+      }
+      paper-dialog.narrow {
+        width: 100%;
+        max-width: 350px;
+      }
+      paper-dialog.wide {
+        width: 100%;
+        max-width: 450px;
+      }
+      paper-dialog h2{
+        margin-bottom: 24px !important;
+      }
+      paper-dialog .dialog_back_icon{
+        margin-top: 10px;
+        margin-left: 10px;
+        color: #888;
+      }
+      paper-dialog .buttons paper-button[dialog-dismiss]{
+        color: #888;
+      }
+      paper-dialog .buttons paper-button:last-of-type{
+        color: var(--app-secondary-color);
+      }
+
+      /* Varios */
+
+      /*->Color de la selección de texto*/
+      ::-moz-selection {
+        color: white;
+        background: var(--paper-amber-500);
+      }
+      ::selection {
+        color: white;
+        background: var(--paper-amber-500);
+      }
+
+      hr{
+        margin: 0;
+        border: 1px solid #eee;
+      }
+      paper-menu{
+        padding: 4px 0;
+      }
+      paper-checkbox{
+        --paper-checkbox-checked-color: var(--app-secondary-color);
+        --paper-checkbox-checked-ink-color: var(--app-secondary-color);
+        --paper-checkbox-unchecked-color: #888;
+        margin: 6px 0;
+      }
+      paper-progress{
+        width: 100%;
+        --paper-progress-height: 3px;
+        --paper-progress-active-color: var(--app-secondary-color);
+      }
+
+      paper-toast {
+        z-index: 1 !important;
+        background-color: #2c2c2c;
+      }
+      paper-toast paper-button {
+        color: var(--paper-amber-500);
+      }
+
+      paper-tooltip{
+        text-align: center;
+        --paper-tooltip:{
+          font-size: 12px;
+        }
+      }
+
+      paper-datetime-picker-item{
+        cursor: pointer;
+      }
+
+      .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Texto con líneas a los lados */
+      h4 {
+        overflow: hidden;
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 10px;
+      }
+      h4:before,
+      h4:after {
+        background-color: #333;
+        content: "";
+        display: inline-block;
+        height: 1px;
+        position: relative;
+        vertical-align: middle;
+        width: 50%;
+      }
+      h4:before {
+        right: 0.5em;
+        margin-left: -50%;
+      }
+      h4:after {
+        left: 0.5em;
+        margin-right: -50%;
+      }
+
+      @media (max-width: 900px) {
+        plan-card {
+          --plan-card-image: {
+            background-color: #eee;
+            min-width: 100%;
+            height: 150px;
+          }
+        }
+      }
+
+      @media (max-width: 600px) {
+        /* Módulos home - subhomes */
+        .module_title_title {
+          font-size: 18px;
+          line-height: 20px;
+        }
+        .module_title_subtitle {
+          font-size: 12px;
+        }
+
+        paper-toast{
+          width: 100%;
+          min-width: 0;
+          border-radius: 0;
+          margin: 0;
+          margin-bottom: 50px;
+        }
+      }
+      @media (max-width: 400px) {
+        /* Módulos home - subhomes */
+        .module_title {
+          padding-left: 4px;
+        }
+      }
+    </style>
+  </template>
+</dom-module>

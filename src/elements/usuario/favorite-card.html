@@ -1,0 +1,98 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../../../bower_components/iron-image/iron-image.html">
+
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="favorite-card">
+  <template>
+    <style include="shared-styles">
+      .fav_link {
+        position: relative;
+        padding: 16px;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        @apply(--layout);
+      }
+
+      .favorite_container {
+        position: relative;
+        background-color: var(--app-primary-color);
+        height: 200px;
+        box-sizing: border-box;
+        @apply(--shadow-transition);
+      }
+      .favorite_container:hover{
+        @apply(--shadow-elevation-2dp);
+      }
+      .image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #EEE;
+        opacity: 0.5;
+      }
+      .favorite_title {
+        font-size: 16px;
+        color: white;
+      }
+      .fav_icon {
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      paper-fab {
+        --paper-fab-background: var(--paper-red-400);
+        --paper-fab-keyboard-focus-background: var(--paper-red-400);
+        --paper-fab-mini: {
+          width: 35px;
+          height: 35px;
+        };
+      }
+      paper-ripple {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      @media (max-width: 400px) {
+        .favorite_container {
+          margin-bottom: 5px;
+          height: 150px;
+        }
+      }
+    </style>
+
+    <div class="favorite_container layout vertical">
+      <iron-image src="{{_generateImage(data.url_img)}}" preload fade sizing="cover" class="image"></iron-image>
+      <div class="fav_icon layout horizontal center">
+        <span class="flex"></span>
+        <paper-fab mini icon="favorite" noink on-tap="_toggleFavorite"></paper-fab>
+      </div>
+      <a href="{{data.slug}}" class="fav_link link flex">
+        <div class="favorite_title paper-font-body2 overflow self-end">{{data.name}}</div>
+      </a>
+      <paper-ripple></paper-ripple>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: "favorite-card",
+
+      properties: {
+        data: Object
+      },
+
+      _toggleFavorite: function () {
+        this.fire('dislike-plan', {idObject: this.data.id_object, type: this.data.type});
+      },
+
+      _generateImage: function (slug) {
+        return "http://localhost:8000" + slug;
+      }
+    })
+  </script>
+</dom-module>

@@ -1,0 +1,77 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="barra-compartir">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        width: 100%;
+        height: 50px;
+        color: rgba(0, 0, 0, 0.75);
+        box-sizing: border-box;
+        padding: 6px 12px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      #share_text{
+        margin-left: 12px;
+        font-weight: 500;
+      }
+      paper-icon-button{
+        --paper-icon-button:{
+          color: #bbb;
+        }
+      }
+    </style>
+
+    <iron-icon icon="social:share"></iron-icon>
+    <div id="share_text" class="paper-font-subhead">Compartir</div>
+    <span class="flex"></span>
+
+    <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080[[path]]" target="_blank" rel="noopener" class="link">
+      <paper-icon-button class="fb" icon="my-icons:facebook"></paper-icon-button>
+      <paper-tooltip animation-delay="100">Compartir en Facebook</paper-tooltip>
+    </a>
+    <a href="https://twitter.com/intent/tweet?url=http://localhost:8080[[path]]" target="_blank" rel="noopener" class="link">
+      <paper-icon-button class="twitter" icon="my-icons:twitter"></paper-icon-button>
+      <paper-tooltip animation-delay="100">Compartir en Twitter</paper-tooltip>
+    </a>
+    <a href="whatsapp://send?text=http://localhost:8080[[path]]" target="_blank" rel="noopener" class="link" data-action="share/whatsapp/share">
+      <paper-icon-button class="whatsapp" icon="my-icons:whatsapp"></paper-icon-button>
+      <paper-tooltip animation-delay="100">Compartir en WhatsApp</paper-tooltip>
+    </a>
+    <a href="mailto:?subject=Descubre%20[[name]]%20en%20Plan%20Ciudad&body=Visita http://localhost:8080[[path]] para conocer más" target="_blank" rel="noopener" class="link">
+      <paper-icon-button class="mail" icon="mail"></paper-icon-button>
+      <paper-tooltip animation-delay="100">Compartir por correo</paper-tooltip>
+    </a>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'barra-compartir',
+
+      properties: {
+        name: String,
+        path: String
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,181 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/app-layout/app-box/app-box.html">
+
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<link rel="import" href="modulo-destacado.html">
+<link rel="import" href="plan-card.html">
+<link rel="import" href="view-more-card.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="module-element">
+  <template>
+    <style include="shared-styles">
+      :host {
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
+      app-box {
+        width: 100%;
+        height: 300px;
+        color: white;
+        margin-top: 40px;
+        --app-box-background-front-layer: {
+          background-image: url('https://source.unsplash.com/category/food/1920x500');
+          margin-top: -200px;
+          height: 500px;
+        };
+      }
+      app-box div {
+        background-color: rgba(51,51,51,0.8);
+        height: 100%;
+      }
+      app-box span {
+        text-align: center;
+      }
+      app-box paper-button {
+        margin-top: 12px;
+        padding: 8px 24px;
+      }
+
+      .more_button_fab {
+        display: none;
+      }
+
+      /* Special card (Template 1) */
+      .template_destacado {
+        width: 100%;
+        background-color: #333;
+        margin-top: 40px;
+        color: white;
+      }
+      .template_destacado iron-image{
+        position: absolute;
+        background-color: #333;
+        width: 100%;
+        height: 437px;
+        opacity: 0.2;
+      }
+
+      @media (max-width: 900px) {
+        .more_button_text {
+          display: none;
+        }
+        .more_button_fab {
+          display: inline-block;
+        }
+        .template_destacado iron-image{
+          height: 385px;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .template_destacado iron-image{
+          height: 459px;
+        }
+      }
+    </style>
+
+    <!-- Si es parallax, lo muestra -->
+    <template is="dom-if" if="{{parallax}}" restamp="true">
+      <app-box effects="parallax-background" effects-config='{"parallax-background":{"scalar": 1.4}}'>
+        <div class="layout vertical center-center">
+          <span class="dark module_title_title paper-font-headline">{{data.name}}</span>
+          <a href="/{{data.btn_slug}}" class="link">
+            <paper-button raised class="raised_button">{{data.btn_name}}</paper-button>
+          </a>
+        </div>
+      </app-box>
+    </template>
+
+    <div class="cards_container">
+      <!-- Si el módulo es diferente al de flickity y al parallax, muestra el título por fuera -->
+      <template is="dom-if" if="{{hasTitle}}" restamp="true">
+        <div class="module_title layout horizontal center">
+          <div>
+            <div class="module_title_title paper-font-headline">{{data.name}}</div>
+            <div class="module_title_subtitle paper-font-body1">{{data.description}}</div>
+          </div>
+          <template is="dom-if" if="{{data.btn_slug}}" restamp="true">
+            <span class="flex"></span>
+            <a href="/{{data.btn_slug}}" class="more_button_text link">
+              <paper-button noink class$="view-more-{{data.items.0.content_type}}">{{data.btn_name}}</paper-button>
+            </a>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    <!-- Si el template es de 1 título y 4 cards con fondo -->
+    <template is="dom-if" if="{{recomendado}}" restamp="true">
+      <div class="template_destacado">
+        <iron-image src="{{data.url_img}}" preload fade sizing="cover"></iron-image>
+        <modulo-destacado items="{{data}}"></modulo-destacado>
+      </div>
+    </template>
+
+    <div class="cards_container">
+      <!-- Si el template es de 5 cards -->
+      <template is="dom-if" if="{{!recomendado}}" restamp="true">
+        <div class="app-grid">
+          <template is="dom-repeat" items="{{data.items}}" as="card">
+            <plan-card
+              url="[[card.url_link]]"
+              image="[[card.url_img]]"
+              title="[[card.name]]"
+              contentype="[[card.content_type]]"
+              namentity="[[card.name_entity]]"
+              date="[[card.date]]"
+              rating="[[card.average_ranking_total]]"
+              price="[[card.price_range]]"
+              description="[[card.description]]"
+              location="[[card.location]]">
+            </plan-card>
+          </template>
+          <!-- Si no es parallax, muestra la carta con el fab de ver más -->
+          <template is="dom-if" if="{{!parallax}}" restamp="true">
+            <view-more-card
+              url="[[data.btn_slug]]"
+              image="[[_generateImageButton(data.items.0.content_type)]]"
+              title="[[data.btn_name]]"
+              contentype="[[data.items.0.content_type]]"
+              class="more_button_fab">
+            </view-more-card>
+          </template>
+        </div>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: "module-element",
+
+      properties: {
+        hasTitle: {
+          type: Boolean,
+          value: false
+        },
+        parallax: Boolean,
+        recomendado: Boolean,
+        data: Object
+      },
+      _generateImageButton: function (contentType) {
+        if (contentType == 'event') {
+          return "https://source.unsplash.com/category/nature";
+        } else if (contentType == 'restaurant') {
+          return "https://source.unsplash.com/category/food";
+        } else if (contentType == 'bar-disco') {
+          return "https://source.unsplash.com/category/people";
+        } else if (contentType == 'tourism') {
+          return "https://source.unsplash.com/category/nature";
+        }
+      }
+    })
+  </script>
+</dom-module>

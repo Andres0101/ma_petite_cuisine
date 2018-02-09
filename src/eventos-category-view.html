@@ -1,0 +1,241 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+
+<link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
+<link rel="import" href="elements/placeholder-card.html">
+<link rel="import" href="elements/plan-card.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="eventos-category-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        position: relative;
+        --app-grid-columns: 5;
+        --app-grid-gutter: 8px;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
+      .titleLoading {
+        height: 112px;
+      }
+
+      iron-list {
+        flex: 1 1 auto;
+        box-sizing: border-box;
+        padding-top: 8px;
+        padding-left: 5px;
+      }
+
+      .event_container {
+        width: 20%;
+        height: auto;
+        padding: 0 8px 8px 0;
+        box-sizing: border-box;
+      }
+
+      .spinner_container {
+        padding-top: 26px;
+        box-sizing: border-box;
+      }
+      paper-spinner-lite {
+        width: 24px;
+        height: 24px;
+        --paper-spinner-color: var(--app-secondary-color);
+      }
+
+      @media (max-width: 1000px) {
+        :host {
+          --app-grid-columns: 4;
+        }
+        .event_container {
+          width: 25%;
+        }
+      }
+      @media (max-width: 800px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+        .event_container {
+          width: 33.33%;
+        }
+      }
+      @media (max-width: 500px) {
+        :host {
+          --app-grid-columns: 2;
+          --app-grid-gutter: 5px;
+        }
+        .event_container {
+          width: 50%;
+        }
+      }
+    </style>
+
+    <iron-ajax
+      id="categoryDetail"
+      auto
+      url="http://localhost:8000/api/v1/category-detail/{{name}}"
+      handle-as="json"
+      loading="{{loadingCategory}}"
+      on-response="handleResponseCategory">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax"
+      url="[[_getAPIEndpoint(page)]]"
+      handle-as="json"
+      loading="{{loadingData}}"
+      on-response="handleResponse">
+    </iron-ajax>
+
+    <!-- Espacio del título cuando este no ha cargado -->
+    <template is="dom-if" if="{{loadingCategory}}" restamp="true">
+      <div class="cards_container titleLoading">
+      </div>
+    </template>
+
+    <template is="dom-if" if="{{!loadingCategory}}" restamp="true">
+      <div class="cards_container">
+        <div class="module_title layout horizontal center">
+          <div>
+            <div class="module_title_title paper-font-headline">{{categoryName}}</div>
+            <div class="module_title_subtitle paper-font-body1">{{categoryDescription}}</div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Montrer un placeholder du module en obtenant les résultats -->
+    <template is="dom-if" if="{{initialLoading}}" restamp="true">
+      <div class="app-grid items_placeholder">
+        <template is="dom-repeat-n" count="5">
+          <placeholder-card></placeholder-card>
+        </template>
+      </div>
+    </template>
+
+    <div class="cards_container">
+      <iron-list id="list" items="[]" as="data" scroll-target="document" grid scroll-offset="400">
+        <template>
+          <plan-card
+            url="[[data.slug]]"
+            image="[[_generateImageUrl(data.url_img_event)]]"
+            title="[[data.title_event]]"
+            contentype="event"
+            namentity="eventos"
+            date="[[data.date]]"
+            rating="[[data.average_ranking_total]]"
+            price="[[data.price_range]]"
+            description="[[data.description]]"
+            location="[[data.location]]"
+            class="event_container">
+          </plan-card>
+        </template>
+      </iron-list>
+    </div>
+
+    <template is="dom-if" if="{{!initialLoading}}" restamp="true">
+      <div class="spinner_container flex layout vertical center">
+        <paper-spinner-lite alt="Cargando datos" active="{{loadingData}}"></paper-spinner-lite>
+      </div>
+    </template>
+
+    <iron-scroll-threshold
+      id="scrollTheshold"
+      lower-threshold="400"
+      on-lower-threshold="_onLowerThreshold"
+      scroll-target="document">
+    </iron-scroll-threshold>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'eventos-category-view',
+
+      properties: {
+        name: String,
+        categoryName: String,
+        categoryDescription: String,
+        page: {
+          type: Number,
+          value: 0
+        },
+        route:{
+          type: Object
+        }
+      },
+
+      attached: function() {
+        this.initialLoading = true;
+
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+
+      handleResponseCategory: function (e) {
+        this.categoryName = e.detail.response.response[0].name;
+        this.categoryDescription = e.detail.response.response[0].description;
+      },
+      _getAPIEndpoint: function(page) {
+        return "http://localhost:8000/api/v1/category/" + this.name + "/todas?page=" + page;
+      },
+
+      handleResponse: function (e) {
+        this.initialLoading = false;
+        var self = this;
+        // Validar si tiene respuesta
+        if (e.detail.response.response) {
+          var data = e.detail.response.response.events;
+          if (data) {
+            data.forEach(function(event) {
+              self.$.list.push('items', event);
+            });
+
+            this.$.scrollTheshold.clearTriggers();
+          }
+        } else {
+          if (this.route.prefix == '/eventos') {
+            this.fire("show-404");
+          }
+        }
+      },
+
+      _onLowerThreshold: function() {
+        this.debounce('_loadData', this._loadMoreData, 60);
+      },
+
+      _loadMoreData: function() {
+        if (this.$.ajax.lastRequest) {
+          this.$.ajax.lastRequest.abort();
+        }
+        this.page ++;
+        this.$.ajax.generateRequest();
+      },
+      _generateImageUrl: function (url_img) {
+        return "http://localhost:8000" + url_img;
+      }
+    });
+  </script>
+</dom-module>

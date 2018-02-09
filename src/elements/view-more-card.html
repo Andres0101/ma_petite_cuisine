@@ -1,0 +1,44 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="view-more-card">
+  <template>
+    <style include="shared-styles">
+      .image {
+        @apply(--view-more-card-image);
+      }
+    </style>
+
+    <a href="{{url}}" class="link">
+      <div class="view_more_card layout vertical">
+        <iron-image class="image" src="{{image}}" preload fade sizing="cover"></iron-image>
+        <div class="view_more_button_container layout vertical center-center">
+          <paper-fab icon="arrow-forward" class$="view-more-{{contentype}}" noink></paper-fab>
+          <div class="view_more_button_text paper-font-subhead">{{title}}</div>
+        </div>
+        <paper-ripple></paper-ripple>
+      </div>
+    </a>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "view-more-card",
+
+      properties: {
+        url: String,
+        image: String,
+        title: String,
+        contentype: String
+      }
+    })
+  </script>
+</dom-module>

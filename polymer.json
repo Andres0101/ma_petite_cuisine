@@ -1,0 +1,34 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/plan-ciudad.html",
+  "fragments": [
+    "src/home-view.html",
+    "src/eventos-view.html",
+    "src/eventos-category-view.html",
+    "src/restaurante-view.html",
+    "src/restaurantes-view.html",
+    "src/restaurantes-todos-view.html",
+    "src/bar-view.html",
+    "src/discoteca-view.html",
+    "src/bares-discotecas-view.html",
+    "src/bares-discotecas-todos-view.html",
+    "src/cines-view.html",
+    "src/usuario-view.html",
+    "src/publicaciones-view.html",
+    "src/favoritos-view.html",
+    "src/calificaciones-view.html",
+    "src/resultado-view.html",
+    "src/publicar-view.html",
+    "src/publicar-evento-view.html",
+    "src/error-view.html"
+  ],
+  "sourceGlobs": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}

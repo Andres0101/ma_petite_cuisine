@@ -1,0 +1,89 @@
+{
+  "categories": [
+    "Feria de Cali",
+    "Rumba",
+    "Deporte",
+    "Cultura",
+    "Cine",
+    "Turismo",
+    "Otros",
+    "Gratis",
+    "Conciertos"
+  ],
+  "foods": [
+    "Americana",
+    "Árabe",
+    "Café",
+    "Carnes",
+    "China",
+    "Colombiana",
+    "Española",
+    "Francesa",
+    "Fusión",
+    "Helados y Postres",
+    "India",
+    "Internacional",
+    "Italiana",
+    "Oriental",
+    "Pacífico",
+    "Peruana",
+    "Pescados y Mariscos",
+    "Pizza",
+    "Rodizzio",
+    "Rápida",
+    "Sushi",
+    "Turca",
+    "Variada",
+    "Vegana",
+    "Vegetariana"
+  ],
+  "musics": [
+    "Antillana",
+    "Bohemia",
+    "Crossover",
+    "Electrónica",
+    "Jazz/Blues",
+    "Lounge",
+    "Reggae",
+    "Salsa",
+    "Tango",
+    "Tropical",
+    "Vallenato",
+    "Rancheras",
+    "Despecho"
+  ],
+  "locations": [
+    "Ciudad Jardin",
+    "Granada",
+    "El Peñón",
+    "San Antonio",
+    "Parque del Perro",
+    "Menga",
+    "La 66",
+    "Avenida sexta",
+    "Juanchito"
+  ],
+  "services": [
+    "Parqueadero",
+    "Acceso silla ruedas",
+    "Seguridad privada",
+    "Wi-Fi",
+    "T.V.",
+    "Terraza",
+    "Show en vivo",
+    "Aire acondicionado"
+  ],
+  "prices": [{
+    "value": "$30.000",
+    "label": "Menos de $30.000"
+  }, {
+    "value": "$30.000 - $60.000",
+    "label": "$30.000 - $60.000"
+  }, {
+    "value": "$60.000 - $100.000",
+    "label": "$60.000 - $100.000"
+  }, {
+    "value": "$100.000",
+    "label": "Más de $100.000"
+  }]
+}

@@ -1,0 +1,123 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
+<link rel="import" href="elements/placeholder-card.html">
+<link rel="import" href="elements/module-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="home-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        position: relative;
+        --app-grid-columns: 5;
+        --app-grid-gutter: 8px;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+      .items_placeholder{
+        margin-top: 88px;
+      }
+
+      @media (max-width: 900px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+      }
+      @media (max-width: 500px) {
+        :host {
+          --app-grid-columns: 2;
+          --app-grid-gutter: 5px;
+        }
+      }
+    </style>
+
+    <iron-ajax
+      url="../data/home.json"
+      auto
+      handle-as="json"
+      on-response="handleResponse">
+    </iron-ajax>
+
+    <!-- Montrer un placeholder du module en obtenant les résultats -->
+    <template is="dom-if" if="{{loadingData}}" restamp="true">
+      <div class="app-grid items_placeholder">
+        <template is="dom-repeat-n" count="5">
+          <placeholder-card></placeholder-card>
+        </template>
+      </div>
+    </template>
+
+    <template is="dom-repeat" items="{{homeData}}" as="module">
+      <module-element
+        has-title="[[_hasTitle(module.template)]]"
+        parallax="[[_isParallax(module.template)]]"
+        recomendado="[[_moduleRecomendado(module.template)]]"
+        data="[[module]]">
+      </module-element>
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'home-view',
+
+      properties: {
+        homeData: {
+          type: Object,
+          value: []
+        },
+        loadingData: {
+          type: Boolean,
+          value: true
+        }
+      },
+
+      ready: function() {
+        this.fire('show-progress', true);
+
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+      _hasTitle: function (template) {
+        if (template == 0 || template == 2) {
+          return true;
+        }
+      },
+      _moduleRecomendado: function(template) {
+        return template === 1;
+      },
+      _isParallax: function (template) {
+        if (template == 3) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      handleResponse: function (data) {
+        this.homeData = data.detail.response;
+        this.loadingData = false;
+        this.fire('show-progress', false);
+      }
+    });
+  </script>
+</dom-module>

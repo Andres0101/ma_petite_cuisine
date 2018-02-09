@@ -1,0 +1,117 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="open-now">
+  <template>
+    <style include="shared-styles">
+      :host{
+        margin-top: 6px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      iron-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 6px;
+      }
+
+      :host(.yellow){
+        color: var(--paper-amber-600);
+      }
+      :host(.green){
+        color: var(--paper-green-a700);
+      }
+      :host(.grey){
+        color: var(--paper-grey-600);
+      }
+      :host(.red){
+        color: var(--paper-red-600);
+      }
+
+      .title{
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+    </style>
+
+    <iron-icon icon="schedule"></iron-icon>
+    <div class="title paper-font-body1">[[_getOpenInfo(startDate, finishDate)]]</div>
+
+  </template>
+  <script>
+    Polymer({
+      is: "open-now",
+      properties: {
+        startDate: String,
+        finishDate: String,
+        openedText: String,
+        openingPrefix: String,
+        closedText: String,
+        closingPrefix: String
+      },
+      _getOpenInfo: function (startDate, finishDate) {
+        var isOpenNow = false;
+        var timeToOpen = "";
+        var timeToClose = "";
+
+        var openingHours = moment(startDate);
+        var closingHours = moment(finishDate);
+
+        // Si está abierto en el momento, muestra en cuánto tiempo cerrará
+        if (moment().isBetween(openingHours, closingHours)) {
+          isOpenNow = true;
+          if (closingHours.diff(moment(), "hours") >= 0 && closingHours.diff(moment(), "hours") < 2) {
+            timeToClose = moment.duration(closingHours.diff(moment())).humanize();
+          }
+        } else { // Si no está abierto en el momento, muestra en cuánto tiempo abrirá
+          if (openingHours.diff(moment()) > 0) {
+            timeToOpen = moment.duration(openingHours.diff(moment())).humanize();
+          } else{
+            this.toggleClass("red");
+            return this.closedText;
+          }
+        }
+
+        if (isOpenNow) {
+          if (timeToClose) {
+            this.toggleClass("yellow");
+            return this.closingPrefix + ' ' + timeToClose;
+          } else {
+            this.toggleClass("green");
+            return this.openedText;
+          }
+        } else{
+          if (timeToOpen) {
+            this.toggleClass("grey");
+            return this.openingPrefix + ' ' + timeToOpen;
+          } else {
+            this.toggleClass("red");
+            return this.closedText;
+          }
+        }
+      },
+      _hasItems: function (array) {
+        return array.length > 0;
+      },
+      _sortByHours: function (array) {
+        return array.sort(function(a,b) {
+          return (moment(a.start, 'HH:mm') > moment(b.start, 'HH:mm')) ? 1 : ((moment(b.start, 'HH:mm') > moment(a.start, 'HH:mm')) ? -1 : 0);
+        });
+      }
+    })
+  </script>
+</dom-module>

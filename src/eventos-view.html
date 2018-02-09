@@ -1,0 +1,201 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
+<link rel="import" href="elements/placeholder-card.html">
+<link rel="import" href="elements/plan-card.html">
+<link rel="import" href="elements/view-more-card.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="eventos-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        position: relative;
+        --app-grid-columns: 5;
+        --app-grid-gutter: 8px;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
+      #event_pages {
+        width: 100%;
+      }
+      .items_placeholder{
+        margin-top: 108px;
+      }
+
+      .more_button_fab {
+        display: none;
+      }
+
+      @media (max-width: 900px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+        .more_button_text {
+          display: none;
+        }
+        .more_button_fab {
+          display: inline-block;
+        }
+      }
+      @media (max-width: 500px) {
+        :host {
+          --app-grid-columns: 2;
+          --app-grid-gutter: 5px;
+        }
+      }
+    </style>
+
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+    <iron-pages id="event_pages" selected="{{page}}" attr-for-selected="name" fallback-selection="error">
+      <section name="" class="layout vertical center">
+        <iron-ajax
+          url="http://localhost:8000/api/v1/subhome-event-categories"
+          auto
+          handle-as="json"
+          loading="{{loadingData}}"
+          on-response="handleResponse">
+        </iron-ajax>
+
+        <!-- Montrer un placeholder du module en obtenant les résultats -->
+        <template is="dom-if" if="{{loadingData}}" restamp="true">
+          <div class="app-grid items_placeholder">
+            <template is="dom-repeat-n" count="5">
+              <placeholder-card></placeholder-card>
+            </template>
+          </div>
+        </template>
+
+        <template is="dom-repeat" items="{{data}}" as="data">
+          <div class="cards_container">
+            <div class="module_title layout horizontal center">
+              <div>
+                <div class="module_title_title paper-font-headline">{{data.name}}</div>
+                <div class="module_title_subtitle paper-font-body1">{{data.description}}</div>
+              </div>
+              <template is="dom-if" if="{{data.btn_name}}" restamp="true">
+                <span class="flex"></span>
+                <a href="/eventos/{{data.slug}}" class="more_button_text link">
+                  <paper-button noink class="view-more-event">{{data.btn_name}}</paper-button>
+                </a>
+              </template>
+            </div>
+
+            <div class="app-grid">
+              <template is="dom-repeat" items="{{data.items}}" as="card">
+                <plan-card
+                  url="[[card.slug]]"
+                  image="[[card.url_img_event]]"
+                  title="[[card.title_event]]"
+                  contentype="event"
+                  date="[[card.date]]"
+                  description="[[card.description]]"
+                  location="[[card.location]]">
+                </plan-card>
+              </template>
+              <!-- Mostrar carta con el fab de ver más -->
+              <template is="dom-if" if="{{data.btn_name}}" restamp="true">
+                <view-more-card
+                  url="[[data.slug]]"
+                  image="[[_generateImageButton(data.slug)]]"
+                  title="[[data.btn_name]]"
+                  contentype="event"
+                  class="more_button_fab">
+                </view-more-card>
+              </template>
+            </div>
+          </div>
+        </template>
+      </section>
+
+      <eventos-category-view name="{{page}}" route="{{route}}"></eventos-category-view>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'eventos-view',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      _routeChanged: function (route) {
+        if (route.path == '') {
+          window.scrollTo(0, 0);
+          this.set('routeData.page', '');
+        }
+      },
+
+      _routePageChanged: function(page) {
+        this.page = page || '';
+      },
+
+      _pageChanged: function(page) {
+        window.scrollTo(0, 0);
+        if (page != "") {
+          // Load page import on demand. Show 404 page if fails
+          var resolvedPageUrl = this.resolveUrl('eventos-category-view.html');
+          this.importHref(resolvedPageUrl, null, this._showPage404, true);
+        }
+      },
+
+      ready: function() {
+        this.fire('show-progress', true);
+
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+
+      handleResponse: function (response) {
+        this.data = response.detail.response.response;
+        this.fire('show-progress', false);
+      },
+
+      _generateImageButton: function (category) {
+        if (category == 'deporte') {
+          return "https://source.unsplash.com/800x600/?sport";
+        } else if (category == 'rumba') {
+          return "https://source.unsplash.com/800x600/?party";
+        } else if (category == 'cine') {
+          return "https://source.unsplash.com/800x600/?movie";
+        } else if (category == 'cultura') {
+          return "https://source.unsplash.com/800x600/?culture";
+        }
+      }
+    });
+  </script>
+</dom-module>

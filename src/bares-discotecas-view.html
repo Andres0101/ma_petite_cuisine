@@ -1,0 +1,255 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
+<link rel="import" href="elements/placeholder-card.html">
+<link rel="import" href="elements/module-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="bares-discotecas-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        position: relative;
+        --app-grid-columns: 5;
+        --app-grid-gutter: 8px;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        padding: 0 !important;
+      }
+      .items_placeholder{
+        margin-top: 88px;
+      }
+      #all_baresDiscos {
+        width: 100%;
+      }
+
+      @media (max-width: 900px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+      }
+      @media (max-width: 500px) {
+        :host {
+          --app-grid-columns: 2;
+          --app-grid-gutter: 5px;
+        }
+      }
+    </style>
+
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+    <iron-pages id="all_baresDiscos" selected="[[page]]" attr-for-selected="name" fallback-selection="error">
+      <section name="" class="layout vertical center">
+        <iron-ajax
+          url="http://localhost:8000/api/v1/subhome-bardiscos-modules"
+          auto
+          handle-as="json"
+          on-response="handleResponse">
+        </iron-ajax>
+
+        <!-- Montrer un placeholder du module en obtenant les résultats -->
+        <template is="dom-if" if="{{loadingData}}" restamp="true">
+          <div class="app-grid items_placeholder">
+            <template is="dom-repeat-n" count="5">
+              <placeholder-card></placeholder-card>
+            </template>
+          </div>
+        </template>
+
+        <template is="dom-repeat" items="{{baresDiscosData}}" as="module">
+          <module-element
+            has-title="[[_hasTitle(module.template)]]"
+            parallax="[[_isParallax(module.template)]]"
+            recomendado="[[_moduleRecomendado(module.template)]]"
+            data="[[module]]">
+          </module-element>
+        </template>
+      </section>
+      <bares-discotecas-todos-view name="todos"></bares-discotecas-todos-view>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'bares-discotecas-view',
+
+      properties: {
+        baresDiscosData: {
+          type: Object,
+          value: []
+        },
+        loadingData: {
+          type: Boolean,
+          value: true
+        },
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      _routeChanged: function (route) {
+        if (route.path == '') {
+          window.scrollTo(0, 0);
+          this.set('routeData.page', '');
+        }
+      },
+
+      _routePageChanged: function(page) {
+        this.page = page || '';
+      },
+
+      _pageChanged: function(page) {
+        window.scrollTo(0, 0);
+        if (page != "") {
+          if (page == "todos") {
+            // Load page import on demand. Show 404 page if fails
+            var resolvedPageUrl = this.resolveUrl('bares-discotecas-todos-view.html');
+            this.importHref(resolvedPageUrl, null, this._showPage404, true);
+          }else {
+            if (this.route.prefix == '/bares-discotecas') {
+              this.fire("show-404");
+            }
+          }
+        }
+      },
+
+      ready: function() {
+        this.fire('show-progress', true);
+
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+
+        var self = this;
+        // Listener para saber cuando Cxense obtuvo los datos para los widgets
+        window.addEventListener('baresDiscosCxReady', function () {
+          self.cxenseData = window.array;
+
+          self.baresDiscosCxReady = true;
+          self._generateCxense();
+        })
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+
+      _hasTitle: function (template) {
+        if (template == 0 || template == 2) {
+          return true;
+        }
+      },
+      _moduleRecomendado: function(template) {
+        return template === 1;
+      },
+      _isParallax: function (template) {
+        if (template == 3) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      handleResponse: function (data) {
+        this.backendData = data.detail.response.response;
+
+        this.baresDisosBackendReady = true;
+        this._generateCxense();
+      },
+      _generateCxense: function () {
+        if (this.baresDisosBackendReady && this.baresDiscosCxReady) {
+          for (var j = 0; j < this.cxenseData.baresDiscos.length; j++) {
+            var baresDiscosRecomendadosCx = this.cxenseData.baresDiscos[j];
+
+            if (baresDiscosRecomendadosCx['recs-pep-type-register'] == 'bar') {
+              baresDiscosRecomendadosCx['name_entity'] = 'bar';
+              baresDiscosRecomendadosCx['type'] = 'place';
+              baresDiscosRecomendadosCx['content_type'] = 'bar-disco';
+            } else if (baresDiscosRecomendadosCx['recs-pep-type-register'] == 'discos') {
+              baresDiscosRecomendadosCx['name_entity'] = 'discoteca';
+              baresDiscosRecomendadosCx['type'] = 'place';
+              baresDiscosRecomendadosCx['content_type'] = 'bar-disco';
+            }
+
+            baresDiscosRecomendadosCx['url_link'] = baresDiscosRecomendadosCx['click_url'];
+            baresDiscosRecomendadosCx['url_img'] = baresDiscosRecomendadosCx['recs-pep-image-thumbnail'];
+            baresDiscosRecomendadosCx['name'] = baresDiscosRecomendadosCx['recs-pep-title-register'];
+            baresDiscosRecomendadosCx['date'] = baresDiscosRecomendadosCx['recs-pep-date-month'];
+            baresDiscosRecomendadosCx['average_ranking_total'] = baresDiscosRecomendadosCx['recs-pep-ranking-register'];
+            baresDiscosRecomendadosCx['price_range'] = baresDiscosRecomendadosCx['recs-pep-price'];
+            baresDiscosRecomendadosCx['description'] = baresDiscosRecomendadosCx['recs-pep-description-register'];
+            baresDiscosRecomendadosCx['location'] = baresDiscosRecomendadosCx['recs-pep-place'];
+
+            delete baresDiscosRecomendadosCx['click_url'];
+            delete baresDiscosRecomendadosCx['recs-pep-image-thumbnail'];
+            delete baresDiscosRecomendadosCx['recs-pep-title-register'];
+            delete baresDiscosRecomendadosCx['recs-pep-date-month'];
+            delete baresDiscosRecomendadosCx['recs-pep-ranking-register'];
+            delete baresDiscosRecomendadosCx['recs-pep-price'];
+            delete baresDiscosRecomendadosCx['recs-pep-description-register'];
+            delete baresDiscosRecomendadosCx['recs-pep-place'];
+          }
+          this.backendData[0]['items'] = this.cxenseData.baresDiscos;
+
+          this.baresDiscosData = this.backendData;
+          this.loadingData = false;
+          this.fire('show-progress', false);
+        }
+      }
+    });
+  </script>
+
+  <!-- Cxense -->
+  <script>
+    // // Widget originales
+    // var WIDGET_HOME = 'e7f0cd3cdd669193d34c7863a9728e646ea38dd3';
+
+    // Widget de 5 items
+    var WIDGET_HOME = '726b12be26598560cdf05ce0e25ecaeb337dd786';
+
+    var array = {};
+
+    function renderBaresDiscos(data, context) {
+      array.baresDiscos = data.response.items;
+      var event = new Event('baresDiscosCxReady');
+      window.dispatchEvent(event);
+    }
+                
+    var cX = cX || {};
+    cX.callQueue = cX.callQueue || [];
+
+    // Request de Restaurantes
+    cX.callQueue.push(['insertWidget', {
+      widgetId: WIDGET_HOME,
+      renderFunction: renderBaresDiscos
+    },
+    {
+      context: {
+        "parameters": [{"key": "userquery", "value": "bar discos"}]
+      }
+    }]);
+  </script>
+</dom-module>

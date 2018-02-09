@@ -1,0 +1,431 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<!-- Estilos compartidos de los info-cards y formularios -->
+<dom-module id="shared-info-card-styles">
+  <template>
+    <style>
+      :host {
+        width: 100%;
+        max-width: 800px;
+        background-color: white;
+        @apply(--shadow-elevation-2dp);
+        border-radius: 2px;
+
+        --app-grid-columns: 4;
+        --app-grid-gutter: 4px;
+      }
+
+      #cover{
+        position: relative;
+        width: 100%;
+        height: 300px;
+        color: white;
+        background-color: var(--app-primary-color);
+      }
+      #cover iron-image{
+        width: 100%;
+        height: 100%;
+        background-color: var(--app-primary-color);
+        opacity: 0.5;
+      }
+      #cover_info{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      paper-rating{
+        --paper-rating-icon:{
+          height: 26px;
+          width: 26px;
+          margin: -2px;
+        }
+      }
+      .cover_item{
+        margin: 2px 0;
+      }
+      .cover_item iron-icon{
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+
+        margin-right: 12px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      #rating_count_cover{
+        margin-right: 4px;
+      }
+      #rating_count_cover iron-icon{
+        margin-right: 0;
+      }
+      .cover_item div{
+        color: #eee;
+      }
+      #favorite_button{
+        position: absolute;
+        bottom: -24px;
+        right: 24px;
+        background-color: #eee;
+        color: #888;
+        @apply(--shadow-transition);
+      }
+      #favorite_button[active]{
+        background-color: var(--app-secondary-color);
+        color: white;
+      }
+      h1{
+        width: 100%;
+        max-width: 500px;
+        font-size: 32px;
+        line-height: 32px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+
+      /*Secciones*/
+      .info_section{
+        padding: 20px;
+      }
+      .section_title{
+        color: rgba(0, 0, 0, 0.75);
+        margin: 12px 0;
+      }
+      .section_title iron-icon{
+        margin-right: 12px;
+      }
+      .section_title div{
+        font-weight: 500;
+      }
+      .info_row{
+        @apply(--layout-horizontal);
+      }
+      .info_item{
+        padding: 10px 5px;
+      }
+      .info_item_title{
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.7);
+        margin-top: 12px;
+      }
+      .info_item p {
+        width: 100%;
+        max-width: 600px;
+        color: #666;
+      }
+
+      /*Mapa*/
+      #map_container{
+        width: 100%;
+        height: 300px;
+        background: url('../../../images/map_placeholder.svg') no-repeat center center;
+      }
+      #maps_button{
+        color: var(--google-blue-500);
+        margin: 0;
+      }
+      google-map{
+        width: 100%;
+        height: 100%;
+      }
+      .sucursal_title{
+        font-weight: 500;
+        color: #444;
+        line-height: 18px;
+      }
+      .sucursal_info{
+        padding: 20px;
+        max-width: 200px;
+      }
+      .sucursal_info_row iron-icon:first-child{
+        min-width: 24px;
+        min-height: 24px;
+        margin-right: 6px;
+        color: rgba(0, 0, 0, 0.3);
+      }
+      .sucursal_info_row{
+        color: #555;
+        margin: 2px 0;
+      }
+
+      /* Galería */
+      .gallery_thumbnail{
+        height: 180px;
+        background-color: #eee;
+        cursor: pointer;
+      }
+      .special_info_image{
+        width: 100%;
+        height: 260px;
+        background-color: #eee;
+      }
+
+      #gallery_dialog{
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(20,20,20,0.6);
+      }
+
+      #gallery_dialog iron-image{
+        width: 100%;
+        height: 100%;
+      }
+
+      .no_text_dialog *{
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      l2t-paper-slider{
+        width: 70%;
+        height: 90%;
+        outline: 0;
+        padding: 0 !important;
+        --paper-slide-height: 100%;
+        --paper-slide-dot-styles:{
+          width: 12px;
+          height: 12px;
+          margin: 3px;
+        }
+      }
+      paper-slide{
+        overflow: hidden;
+      }
+      .close_dialog_icon{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        padding: 8px !important;
+        z-index: 1;
+      }
+
+      #video_dialog{
+        width: 700px;
+      }
+      google-youtube{
+        padding: 0 !important;
+      }
+
+      /* Boletería */
+      .ticket_price{
+        color: #888;
+        font-weight: 300;
+      }
+
+      /* Calificaciones */
+      material-progress-bars {
+        width: 100%;
+        @apply(--paper-font-body2);
+        font-size: 0.9em;
+        --material-progress-legend-item-style:{
+          color: #888;
+          margin-left: 0;
+          margin-right: 10px;
+          @apply(--paper-font-body1);
+        }
+      }
+      material-progress-bars span {
+        padding-right: 8px;
+      }
+
+      #ratingScore{
+        margin-bottom: 14px;
+      }
+
+      #ratingText div{
+        font-weight: 300;
+        color: #888;
+      }
+      #ratingText div:last-child{
+        font-weight: 300;
+        color: #eee;
+        margin-bottom: 4px;
+        margin-left: 8px;
+      }
+
+      .rating_bar1 {
+        background-color: var(--paper-deep-orange-500);
+      }
+      .rating_bar2 {
+        background-color: var(--paper-orange-500);
+      }
+      .rating_bar3 {
+        background-color: var(--paper-amber-500);
+      }
+      .rating_bar4 {
+        background-color: var(--paper-light-green-500);
+      }
+      .rating_bar5 {
+        background-color: var(--paper-green-500);
+      }
+
+      #reviews_title{
+        margin: 20px 0;
+      }
+      #reviews_title_text div:first-child{
+        font-weight: 500;
+        color: #555;
+      }
+      #reviews_title_text div:last-child{
+        color: #888;
+      }
+      #reviews_title paper-menu-button{
+        --paper-menu-button: {
+          padding-right: 0;
+        }
+        --paper-menu-button-dropdown: {
+          margin-top: 50px;
+        }
+        --paper-menu-button-content:{
+          cursor: pointer;
+        }
+      }
+      #reviews_title iron-icon {
+        --iron-icon-fill-color: #757575;
+      }
+      #reviews_title span {
+        color: #757575;
+      }
+
+      .review{
+        width: 50%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .review_time_ago{
+        color: #888;
+      }
+
+      .reviewer_image{
+        width: 36px;
+        height: 36px;
+        background-color: #eee;
+        border-radius: 50%;
+        margin-right: 8px;
+        will-change: transform;
+      }
+      .reviewer_name{
+        color: #444;
+        line-height: 14px;
+      }
+
+      .review paper-rating{
+        --paper-rating-icon:{
+          height: 20px;
+          width: 20px;
+          margin: -2px;
+        }
+      }
+      .review p{
+        font-style: italic;
+        font-size: 13px;
+      }
+
+      /* Diálogo review */
+      #rating_dialog{
+        max-width: 340px;
+        width: 100%;
+      }
+      #review_image{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #eee;
+        will-change: transform;
+        margin-bottom: 14px;
+        @apply(--shadow-elevation-2dp);
+      }
+      star-rating{
+        --star-color: var(--paper-amber-500);
+        margin-bottom: 12px;
+      }
+      paper-textarea{
+        margin: 12px 0;
+        width: 100%;
+        --paper-input-container:{
+          box-sizing: border-box;
+          padding: 2px;
+        }
+        --paper-input-container-input:{
+          padding: 0 8px;
+          box-sizing: border-box;
+          height: 100px;
+          max-height: 100px;
+          font-size: 14px;
+          line-height: 18px;
+        }
+        --paper-input-container-label:{
+          padding: 0 2px;
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+        .review{
+          padding: 10px;
+        }
+        l2t-paper-slider{
+          width: 100%;
+        }
+      }
+      @media (max-width: 750px) {
+        .reviewer_image{
+          display: none;
+        }
+      }
+      @media (max-width: 600px) {
+        :host {
+          --app-grid-columns: 2;
+        }
+        .info_section{
+          padding: 10px;
+        }
+        .info_row{
+          @apply(--layout-vertical);
+        }
+        .sucursal_info{
+          padding: 10px;
+        }
+        #reviews_container{
+          @apply(--layout-vertical);
+        }
+        .review{
+          width: 100%;
+          padding: 5px;
+        }
+        #favorite_button{
+          position: fixed;
+          bottom: 66px;
+          right: 16px;
+          z-index: 2;
+          transition: bottom 0.3s ease;
+        }
+        #favorite_button.animate{
+          bottom: 116px;
+        }
+        #favorite_tooltip{
+          display: none;
+        }
+      }
+      @media (max-width: 400px){
+        .gallery_thumbnail{
+          height: 120px;
+        }
+      }
+    </style>
+  </template>
+</dom-module>
