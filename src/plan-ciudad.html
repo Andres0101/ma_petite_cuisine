@@ -837,7 +837,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     Connexion
                   </template>
                 </paper-button>
-                <!-- <a href="#" on-tap="_showRestorePasswordForm" class="paper-font-caption layout vertical center link">¿Olvidaste la contraseña?</a> -->
               </form>
             </div>
           </div>
@@ -874,20 +873,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     S'inscrire
                   </template>
                 </paper-button>
-              </form>
-            </div>
-          </div>
-
-          <div name="restore_password">
-            <paper-icon-button icon="arrow-back" class="dialog_back_icon" on-tap="_showLoginForm"></paper-icon-button>
-            <div class="dialog_container">
-              <form is="iron-form" id="restore_password_form" method="post" action="http://localhost:8000/api/v1/send-email-reset-password" on-iron-form-response="_sendEmailSuccess" on-iron-form-error="_sendEmailError">
-                <h2>Reestablecer contraseña</h2>
-                <p>Ingresa tu email y te enviaremos un enlace para que puedas reestablecer tu contraseña.</p>
-                <div class="inputs">
-                  <paper-input label="Email" type="email" name="email" required error-message="Entrez un email valide"></paper-input>
-                </div>
-                <paper-button raised on-tap="restorePassword" class="dialog_button raised_button full_width">Reestablecer contraseña</paper-button>
               </form>
             </div>
           </div>
@@ -1037,10 +1022,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.login_page = "signup";
         this.$.login_dialog.center();
       },
-      _showRestorePasswordForm: function () {
-        this.login_page = "restore_password";
-        this.$.login_dialog.center();
-      },
 
       // ========================= Actions de connexion =========================
       // Connexion avec email
@@ -1166,14 +1147,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.pc_toast.show();
       },
 
-      // ================ Acción enviar correo de reset password ================
-      restorePassword: function () {
-        if (!this.$.restore_password_form.validate()) {
-          return;
-        }
-        this.$.restore_password_form.submit();
-      },
-
       // ===================== Respuesta del reset password =====================
       _sendEmailSuccess: function (event) {
         var message = event.detail.response;
@@ -1279,7 +1252,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       closeLoginDialog: function () {
         // Reset todos los inputs de los forms
-        this.$.restore_password_form.reset();
         this.$.signup_form.reset();
         this.$.login_form.reset();
 
@@ -1320,8 +1292,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.signupUser();
         } else if (this.login_page == "login") {
           this.loginUser();
-        } else if (this.login_page == "restore_password") {
-          this.restorePassword();
         }
       },
 
