@@ -381,21 +381,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: 10px;
       }
 
-      /* Diálogo de preferencias del usuario */
-      #preferences_dialog h3{
-        margin-top: 24px;
-      }
-      #preferences_checkboxes{
-        height: 150px;
-      }
-
-      #interests_container{
-        color: var(--disabled-text-color);
-      }
-      #interests_container[has-newsletter]{
-        color: var(--primary-text-color);
-      }
-
       /*Footer*/
       footer {
         padding: 30px 100px;
@@ -911,42 +896,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </paper-dialog-scrollable>
     </paper-dialog>
 
-    <!-- Diálogo de preferencias del usuario -->
-    <paper-dialog id="preferences_dialog" class="wide" with-backdrop on-iron-overlay-opened="_disableDocumentScrolling" on-iron-overlay-closed="_restoreDocumentScrolling">
-      <paper-dialog-scrollable>
-        <div>
-          <paper-icon-button icon="close" class="dialog_back_icon" dialog-dismiss></paper-icon-button>
-          <div class="dialog_container">
-            <form is="iron-form" id="preferences_form" method="post" action="/form/handler">
-              <h2>Preferencias</h2>
-
-              <h3>Tu cuenta de Plan Ciudad</h3>
-              <p>Actualmente inicias sesión con el correo <strong>{{userInfo.user.email}}</strong>. Si deseas modificarlo, presiona este botón y enviaremos un mensaje de verificación a tu correo actual junto con más información.</p>
-              <paper-button class="transparent_dark_button" on-tap="changeEmail">Cambiar correo</paper-button>
-
-              <h3>Boletín de noticias</h3>
-
-              <!-- <div id="interests_container" has-newsletter$="{{hasNewsletter}}">
-                <h3>Intereses</h3>
-                <p>Selecciona las categorías de tu interés y recibe semanalmente en tu correo los mejores planes de tu ciudad.</p>
-                <div id="preferences_checkboxes" class="layout vertical wrap">
-                  <paper-checkbox name="cine" disabled="{{!hasNewsletter}}">Cine</paper-checkbox>
-                  <paper-checkbox name="conciertos" disabled="{{!hasNewsletter}}">Conciertos</paper-checkbox>
-                  <paper-checkbox name="cultura" disabled="{{!hasNewsletter}}">Cultura</paper-checkbox>
-                  <paper-checkbox name="deporte" disabled="{{!hasNewsletter}}">Deporte</paper-checkbox>
-                  <paper-checkbox name="gratis" disabled="{{!hasNewsletter}}">Gratis</paper-checkbox>
-                  <paper-checkbox name="rumba" disabled="{{!hasNewsletter}}">Rumba</paper-checkbox>
-                  <paper-checkbox name="semana-santa" disabled="{{!hasNewsletter}}">Semana Santa</paper-checkbox>
-                  <paper-checkbox name="valle" disabled="{{!hasNewsletter}}">Valle</paper-checkbox>
-                  <paper-checkbox name="otros" disabled="{{!hasNewsletter}}">Otros</paper-checkbox>
-                </div>
-              </div> -->
-            </form>
-          </div>
-        </div>
-      </paper-dialog-scrollable>
-    </paper-dialog>
-
     <paper-toast id="pc_toast" on-iron-overlay-opened="_disableDocumentScrolling">
       <template is="dom-if" if="{{_resetLoginFb}}" restamp="true">
         <paper-button on-tap="resetToast">Connexion</paper-button>
@@ -1092,13 +1041,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _showRestorePasswordForm: function () {
         this.login_page = "restore_password";
         this.$.login_dialog.center();
-      },
-
-      _showPreferencesDialog: function () {
-        this.$.preferences_dialog.open();
-        this.async(function () {
-          this.$.preferences_dialog.center();
-        },20);
       },
 
       // ========================= Actions de connexion =========================
