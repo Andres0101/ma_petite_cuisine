@@ -114,17 +114,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        }(document, 'script', 'facebook-jssdk'));
     </script>
 
-    <!-- Script Cxense -->
-    <script type="text/javascript">
-      var cX = cX || {}; cX.callQueue = cX.callQueue || [];
-      cX.callQueue.push(['setSiteId', '1146318811362077926']);
-      cX.callQueue.push(['sendPageViewEvent']);
+    <!-- Script Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAW_s-R_ADDM9gS9EOTJFRJ28TJcd6-SdU",
+        authDomain: "mapetitecuisine-6466d.firebaseapp.com",
+        databaseURL: "https://mapetitecuisine-6466d.firebaseio.com",
+        projectId: "mapetitecuisine-6466d",
+        storageBucket: "mapetitecuisine-6466d.appspot.com",
+        messagingSenderId: "702963782012"
+      };
+      firebase.initializeApp(config);
+
+      // Get a reference to the database service
+      var database = firebase.database();
     </script>
-    <script type="text/javascript">
-      (function(d,s,e,t){e=d.createElement(s);e.type='text/java'+s;e.async='async';
-      e.src='http'+('https:'===location.protocol?'s://s':'://')+'cdn.cxense.com/cx.js';
-      t=d.getElementsByTagName(s)[0];t.parentNode.insertBefore(e,t);})(document,'script');
-    </script>
+
+
+    <link rel="import" href="/bower_components/firebase/firebase-app.js">
+    <link rel="import" href="/bower_components/firebase/firebase-auth.js">
+    <link rel="import" href="/bower_components/firebase/firebase-database.js">
 
     <link rel="import" href="/src/plan-ciudad.html">
 

@@ -576,7 +576,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-menu-button id="user_dropdown" horizontal-align="right" horizontal-offset="9" vertical-offset="10">
                   <paper-button id="logged_user" class="transparent_button dropdown-trigger layout horizontal center">
                     <iron-image src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="cover"></iron-image>
-                    <div class="paper-font-body1">{{_computeFirstName(userInfo.user.name)}}</div>
+                    <div class="paper-font-body1">{{user.name}}</div>
                     <iron-icon icon="arrow-drop-down"></iron-icon>
                   </paper-button>
                   <paper-menu class="dropdown-content">
@@ -706,7 +706,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <iron-image id="user_picture" src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="contain"></iron-image>
               <paper-input id="dashboard_name_input" label="Nombre completo" name="name" value="{{userInfo.user.name}}" no-label-float></paper-input>
               <paper-textarea id="dashboard_bio_input" label="Biografía" name="description" value="{{userInfo.user.description}}" no-label-float char-counter maxlength="140" max-rows="3"></paper-textarea>
-              <input id="accept_newsletters_update" type="text" name="accept_newsletters" hidden>
 
               <div id="user_social_inputs" class="layout horizontal around-justified wrap">
                 <paper-input id="dashboard_fb_input" label="Nombre de usuario" name="facebook_profile" value="{{userInfo.user.facebook_profile}}" no-label-float>
@@ -845,38 +844,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-dialog-scrollable>
         <iron-pages selected="{{login_page}}" attr-for-selected="name">
           <div name="info">
-            <iron-image class="dialog_image" src="http://source.unsplash.com/random" preload fade sizing="cover"></iron-image>
+            <iron-image class="dialog_image" src="http://source.unsplash.com/500x500/?food" preload fade sizing="cover"></iron-image>
             <paper-icon-button id="close_login_dialog_icon" icon="close" dialog-dismiss></paper-icon-button>
             <div class="dialog_container">
               <paper-button raised class="fb full_width" on-tap="_openFbSignupDialog">
                 <iron-icon icon="my-icons:facebook"></iron-icon>
-                Registrarse con Facebook
+                S'inscrire avec Facebook
               </paper-button>
               <paper-button raised on-tap="_showSignUpForm" class="raised_button full_width">
-                Registrarse con email
+                S'inscrire avec email
               </paper-button>
               <paper-button on-tap="_showLoginForm" id="login_button" class="full_width">
-                Iniciar sesión
+                Connexion
               </paper-button>
-              <span class="paper-font-caption layout vertical center">*Al ingresar usted acepta los <a href="#" class="link terms_and_conditions_link">términos y condiciones</a></span>
+              <span class="paper-font-caption layout vertical center">*En entrant, vous acceptez les <a href="#" class="link terms_and_conditions_link">termes et conditions</a></span>
             </div>
           </div>
 
           <div name="login">
             <paper-icon-button icon="arrow-back" class="dialog_back_icon" on-tap="_showLoginInfo"></paper-icon-button>
             <div class="dialog_container">
-              <form is="iron-form" id="login_form" method="post" action="http://localhost:8000/api/v1/auth-user" on-iron-form-response="_loginSuccess" on-iron-form-error="_loginError">
-                <h2>Iniciar sesión</h2>
+              <form is="iron-form" id="login_form" method="" action="">
+                <h2>Connexion</h2>
                 <paper-button raised class="fb full_width" on-tap="_openFbLoginDialog">
                   <iron-icon icon="my-icons:facebook"></iron-icon>
-                  Continuar con Facebook
+                  Facebook
                 </paper-button>
-                <h4>o</h4>
+                <h4>ou</h4>
                 <div class="inputs">
                   <input id="kind_login" type="text" name="kind_login" hidden>
-                  <input id="token_short_facebook" type="text" name="token_short_facebook" hidden>
-                  <paper-input id="loginEmail" label="Email" name="email" type="email" error-message="Ingresa un correo válido"></paper-input>
-                  <paper-input id="loginPassword" label="Contraseña" name="password" type="password" error-message="Ingresa tu contraseña"></paper-input>
+                  <!-- <input id="token_short_facebook" type="text" name="token_short_facebook" hidden> -->
+                  <paper-input id="loginEmail" label="Email" name="email" type="email" error-message="Entrez un email valide"></paper-input>
+                  <paper-input id="loginPassword" label="Mot de passe" name="password" type="password" error-message="Entrez votre mot de passe"></paper-input>
                 </div>
                 <paper-button raised on-tap="loginUser" class="dialog_button raised_button full_width">
                   <!-- Indicador de carga de información del usuario -->
@@ -884,10 +883,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
                   </template>
                   <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
-                    Iniciar sesión
+                    Connexion
                   </template>
                 </paper-button>
-                <a href="#" on-tap="_showRestorePasswordForm" class="paper-font-caption layout vertical center link">¿Olvidaste la contraseña?</a>
+                <!-- <a href="#" on-tap="_showRestorePasswordForm" class="paper-font-caption layout vertical center link">¿Olvidaste la contraseña?</a> -->
               </form>
             </div>
           </div>
@@ -895,13 +894,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div name="signup">
             <paper-icon-button icon="arrow-back" class="dialog_back_icon" on-tap="_showLoginInfo"></paper-icon-button>
             <div class="dialog_container">
-              <form is="iron-form" id="signup_form" method="post" action="http://localhost:8000/api/v1/user" on-iron-form-response="_registerSuccess" on-iron-form-error="_registerError">
-                <h2>Registrarse</h2>
+              <form is="iron-form" id="signup_form" method="" action="">
+                <h2>S'inscrire</h2>
                 <div class="inputs">
-                  <input id="accept_newsletters" type="text" name="accept_newsletters" hidden>
-                  <input id="accept_terms" type="text" name="accept_terms" hidden>
-                  <input id="kind_register" type="text" name="kind_register" hidden>
-
                   <!-- Si el registro es con Facebook -->
                   <template is="dom-if" if="{{isSignupFb}}" restamp="true">
                     <input id="name_facebook" type="text" name="name" hidden>
@@ -912,15 +907,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                   <!-- Si el registro es con email -->
                   <template is="dom-if" if="{{!isSignupFb}}" restamp="true">
-                    <paper-input name="name" label="Nombre completo" required error-message="Ingresa tu nombre completo"></paper-input>
-                    <paper-input label="Email" type="email" name="email" required error-message="Ingresa un correo válido"></paper-input>
+                    <paper-input id="name" name="name" label="Nom et pénom" required error-message="Entrez votre nom complet"></paper-input>
+                    <paper-input id="email" label="Email" type="email" name="email" required error-message="Entrez un email valide"></paper-input>
                   </template>
 
-                  <input id="confirm_password" type="text" name="confirm_password" hidden>
-                  <paper-input id="signupPassword" label="Contraseña" type="password" name="password" minlength="6" error-message="Debe contener mínimo 6 caracteres">
+                  <paper-input id="signupPassword" label="Mot de passe" type="password" name="password" minlength="6" error-message="Doit contenir au moins 6 caractères">
                     <paper-icon-button id="signupPasswordSuffix" suffix icon="visibility-off" title="Contraseña oculta" on-tap="_viewPassword"></paper-icon-button>
                   </paper-input>
-                  <paper-checkbox id="promotions_checkbox" checked>Deseo recibir información en mi email</paper-checkbox>
                 </div>
                 <paper-button raised on-tap="signupUser" class="dialog_button raised_button full_width">
                   <!-- Indicador de carga de información del usuario -->
@@ -931,7 +924,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     Registrarse
                   </template>
                 </paper-button>
-                <div class="paper-font-caption layout vertical center">*Al registrarse usted acepta los <a href="#" class="link terms_and_conditions_link">términos y condiciones</a></div>
               </form>
             </div>
           </div>
@@ -943,7 +935,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <h2>Reestablecer contraseña</h2>
                 <p>Ingresa tu email y te enviaremos un enlace para que puedas reestablecer tu contraseña.</p>
                 <div class="inputs">
-                  <paper-input label="Email" type="email" name="email" required error-message="Ingresa un correo válido"></paper-input>
+                  <paper-input label="Email" type="email" name="email" required error-message="Entrez un email valide"></paper-input>
                 </div>
                 <paper-button raised on-tap="restorePassword" class="dialog_button raised_button full_width">Reestablecer contraseña</paper-button>
               </form>
@@ -967,9 +959,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-button class="transparent_dark_button" on-tap="changeEmail">Cambiar correo</paper-button>
 
               <h3>Boletín de noticias</h3>
-              <paper-toggle-button checked="{{hasNewsletter}}" on-change="_newsletterChanged">Deseo recibir información en mi email</paper-toggle-button>
 
-              <div id="interests_container" has-newsletter$="{{hasNewsletter}}">
+              <!-- <div id="interests_container" has-newsletter$="{{hasNewsletter}}">
                 <h3>Intereses</h3>
                 <p>Selecciona las categorías de tu interés y recibe semanalmente en tu correo los mejores planes de tu ciudad.</p>
                 <div id="preferences_checkboxes" class="layout vertical wrap">
@@ -983,7 +974,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   <paper-checkbox name="valle" disabled="{{!hasNewsletter}}">Valle</paper-checkbox>
                   <paper-checkbox name="otros" disabled="{{!hasNewsletter}}">Otros</paper-checkbox>
                 </div>
-              </div>
+              </div> -->
             </form>
           </div>
         </div>
@@ -992,7 +983,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-toast id="pc_toast" on-iron-overlay-opened="_disableDocumentScrolling">
       <template is="dom-if" if="{{_resetLoginFb}}" restamp="true">
-        <paper-button on-tap="resetToast">Iniciar sesión</paper-button>
+        <paper-button on-tap="resetToast">Connexion</paper-button>
       </template>
     </paper-toast>
 
@@ -1055,17 +1046,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.editDashboard = false;
         this.isSignupFb = false; // Inputs hidden para Fb
 
-        // Validar si existe el localstorage
-        if (this.userInfo) {
-          this._handleNewsletterInfo();
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            firebase.database().ref('users/' + user.uid).once('value').then(function(snapshot) {
+              var userName = (snapshot.val() && snapshot.val().name) || 'Anonymous';
+              var userEmail = snapshot.val().email;
+              var userAvatar = snapshot.val().profile_picture;
+              var typeLogin = snapshot.val().type_login;
 
-          this.userLogged = true;
-          this.closeLoginDialog();
+              self.user = {
+                'name': userName,
+                'email': userEmail,
+                'typeLogin': typeLogin,
+                'avatar': userAvatar
+              };
+            });
 
-          if (this.userInfo.user.kind_register == "facebook") {
-            this.updateFbUserImage();
+            self.userLogged = true;
+            self.closeLoginDialog();
           }
-        }
+        });
       },
 
       _routePageChanged: function(page) {
@@ -1136,19 +1136,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },20);
       },
 
-      // =========================== Acciones de login ==========================
-      // Login con correo
+      // ========================= Actions de connexion =========================
+      // Connexion avec email
       loginUser: function () {
+        var self = this;
+
         this.$.loginEmail.required = true;
         this.$.loginPassword.required = true;
 
-        /* Validar campos */
+        /* Valider les champs */
         if (!this.$.login_form.validate()) {
           return;
         }
-        this.$.kind_login.value = "email";
-        this.$.login_form.submit();
-        this.checkingUserInfo = true; // Spinner
+
+        var email = this.$.loginEmail.value;
+        var password = this.$.loginPassword.value;
+
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+
+          if (errorCode == "auth/user-not-found") {
+            self.$.pc_toast.text = "Il n'y a pas d'enregistrement utilisateur correspondant à cet identifiant";
+            self.$.loginEmail.value = "";
+          } else if (errorCode == "auth/wrong-password") {
+            self.$.pc_toast.text = "Le mot de passe est invalide";
+          }
+          self.$.pc_toast.show();
+          self.$.loginPassword.value = "";
+        });
       },
       // Login con Facebook
       _openFbLoginDialog: function () {
@@ -1170,58 +1187,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }, {scope: 'public_profile,email'});
       },
 
-      // ========================== Respuesta del login =========================
-      _loginSuccess: function (event) {
-        this.closeLoginDialog();
-
-        this.userInfo = event.detail.response; // Setea el localstorage
-        this.userLogged = true;
-        this.checkingUserInfo = false; // Spinner
-
-        this._handleNewsletterInfo();
-
-        if (this.userInfo.user.kind_register == "facebook") {
-          var self = this;
-          FB.getLoginStatus(function(response) {
-            self.userInfo.user.idUserFb = response.authResponse.userID;
-            self.updateFbUserImage();
-          });
-        }
-      },
-      _loginError: function (error) {
-        var response = error.detail.request.response.response;
-        this.$.pc_toast.text = response.message;
-        this.checkingUserInfo = false; // Spinner
-
-        // Si la contraseña es incorrecta borra el input
-        if (response.code_error_login == 3) {
-          this.$.loginPassword.value = "";
-        }
-
-        this.$.pc_toast.show();
-      },
-
-      // ========================== Acciones de registro ========================
+      // ======================== Actions d'enregistrement ======================
+      // S'inscrire avec email
       signupUser: function () {
-        this.$.signupPassword.required = true;
-        this.checkingUserInfo = true; // Spinner
+        var self = this;
+        // this.$.signupPassword.required = true;
 
-        /* Validar campos */
+        /* Valider les champs */
         if (!this.$.signup_form.validate()) {
           return;
         }
 
-        this.$.kind_register.value = "email";
-        this.$.accept_terms.value = "1";
-        this.$.confirm_password.value = this.$.signupPassword.value;
-        if (this.$.promotions_checkbox.checked) {
-          this.$.accept_newsletters.value = "1";
-        } else {
-          this.$.accept_newsletters.value = "0";
-        }
+        this.checkingUserInfo = true; // Spinner
 
-        this.$.signup_form.submit();
+        var name = this.$$('#name').value;
+        var email = this.$$('#email').value;
+        var password = this.$.signupPassword.value;
+
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
+          firebase.database().ref('users/' + user.uid).set({
+            name: name,
+            email: email,
+            profile_picture : 'default',
+            type_login: 'email'
+          });
+        }, function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+
+          if (errorCode == 'auth/email-already-in-use') {
+            self.$.pc_toast.text = "L'adresse e-mail est déjà utilisée par un autre compte.";
+            self.$.pc_toast.show();
+          }
+
+          self.checkingUserInfo = false; // Spinner
+        });
+
+        this.checkingUserInfo = false; // Spinner
       },
+
+      // S'inscrire avec Facebook
       signupUserFb: function (userToken) {
         var self = this;
         this.checkingUserInfo = true; // Spinner
@@ -1234,57 +1240,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           self.$$('#signupPassword').value = userToken;
           self.$$('#token_short_facebook_register').value = userToken;
 
-          self.$.accept_terms.value = "1";
-          if (self.$.promotions_checkbox.checked) {
-            self.$.accept_newsletters.value = "1";
-          } else {
-            self.$.accept_newsletters.value = "0";
-          }
-
           self.$.signup_form.submit();
         });
-      },
-
-      // ======================== Respuesta del registro ========================
-      _registerSuccess: function (event) {
-        var form_info = this.$.signup_form.serialize();
-        if (form_info.kind_register == "facebook") {
-          this.isSignupFb = false;
-          this._openFbLoginDialog();
-        } else if (form_info.kind_register == "email") {
-          this.$.loginEmail.value = form_info.email;
-          this.$.loginPassword.value = form_info.password;
-          this.loginUser();
-        }
-
-        this.closeLoginDialog();
-        this.checkingUserInfo = false; // Spinner
-
-        console.log("Respuesta registro", event.detail.response);
-        // TODO: Crear pantalla de validar registro y despues hacer consulta a http://localhost:8000/api/v1/send-email-activate para activar la cuenta
-      },
-      _registerError: function (error) {
-        var response = error.detail.request.response;
-        this.checkingUserInfo = false; // Spinner
-
-        this.$.pc_toast.text = "El email ingresado ya existe";
-        this.$.pc_toast.show();
       },
 
       // ====================== Actualizar info de usuario ======================
       _updateUserInfo: function () {
         this._toggleEditDashboard();
 
-        if (this.hasNewsletter) {
-          this.$$('#accept_newsletters_update').value = "1";
-        } else {
-          this.$$('#accept_newsletters_update').value = "0";
-        }
-
         this.$.updateUser.params = {
           'id': this.userInfo.user.id,
           'token': this.userInfo.token,
-          'accept_newsletters': this.$$('#accept_newsletters_update').value,
           'description': this.$$('#dashboard_bio_input').value,
           'facebook_profile': this.$$('#dashboard_fb_input').value,
           'instagram_profile': this.$$('#dashboard_instagram_input').value,
@@ -1297,7 +1263,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // ====================== Respuesta del update info =======================
       handleResponseUpdateUser: function (event) {
-        this.set('userInfo.user.accept_newsletters', this.$.updateUser.params.accept_newsletters);
         this.set('userInfo.user.description', this.$.updateUser.params.description);
         this.set('userInfo.user.facebook_profile', this.$.updateUser.params.facebook_profile);
         this.set('userInfo.user.instagram_profile', this.$.updateUser.params.instagram_profile);
@@ -1450,19 +1415,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         document.body.style.overflow = '';
       },
 
-      // Validar si el usuario aceptó el newsletter
-      _handleNewsletterInfo: function () {
-        if (this.userInfo.user.accept_newsletters === "1") {
-          this.hasNewsletter = true;
-        } else {
-          this.hasNewsletter = false;
-        }
-      },
-      // Escuchar cada vez que cambia el toggle de newsletter
-      _newsletterChanged: function (event) {
-        this.hasNewsletter = event.target.checked;
-      },
-
       _generateUserAvatar: function (register, image) {
         if (register == "facebook") {
           return image;
@@ -1488,11 +1440,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // ================================ Logout ================================
       _userLogout: function () {
-        if (this.userInfo.user.kind_register == "facebook") {
-          FB.logout(function(response) {});
-        }
-        this.userLogged = false;
-        this.$.localstorage.value = null;
+        var self = this;
+        // if (this.userInfo.user.kind_register == "facebook") {
+        //   FB.logout(function(response) {});
+        // }
+
+        firebase.auth().signOut().then(function() {
+          // Sign-out successful.
+          self.$.pc_toast.text = "Déconnexion réussie";
+          self.$.pc_toast.show();
+
+          self.userLogged = false;
+          self.user = null;
+        }).catch(function(error) {});
       },
 
       _computeFirstName:function (fullName) {
