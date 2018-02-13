@@ -584,7 +584,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                       <paper-item>Perfil</paper-item>
                     </a>
                     <hr>
-                    <paper-item on-tap="_userLogout">Cerrar sesión</paper-item>
+                    <paper-item on-tap="_userLogout">Déconnexion</paper-item>
                   </paper-menu>
                 </paper-menu-button>
               </template>
@@ -666,22 +666,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </a>
             <span class="flex"></span>
 
-            <!-- Sesión iniciada: Botones de Editar perfil / Cerrar sesión -->
+            <!-- Connexion de l'utilisateur -->
             <template is="dom-if" if="{{userLogged}}" restamp="true">
-              <!-- Modo edición: Mostrar botón de guardar la información del usuario / Cancelar -->
-              <template is="dom-if" if="{{editDashboard}}" restamp="true">
-                <paper-button raised class="raised_button" on-tap="_updateUserInfo">Guardar perfil</paper-button>
-                <paper-button class="transparent_button" on-tap="_toggleEditDashboard">Cancelar</paper-button>
-              </template>
-              <!-- Modo visualización: Mostrar botón de editar la información del usuario / Cerrar sesión -->
-              <template is="dom-if" if="{{!editDashboard}}" restamp="true">
-                <paper-button id="edit_dashboard_button" raised class="raised_button" on-tap="_toggleEditDashboard">Editar perfil</paper-button>
-                <paper-button id="logout_button" class="transparent_button" on-tap="_userLogout">
-                  <iron-icon icon="exit-to-app"></iron-icon>
-                  <span>Cerrar sesión</span>
-                </paper-button>
-              </template>
-
+              <!-- Bouton de déconnexion -->
+              <paper-button id="logout_button" class="transparent_button" on-tap="_userLogout">
+                <iron-icon icon="exit-to-app"></iron-icon>
+                <span>Déconnexion</span>
+              </paper-button>
             </template>
 
             <!-- Sesión no iniciada: Botones de Publicar / Ingresar -->
@@ -701,49 +692,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
 
           <app-toolbar id="dashboard_header" class="middle layout vertical center flex">
-            <!-- Modo edición: Mostrar inputs para editar la información del usuario -->
-            <template is="dom-if" if="{{editDashboard}}" restamp="true">
-              <iron-image id="user_picture" src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="contain"></iron-image>
-              <paper-input id="dashboard_name_input" label="Nombre completo" name="name" value="{{userInfo.user.name}}" no-label-float></paper-input>
-              <paper-textarea id="dashboard_bio_input" label="Biografía" name="description" value="{{userInfo.user.description}}" no-label-float char-counter maxlength="140" max-rows="3"></paper-textarea>
-
-              <div id="user_social_inputs" class="layout horizontal around-justified wrap">
-                <paper-input id="dashboard_fb_input" label="Nombre de usuario" name="facebook_profile" value="{{userInfo.user.facebook_profile}}" no-label-float>
-                  <iron-icon icon="my-icons:facebook" prefix></iron-icon>
-                </paper-input>
-                <paper-input id="dashboard_instagram_input" label="Nombre de usuario" name="instagram_profile" value="{{userInfo.user.instagram_profile}}" no-label-float>
-                  <iron-icon icon="my-icons:instagram" prefix></iron-icon>
-                </paper-input>
-                <paper-input id="dashboard_twitter_input" label="Nombre de usuario" name="twitter_profile" value="{{userInfo.user.twitter_profile}}" no-label-float>
-                  <iron-icon icon="my-icons:twitter" prefix></iron-icon>
-                </paper-input>
-                <paper-input id="dashboard_snap_input" label="Nombre de usuario" name="snapchat_profile" value="{{userInfo.user.snapchat_profile}}" no-label-float>
-                  <iron-icon icon="my-icons:snapchat" prefix></iron-icon>
-                </paper-input>
-              </div>
-              <paper-button id="preferences_button" class="transparent_button" on-tap="_showPreferencesDialog">Preferencias</paper-button>
-            </template>
-
-            <!-- Modo visualización: Mostrar la información del usuario -->
-            <template is="dom-if" if="{{!editDashboard}}" restamp="true">
-              <iron-image id="user_picture" src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="contain"></iron-image>
-              <div id="user_full_name" class="paper-font-headline">{{userInfo.user.name}}</div>
-              <div id="user_bio" class="paper-font-body1">{{userInfo.user.description}}</div>
-              <div id="user_social_links">
-                <a href="https://facebook.com/{{userInfo.user.facebook_profile}}" hidden="{{!userInfo.user.facebook_profile}}" target="_blank" rel="noopener" class="link">
-                  <paper-icon-button icon="my-icons:facebook"></paper-icon-button>
-                </a>
-                <a href="https://instagram.com/{{userInfo.user.instagram_profile}}" hidden="{{!userInfo.user.instagram_profile}}" target="_blank" rel="noopener" class="link">
-                  <paper-icon-button icon="my-icons:instagram"></paper-icon-button>
-                </a>
-                <a href="https://twitter.com/{{userInfo.user.twitter_profile}}" hidden="{{!userInfo.user.twitter_profile}}" target="_blank" rel="noopener" class="link">
-                  <paper-icon-button icon="my-icons:twitter"></paper-icon-button>
-                </a>
-                <a href="https://snapchat.com/add/{{userInfo.user.snapchat_profile}}" hidden="{{!userInfo.user.snapchat_profile}}" target="_blank" rel="noopener" class="link">
-                  <paper-icon-button icon="my-icons:snapchat"></paper-icon-button>
-                </a>
-              </div>
-            </template>
+            <!-- Montrer l'info de l'utilisateur -->
+            <iron-image id="user_picture" src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="contain"></iron-image>
+            <div id="user_full_name" class="paper-font-headline">{{userInfo.user.name}}</div>
+            <div id="user_bio" class="paper-font-body1">{{userInfo.user.description}}</div>
+            <div id="user_social_links">
+              <a href="https://facebook.com/{{userInfo.user.facebook_profile}}" hidden="{{!userInfo.user.facebook_profile}}" target="_blank" rel="noopener" class="link">
+                <paper-icon-button icon="my-icons:facebook"></paper-icon-button>
+              </a>
+              <a href="https://instagram.com/{{userInfo.user.instagram_profile}}" hidden="{{!userInfo.user.instagram_profile}}" target="_blank" rel="noopener" class="link">
+                <paper-icon-button icon="my-icons:instagram"></paper-icon-button>
+              </a>
+              <a href="https://twitter.com/{{userInfo.user.twitter_profile}}" hidden="{{!userInfo.user.twitter_profile}}" target="_blank" rel="noopener" class="link">
+                <paper-icon-button icon="my-icons:twitter"></paper-icon-button>
+              </a>
+              <a href="https://snapchat.com/add/{{userInfo.user.snapchat_profile}}" hidden="{{!userInfo.user.snapchat_profile}}" target="_blank" rel="noopener" class="link">
+                <paper-icon-button icon="my-icons:snapchat"></paper-icon-button>
+              </a>
+            </div>
           </app-toolbar>
 
           <!-- Pestañas -->
@@ -1043,7 +1009,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._resetLoginFb = false;
         this._passwordVisible = false;
         this.checkingUserInfo = false; // Spinner
-        this.editDashboard = false;
         this.isSignupFb = false; // Inputs hidden para Fb
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -1079,17 +1044,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var resolvedPageUrl = this.resolveUrl(page + '-view' + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
 
-        //Ocultar elementos del header al ingresar a la vista del usuario
+        // Cacher les éléments du header en entrant dans l'utilisateur view
         this.hideHeader = false;
-        if(page == "usuario") {
+        if (page == "usuario") {
           this.async(function () {
-            if (this.userInfo) {
+            if (this.user) {
               this.userDashboard = true;
             } else {
               this._showPage404();
             }
           });
-        }else {
+        } else {
           this.userDashboard = false;
           if (page == "publicar") {
             this.hideHeader = true;
@@ -1234,8 +1199,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // ====================== Actualizar info de usuario ======================
       _updateUserInfo: function () {
-        this._toggleEditDashboard();
-
         this.$.updateUser.params = {
           'id': this.userInfo.user.id,
           'token': this.userInfo.token,
@@ -1419,10 +1382,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         } else if (this.login_page == "restore_password") {
           this.restorePassword();
         }
-      },
-
-      _toggleEditDashboard: function () {
-        this.editDashboard = !this.editDashboard;
       },
 
       // ================================ Logout ================================
