@@ -575,7 +575,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <template is="dom-if" if="{{userLogged}}" restamp="true">
                 <paper-menu-button id="user_dropdown" horizontal-align="right" horizontal-offset="9" vertical-offset="10">
                   <paper-button id="logged_user" class="transparent_button dropdown-trigger layout horizontal center">
-                    <iron-image src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="cover"></iron-image>
+                    <iron-image src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="cover"></iron-image>
                     <div class="paper-font-body1">{{user.name}}</div>
                     <iron-icon icon="arrow-drop-down"></iron-icon>
                   </paper-button>
@@ -703,7 +703,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar id="dashboard_header" class="middle layout vertical center flex">
             <!-- Modo edición: Mostrar inputs para editar la información del usuario -->
             <template is="dom-if" if="{{editDashboard}}" restamp="true">
-              <iron-image id="user_picture" src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="contain"></iron-image>
+              <iron-image id="user_picture" src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="contain"></iron-image>
               <paper-input id="dashboard_name_input" label="Nombre completo" name="name" value="{{userInfo.user.name}}" no-label-float></paper-input>
               <paper-textarea id="dashboard_bio_input" label="Biografía" name="description" value="{{userInfo.user.description}}" no-label-float char-counter maxlength="140" max-rows="3"></paper-textarea>
 
@@ -726,7 +726,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <!-- Modo visualización: Mostrar la información del usuario -->
             <template is="dom-if" if="{{!editDashboard}}" restamp="true">
-              <iron-image id="user_picture" src="{{_generateUserAvatar(userInfo.user.kind_register, userInfo.user.avatar)}}" preload fade sizing="contain"></iron-image>
+              <iron-image id="user_picture" src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="contain"></iron-image>
               <div id="user_full_name" class="paper-font-headline">{{userInfo.user.name}}</div>
               <div id="user_bio" class="paper-font-body1">{{userInfo.user.description}}</div>
               <div id="user_social_links">
@@ -847,7 +847,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-image class="dialog_image" src="http://source.unsplash.com/500x500/?food" preload fade sizing="cover"></iron-image>
             <paper-icon-button id="close_login_dialog_icon" icon="close" dialog-dismiss></paper-icon-button>
             <div class="dialog_container">
-              <paper-button raised class="fb full_width" on-tap="_openFbSignupDialog">
+              <paper-button raised class="fb full_width" on-tap="_openFbDialog">
                 <iron-icon icon="my-icons:facebook"></iron-icon>
                 S'inscrire avec Facebook
               </paper-button>
@@ -866,7 +866,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="dialog_container">
               <form is="iron-form" id="login_form" method="" action="">
                 <h2>Connexion</h2>
-                <paper-button raised class="fb full_width" on-tap="_openFbLoginDialog">
+                <paper-button raised class="fb full_width" on-tap="_openFbDialog">
                   <iron-icon icon="my-icons:facebook"></iron-icon>
                   Facebook
                 </paper-button>
@@ -1167,31 +1167,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           self.$.loginPassword.value = "";
         });
       },
-      // Login con Facebook
-      _openFbLoginDialog: function () {
-        var self = this;
-        FB.login(function(response) {
-          if (response.status == 'connected') {
-            self._getFbUserData(response.authResponse.accessToken);
-          }
-        }, {scope: 'public_profile,email'});
-      },
-      // Registrar con Facebook
-      _openFbSignupDialog: function () {
-        var self = this;
-        FB.login(function(response) {
-          if (response.status == 'connected') {
-            self.isSignupFb = true;
-            self.signupUserFb(response.authResponse.accessToken);
-          }
-        }, {scope: 'public_profile,email'});
+
+      // Connexion avec Facebook
+      _openFbDialog: function () {
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          var token = result.credential.accessToken;
+          // The signed-in user info.
+          var user = result.user;
+
+          firebase.database().ref('users/' + user.uid).set({
+            name: user.displayName,
+            email: user.email,
+            profile_picture : user.photoURL,
+            type_login: 'facebook'
+          });
+        }).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+        });
       },
 
       // ======================== Actions d'enregistrement ======================
       // S'inscrire avec email
       signupUser: function () {
         var self = this;
-        // this.$.signupPassword.required = true;
 
         /* Valider les champs */
         if (!this.$.signup_form.validate()) {
@@ -1225,23 +1230,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         this.checkingUserInfo = false; // Spinner
-      },
-
-      // S'inscrire avec Facebook
-      signupUserFb: function (userToken) {
-        var self = this;
-        this.checkingUserInfo = true; // Spinner
-
-        FB.api('/me?fields=name,first_name,picture.height(150),email', function(response) {
-          self.$$('#name_facebook').value = response.name;
-          self.$$('#avatar_facebook').value = response.picture.data.url;
-          self.$$('#email_facebook').value = response.email;
-          self.$$('#kind_register').value = "facebook";
-          self.$$('#signupPassword').value = userToken;
-          self.$$('#token_short_facebook_register').value = userToken;
-
-          self.$.signup_form.submit();
-        });
       },
 
       // ====================== Actualizar info de usuario ======================
@@ -1383,7 +1371,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.pc_toast.close();
 
         this.closeLoginDialog();
-        this._openFbLoginDialog();
       },
 
       closeLoginDialog: function () {
@@ -1441,9 +1428,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // ================================ Logout ================================
       _userLogout: function () {
         var self = this;
-        // if (this.userInfo.user.kind_register == "facebook") {
-        //   FB.logout(function(response) {});
-        // }
 
         firebase.auth().signOut().then(function() {
           // Sign-out successful.
