@@ -566,7 +566,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   </paper-button>
                   <paper-menu class="dropdown-content">
                     <a href="/usuario/publicaciones" class="link">
-                      <paper-item>Perfil</paper-item>
+                      <paper-item>Profil</paper-item>
                     </a>
                     <hr>
                     <paper-item on-tap="_userLogout">Déconnexion</paper-item>
@@ -582,7 +582,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <span>Connexion</span>
                   </template>
                   <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
-                    <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                    <paper-spinner-lite alt="Chargement du profil" active></paper-spinner-lite>
                   </template>
                 </paper-button>
               </template>
@@ -665,7 +665,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
                 <!-- Indicador de carga de información del usuario -->
                 <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
-                  <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                  <paper-spinner-lite alt="Chargement du profil" active></paper-spinner-lite>
                 </template>
                 <!-- Botón de ingresar -->
                 <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
@@ -831,7 +831,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-button raised on-tap="loginUser" class="dialog_button raised_button full_width">
                   <!-- Indicador de carga de información del usuario -->
                   <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
-                    <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                    <paper-spinner-lite alt="Chargement du profil" active></paper-spinner-lite>
                   </template>
                   <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
                     Connexion
@@ -846,7 +846,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button icon="arrow-back" class="dialog_back_icon" on-tap="_showLoginInfo"></paper-icon-button>
             <div class="dialog_container">
               <form is="iron-form" id="signup_form" method="" action="">
-                <h2>S'inscrire</h2>
                 <div class="inputs">
                   <!-- Si el registro es con Facebook -->
                   <template is="dom-if" if="{{isSignupFb}}" restamp="true">
@@ -869,10 +868,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-button raised on-tap="signupUser" class="dialog_button raised_button full_width">
                   <!-- Indicador de carga de información del usuario -->
                   <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
-                    <paper-spinner-lite alt="Cargando perfil" active></paper-spinner-lite>
+                    <paper-spinner-lite alt="Chargement du profil" active></paper-spinner-lite>
                   </template>
                   <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
-                    Registrarse
+                    S'inscrire
                   </template>
                 </paper-button>
               </form>
