@@ -17,9 +17,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/iron-icons/places-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
@@ -566,7 +567,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   </paper-button>
                   <paper-menu class="dropdown-content">
                     <a href="/usuario/publicaciones" class="link">
-                      <paper-item>Profil</paper-item>
+                      <paper-item>Mon compte</paper-item>
                     </a>
                     <hr>
                     <paper-item on-tap="_userLogout">Déconnexion</paper-item>
@@ -619,20 +620,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div id="header_tabs" sticky>
               <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation">
                 <paper-tab name="eventos" link>
-                  <a class="link" href="/eventos" tabindex="-1">Ongle 1</a>
-                  <!-- <a class="link" href="/eventos" tabindex="-1">Eventos</a> -->
+                  <div class="layout vertical center">
+                    <iron-icon icon="face"></iron-icon>
+                    <a class="link" href="/eventos" tabindex="-1">Débutant</a>
+                  </div>
                 </paper-tab>
                 <paper-tab name="restaurantes" link>
-                  <a class="link" href="/restaurantes" tabindex="-1">Ongle 2</a>
-                  <!-- <a class="link" href="/restaurantes" tabindex="-1">Restaurantes</a> -->
+                  <div class="layout vertical center">
+                    <iron-icon icon="schedule"></iron-icon>
+                    <a class="link" href="/restaurantes" tabindex="-1">Temps</a>
+                  </div>
                 </paper-tab>
                 <paper-tab name="bares-discotecas" link>
-                  <a class="link" href="/bares-discotecas" tabindex="-1">Ongle 3</a>
-                  <!-- <a class="link" href="/bares-discotecas" tabindex="-1">Bares y Discotecas</a> -->
+                  <div class="layout vertical center">
+                    <iron-icon icon="euro-symbol"></iron-icon>
+                    <a class="link" href="/bares-discotecas" tabindex="-1">Prix</a>
+                  </div>
                 </paper-tab>
                 <paper-tab name="cines" link>
-                  <a class="link" href="/cines" tabindex="-1">Ongle 4</a>
-                  <!-- <a class="link" href="/cines" tabindex="-1">Cines</a> -->
+                  <div class="layout vertical center">
+                    <iron-icon icon="alarm"></iron-icon>
+                    <a class="link" href="/cines" tabindex="-1">Cuisson</a>
+                  </div>
+                </paper-tab>
+                <paper-tab name="cines" link>
+                  <div class="layout vertical center">
+                    <iron-icon icon="social:group-add"></iron-icon>
+                    <a class="link" href="/cines" tabindex="-1">Quantité</a>
+                  </div>
+                </paper-tab>
+                <paper-tab name="cines" link>
+                  <div class="layout vertical center">
+                    <iron-icon icon="places:spa"></iron-icon>
+                    <a class="link" href="/cines" tabindex="-1">Vegan</a>
+                  </div>
                 </paper-tab>
               </paper-tabs>
             </div>
@@ -701,14 +722,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div id="dashboard_tabs" sticky>
             <paper-tabs selected="[[subroute.path]]" attr-for-selected="name" role="navigation">
               <paper-tab name="/publicaciones" link>
-                <a class="link" href="/usuario/publicaciones" tabindex="-1">Publicaciones</a>
+                <a class="link" href="/usuario/publicaciones" tabindex="-1">Recettes</a>
               </paper-tab>
               <paper-tab name="/calificaciones" link>
-                <a class="link" href="/usuario/calificaciones" tabindex="-1">Calificaciones</a>
+                <a class="link" href="/usuario/calificaciones" tabindex="-1">Liste des courses</a>
               </paper-tab>
-              <paper-tab name="/favoritos" link>
+              <!-- <paper-tab name="/favoritos" link>
                 <a class="link" href="/usuario/favoritos" tabindex="-1">Favoritos</a>
-              </paper-tab>
+              </paper-tab> -->
             </paper-tabs>
           </div>
         </div>
@@ -744,19 +765,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Bottom navigation -->
       <bottom-nav fixed>
         <bottom-toolbar id="bottom_nav_toolbar" selected="[[page]]" attr-for-selected="name">
-          <bottom-tab label="Inicio" name="home" icon="home" link>
+          <bottom-tab label="Accueil" name="home" icon="home" link>
             <a href="/"></a>
           </bottom-tab>
-          <bottom-tab label="Eventos" name="eventos" icon="event" link>
+          <bottom-tab label="Débutant" name="home" icon="face" link>
+            <a href="/"></a>
+          </bottom-tab>
+          <bottom-tab label="Temps" name="eventos" icon="schedule" link>
             <a href="/eventos"></a>
           </bottom-tab>
-          <bottom-tab label="Restaurantes" name="restaurantes" icon="maps:restaurant" link>
+          <bottom-tab label="Prix" name="restaurantes" icon="euro-symbol" link>
             <a href="/restaurantes"></a>
           </bottom-tab>
-          <bottom-tab label="Bares / Discos" name="bares-discotecas" icon="maps:local-bar" link>
+          <!-- <bottom-tab label="Bares / Discos" name="bares-discotecas" icon="alarm" link>
             <a href="/bares-discotecas"></a>
-          </bottom-tab>
-          <bottom-tab label="Cines" name="cines" icon="maps:local-movies" link>
+          </bottom-tab> -->
+          <bottom-tab label="Vegan" name="cines" icon="places:spa" link>
             <a href="/cines"></a>
           </bottom-tab>
         </bottom-toolbar>
