@@ -561,7 +561,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <template is="dom-if" if="{{userLogged}}" restamp="true">
                 <paper-menu-button id="user_dropdown" horizontal-align="right" horizontal-offset="9" vertical-offset="10">
                   <paper-button id="logged_user" class="transparent_button dropdown-trigger layout horizontal center">
-                    <iron-image src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="cover"></iron-image>
+                    <iron-image src="{{user.avatar}}" preload fade sizing="cover"></iron-image>
                     <div class="paper-font-body1">{{user.name}}</div>
                     <iron-icon icon="arrow-drop-down"></iron-icon>
                   </paper-button>
@@ -699,7 +699,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <app-toolbar id="dashboard_header" class="middle layout vertical center flex">
             <!-- Montrer l'info de l'utilisateur -->
-            <iron-image id="user_picture" src="{{_generateUserAvatar(user.typeLogin, user.avatar)}}" preload fade sizing="contain"></iron-image>
+            <iron-image id="user_picture" src="{{user.avatar}}" preload fade sizing="contain"></iron-image>
             <div id="user_full_name" class="paper-font-headline">{{userInfo.user.name}}</div>
             <div id="user_bio" class="paper-font-body1">{{userInfo.user.description}}</div>
             <div id="user_social_links">
@@ -975,6 +975,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               var userEmail = snapshot.val().email;
               var userAvatar = snapshot.val().profile_picture;
               var typeLogin = snapshot.val().type_login;
+
+              if (userAvatar == 'default') {
+                // Once the sign in completed, we get the download URL of the image
+                defaultProfileImg.getDownloadURL().then(function(url)                             {
+                  // Once we have the download URL, we set it to our img element
+                  self.set('user.avatar', url);
+                }).catch(function(error) {
+                  // If anything goes wrong while getting the download URL, log the error
+                  console.error(error);
+                });
+              }
 
               self.user = {
                 'name': userName,
@@ -1300,14 +1311,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _restoreDocumentScrolling: function() {
         document.body.style.overflow = '';
-      },
-
-      _generateUserAvatar: function (register, image) {
-        if (register == "facebook") {
-          return image;
-        } else {
-          return "http://localhost:8000" + image;
-        }
       },
 
       // Método del key event

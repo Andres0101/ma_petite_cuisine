@@ -132,6 +132,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var database = firebase.database();
       // Facebook provider
       var provider = new firebase.auth.FacebookAuthProvider();
+      // Get a reference to the storage service
+     var storage = firebase.storage();
+     var storageRef = storage.ref();
+     var defaultProfileImg = storageRef.child('images/defaultProfile.png');
     </script>
 
     <link rel="import" href="/src/plan-ciudad.html">
