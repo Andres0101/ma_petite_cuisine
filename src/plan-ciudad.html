@@ -976,9 +976,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               var userAvatar = snapshot.val().profile_picture;
               var typeLogin = snapshot.val().type_login;
 
+              var list = [];
+              var self = this;
+              firebase.database().ref('recipes').once('value').then(function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                  var item = childSnapshot.val();
+                  item.key = childSnapshot.key;
+
+                  list.push(item);
+                });
+
+                self.recipes = list;
+                console.log("Home");
+                console.log(self.recipes);
+                self.recipesDone();
+              });
+
               if (userAvatar == 'default') {
                 // Once the sign in completed, we get the download URL of the image
-                defaultProfileImg.getDownloadURL().then(function(url)                             {
+                defaultProfileImg.getDownloadURL().then(function(url) {
                   // Once we have the download URL, we set it to our img element
                   self.set('user.avatar', url);
                 }).catch(function(error) {
