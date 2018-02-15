@@ -43,6 +43,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+
 <link rel="import" href="../bower_components/bottom-nav/bottom-nav.html">
 <link rel="import" href="../bower_components/byutv-jsonp/byutv-jsonp.html">
 <link rel="import" href="../bower_components/moment-element/moment-element.html">
@@ -544,6 +548,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
+    <firebase-app
+      name="mapetitecuisine"
+      auth-domain="mapetitecuisine-6466d.firebaseapp.com"
+      database-url="https://mapetitecuisine-6466d.firebaseio.com"
+      api-key="AIzaSyAW_s-R_ADDM9gS9EOTJFRJ28TJcd6-SdU"
+      storage-bucket="mapetitecuisine-6466d.appspot.com"
+      messaging-sender-id="702963782012">
+    </firebase-app>
+    <firebase-auth
+      id="auth"
+      app-name="mapetitecuisine"
+      user="{{userInfo}}"
+      provider="facebook">
+    </firebase-auth>
+    <firebase-query
+      id="query"
+      app-name="mapetitecuisine"
+      path="/recipes"
+      data="{{recipes}}">
+    </firebase-query>
+
     <div id="header_layout">
       <!-- Header del sitio -->
       <template is="dom-if" if="{{!userDashboard}}" restamp="true">
@@ -558,7 +583,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <span class="flex"></span>
 
               <!-- Sesión iniciada: Mostrar información del usuario con dropdown -->
-              <template is="dom-if" if="{{userLogged}}" restamp="true">
+              <template is="dom-if" if="[[userInfo]]" restamp="true">
                 <paper-menu-button id="user_dropdown" horizontal-align="right" horizontal-offset="9" vertical-offset="10">
                   <paper-button id="logged_user" class="transparent_button dropdown-trigger layout horizontal center">
                     <iron-image src="{{user.avatar}}" preload fade sizing="cover"></iron-image>
@@ -576,7 +601,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </template>
 
               <!-- Sesión no iniciada: Botón de Ingresar -->
-              <template is="dom-if" if="{{!userLogged}}" restamp="true">
+              <template is="dom-if" if="[[!userInfo]]" restamp="true">
                 <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
                   <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
                     <iron-icon icon="social:person"></iron-icon>
@@ -661,7 +686,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span class="flex"></span>
 
             <!-- Connexion de l'utilisateur -->
-            <template is="dom-if" if="{{userLogged}}" restamp="true">
+            <template is="dom-if" if="[[userInfo]]" restamp="true">
               <!-- Bouton de déconnexion -->
               <paper-button id="logout_button" class="transparent_button" on-tap="_userLogout">
                 <iron-icon icon="exit-to-app"></iron-icon>
@@ -670,7 +695,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </template>
 
             <!-- Sesión no iniciada: Botones de Publicar / Ingresar -->
-            <template is="dom-if" if="{{!userLogged}}" restamp="true">
+            <template is="dom-if" if="[[!userInfo]]" restamp="true">
               <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
                 <!-- Indicador de carga de información del usuario -->
                 <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
@@ -765,9 +790,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <bottom-tab label="Prix" name="restaurantes" icon="euro-symbol" link>
             <a href="/restaurantes"></a>
           </bottom-tab>
-          <!-- <bottom-tab label="Bares / Discos" name="bares-discotecas" icon="alarm" link>
-            <a href="/bares-discotecas"></a>
-          </bottom-tab> -->
           <bottom-tab label="Vegan" name="cines" icon="places:spa" link>
             <a href="/cines"></a>
           </bottom-tab>
@@ -909,7 +931,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       properties: {
         userInfo: {
-          type: Object
+          type: Object,
+          observer: '_userChanged'
+        },
+        recipes: {
+          type: Array,
+          observer: '_recipeChanged'
         },
         page: {
           type: String,
@@ -956,57 +983,63 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.checkingUserInfo = false; // Spinner
         this.isSignupFb = false; // Inputs hidden para Fb
 
-        firebase.auth().onAuthStateChanged(function(user) {
-          if (user) {
-            firebase.database().ref('users/' + user.uid).once('value').then(function(snapshot) {
-              var userName = (snapshot.val() && snapshot.val().name) || 'Anonymous';
-              var userEmail = snapshot.val().email;
-              var userAvatar = snapshot.val().profile_picture;
-              var typeLogin = snapshot.val().type_login;
-
-              var list = [];
-              var self = this;
-              firebase.database().ref('recipes').once('value').then(function(snapshot) {
-                snapshot.forEach(function(childSnapshot) {
-                  var item = childSnapshot.val();
-                  item.key = childSnapshot.key;
-
-                  list.push(item);
-                });
-
-                self.recipes = list;
-                console.log("Home");
-                console.log(self.recipes);
-                self.recipesDone();
-              });
-
-              if (userAvatar == 'default') {
-                // Once the sign in completed, we get the download URL of the image
-                defaultProfileImg.getDownloadURL().then(function(url) {
-                  // Once we have the download URL, we set it to our img element
-                  self.set('user.avatar', url);
-                }).catch(function(error) {
-                  // If anything goes wrong while getting the download URL, log the error
-                  console.error(error);
-                });
-              }
-
-              self.user = {
-                'name': userName,
-                'email': userEmail,
-                'typeLogin': typeLogin,
-                'avatar': userAvatar
-              };
-            });
-
-            self.userLogged = true;
-            self.closeLoginDialog();
-          }
-        });
+        // var list = [];
+        // var self = this;
+        // firebase.database().ref('recipes').once('value').then(function(snapshot) {
+        //   snapshot.forEach(function(childSnapshot) {
+        //     var item = childSnapshot.val();
+        //     item.key = childSnapshot.key;
+        //
+        //     list.push(item);
+        //   });
+        //
+        //   self.recipes = list;
+        //   console.log("Home");
+        //   console.log(self.recipes);
+        //   // self.recipesDone();
+        // });
       },
 
       _routePageChanged: function(page) {
         this.page = page || 'home';
+      },
+      _userChanged: function(userInfo) {
+        var self = this;
+
+        if (userInfo) {
+          this.$.auth.app.database().ref('users/' + userInfo.uid).once('value').then(function(snapshot) {
+            var userName = (snapshot.val() && snapshot.val().name) || 'Anonymous';
+            var userEmail = snapshot.val().email;
+            var userAvatar = snapshot.val().profile_picture;
+            var typeLogin = snapshot.val().type_login;
+
+            if (userAvatar == 'default') {
+              // Once the sign in completed, we get the download URL of the image
+              defaultProfileImg.getDownloadURL().then(function(url) {
+                // Once we have the download URL, we set it to our img element
+                self.set('user.avatar', url);
+              }).catch(function(error) {
+                // If anything goes wrong while getting the download URL, log the error
+                console.error(error);
+              });
+            }
+
+            self.user = {
+              'name': userName,
+              'email': userEmail,
+              'typeLogin': typeLogin,
+              'avatar': userAvatar
+            };
+          });
+
+          // this.userLogged = true;
+          this.closeLoginDialog();
+        }
+      },
+      _recipeChanged: function(newData, oldData) {
+        // do something when the query returns values
+        console.log("newData");
+        console.log(newData);
       },
 
       _pageChanged: function(page) {
@@ -1078,7 +1111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var email = this.$.loginEmail.value;
         var password = this.$.loginPassword.value;
 
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        this.$.auth.signInWithEmailAndPassword(email, password).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -1096,13 +1129,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // Connexion avec Facebook
       _openFbDialog: function () {
-        firebase.auth().signInWithPopup(provider).then(function(result) {
-          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-          var token = result.credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
+        var self = this;
 
-          firebase.database().ref('users/' + user.uid).set({
+        this.$.auth.signInWithPopup().then(function(response) {
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          var token = response.credential.accessToken;
+          // The signed-in user info.
+          var user = response.user;
+
+          self.$.auth.app.database().ref('users/' + user.uid).set({
             name: user.displayName,
             email: user.email,
             profile_picture : user.photoURL,
@@ -1135,8 +1170,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var email = this.$$('#email').value;
         var password = this.$.signupPassword.value;
 
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
-          firebase.database().ref('users/' + user.uid).set({
+        this.$.auth.createUserWithEmailAndPassword(email, password).then(function(user) {
+          self.$.auth.app.database().ref('users/' + user.uid).set({
             name: name,
             email: email,
             profile_picture : 'default',
@@ -1330,13 +1365,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _userLogout: function () {
         var self = this;
 
-        firebase.auth().signOut().then(function() {
+        this.$.auth.signOut().then(function() {
           // Sign-out successful.
           self.$.pc_toast.text = "Déconnexion réussie";
           self.$.pc_toast.show();
-
-          self.userLogged = false;
-          self.user = null;
         }).catch(function(error) {});
       },
 
