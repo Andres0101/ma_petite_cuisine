@@ -21,12 +21,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       :host {
         --app-primary-color: #333;
-        --app-secondary-color: #e95841;
+        --app-secondary-color: var(--paper-green-400);
         --app-background-color: #F2F2F2;
-
-        --app-event-color: var(--paper-blue-400);
-        --app-bar-disco-color: var(--paper-purple-400);
-        --app-turismo-color: var(--paper-green-400);
 
         /*Redes sociales*/
         --social-fb-color: #3B5A9A;
@@ -118,39 +114,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-overflow: ellipsis;
       }
 
-      /* Color tarjeta */
-      .event {
-        border-bottom: 2px solid var(--app-event-color);
-      }
-      .restaurant {
-        border-bottom: 2px solid var(--app-secondary-color);
-      }
-      .bar-disco {
-        border-bottom: 2px solid var(--app-bar-disco-color);
-      }
-      .tourism {
-        border-bottom: 2px solid var(--app-turismo-color);
-      }
       /* Color botón Ver más */
-      .view-more-event {
-        background-color: var(--app-event-color);
-        color: white;
-        --paper-fab-background: var(--app-event-color);
-      }
-      .view-more-restaurant {
+      .view-more-recipe {
         background-color: var(--app-secondary-color);
         color: white;
         --paper-fab-background: var(--app-secondary-color);
-      }
-      .view-more-bar-disco {
-        background-color: var(--app-bar-disco-color);
-        color: white;
-        --paper-fab-background: var(--app-bar-disco-color);
-      }
-      .view-more-tourism {
-        background-color: var(--app-turismo-color);
-        color: white;
-        --paper-fab-background: var(--app-turismo-color);
       }
 
       h1 {

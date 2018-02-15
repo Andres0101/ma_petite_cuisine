@@ -45,7 +45,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../bower_components/bottom-nav/bottom-nav.html">
 <link rel="import" href="../bower_components/byutv-jsonp/byutv-jsonp.html">
@@ -562,12 +561,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       user="{{userInfo}}"
       provider="facebook">
     </firebase-auth>
-    <firebase-query
-      id="query"
-      app-name="mapetitecuisine"
-      path="/recipes"
-      data="{{recipes}}">
-    </firebase-query>
 
     <div id="header_layout">
       <!-- Header del sitio -->
@@ -934,10 +927,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           observer: '_userChanged'
         },
-        recipes: {
-          type: Array,
-          observer: '_recipeChanged'
-        },
         page: {
           type: String,
           reflectToAttribute: true,
@@ -1035,11 +1024,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // this.userLogged = true;
           this.closeLoginDialog();
         }
-      },
-      _recipeChanged: function(newData, oldData) {
-        // do something when the query returns values
-        console.log("newData");
-        console.log(newData);
       },
 
       _pageChanged: function(page) {

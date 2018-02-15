@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
@@ -52,6 +53,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       on-response="handleResponse">
     </iron-ajax>
 
+    <firebase-query
+      id="query"
+      app-name="mapetitecuisine"
+      path="/recipes"
+      data="{{recipes}}"
+      limit-to-first=5>
+    </firebase-query>
+
     <!-- Montrer un placeholder du module en obtenant les résultats -->
     <template is="dom-if" if="{{loadingData}}" restamp="true">
       <div class="app-grid items_placeholder">
@@ -60,6 +69,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
       </div>
     </template>
+
+    <div class="cards_container">
+      <div class="module_title layout horizontal center">
+        <div>
+          <div class="module_title_title paper-font-headline">Recettes</div>
+          <div class="module_title_subtitle paper-font-body1">Les plus récent</div>
+        </div>
+        <span class="flex"></span>
+        <a href="/recettes" class="more_button_text link">
+          <paper-button noink class="view-more-recipe">Plus</paper-button>
+        </a>
+      </div>
+
+      <div class="app-grid">
+        <template is="dom-repeat" items="{{recipes}}" as="recipe">
+          <plan-card
+            url="[[recipe.url_link]]"
+            image="[[recipe.image]]"
+            title="[[recipe.name]]"
+            date="[[recipe.date]]"
+            rating="[[recipe.rating]]"
+            price="[[recipe.price_range]]"
+            description="[[recipe.description]]"
+            category="[[recipe.categories]]">
+          </plan-card>
+        </template>
+        <!-- Si no es parallax, muestra la carta con el fab de ver más -->
+        <!-- <template is="dom-if" if="{{!parallax}}" restamp="true">
+          <view-more-card
+            url="[[data.btn_slug]]"
+            image="[[_generateImageButton(data.items.0.content_type)]]"
+            title="[[data.btn_name]]"
+            contentype="[[data.items.0.content_type]]"
+            class="more_button_fab">
+          </view-more-card>
+        </template> -->
+      </div>
+    </div>
 
     <template is="dom-repeat" items="{{homeData}}" as="module">
       <module-element
@@ -81,10 +128,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           value: []
         },
+        recipes: {
+          type: Array,
+          observer: '_recipeChanged'
+        },
         loadingData: {
           type: Boolean,
           value: true
         }
+      },
+
+      attached: function () {
+        this.loadingData = true;
       },
 
       ready: function() {
@@ -115,6 +170,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       handleResponse: function (data) {
         this.homeData = data.detail.response;
+      },
+      _recipeChanged: function (newData, oldData) {
         this.loadingData = false;
         this.fire('show-progress', false);
       }

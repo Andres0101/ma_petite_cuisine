@@ -22,6 +22,7 @@
         @apply(--shadow-elevation-2dp);
         @apply(--shadow-transition);
         @apply(--plan-card);
+        border-bottom: 2px solid var(--app-secondary-color);
       }
       .plan_card:hover {
         @apply(--shadow-elevation-6dp);
@@ -121,7 +122,7 @@
     </style>
 
     <a href="{{url}}" class="link">
-      <div class$="{{contentype}} plan_card">
+      <div class="plan_card">
         <iron-image class="image" src="{{image}}" preload fade sizing="cover"></iron-image>
         <div class="fix_overflow layout vertical">
           <div class="card_content">
@@ -142,12 +143,19 @@
               <div class="card_price paper-font-body2">{{_generatePriceRange(price)}}</div>
             </div>
             <p class="description overflow">{{description}}</p>
-            <template is="dom-if" if="{{location}}">
+            <template is="dom-if" if="{{category}}">
+              <span>{{_getCategoryName(category)}}</span>
               <div class="location layout horizontal center">
                 <iron-icon class="location_icon" icon="communication:location-on"></iron-icon>
                 <span class="overflow">{{location}}</span>
               </div>
             </template>
+            <!-- <template is="dom-if" if="{{location}}">
+              <div class="location layout horizontal center">
+                <iron-icon class="location_icon" icon="communication:location-on"></iron-icon>
+                <span class="overflow">{{location}}</span>
+              </div>
+            </template> -->
           </div>
         </div>
         <paper-ripple></paper-ripple>
@@ -172,10 +180,6 @@
           type: String,
           reflectToAttribute: true
         },
-        contentype:{
-          type: String,
-          reflectToAttribute: true
-        },
         namentity:{
           type: String,
           reflectToAttribute: true
@@ -196,8 +200,8 @@
           type: String,
           reflectToAttribute: true
         },
-        location:{
-          type: String,
+        category:{
+          type: Array,
           reflectToAttribute: true
         }
       },
@@ -210,6 +214,9 @@
           temp = temp + "$";
         }
         return temp;
+      },
+      _getCategoryName: function (categories) {
+        console.log(categories);
       }
     })
   </script>
