@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/plan-ciudad.html",
+  "shell": "src/petite-cuisine.html",
   "fragments": [
     "src/home-view.html",
     "src/eventos-view.html",
