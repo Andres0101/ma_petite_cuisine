@@ -12,7 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 
-<link rel="import" href="elements/single_view/place-info-card.html">
+<link rel="import" href="elements/single_view/recipe-info-card.html">
 <link rel="import" href="elements/recommended-side-module.html">
 
 <link rel="import" href="shared-styles.html">
@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route route="{{route}}" pattern="/recette/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
     <div class="cards_container">
-      <place-info-card url="{{routeData.page}}"></place-info-card>
+      <recipe-info-card url="{{routeData.page}}"></recipe-info-card>
     </div>
 
   </template>

@@ -1,0 +1,617 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/polymerfire/firebase-query.html">
+
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/places-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/notification-icons.html">
+
+<link rel="import" href="../../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../../bower_components/google-youtube/google-youtube.html">
+
+<link rel="import" href="../../../bower_components/l2t-paper-slider/l2t-paper-slider.html">
+<link rel="import" href="../../../bower_components/material-progress/material-progress-bars.html">
+<link rel="import" href="../../../bower_components/paper-rating/paper-rating.html">
+<link rel="import" href="../../../bower_components/star-rating/star-rating.html">
+
+<link rel="import" href="barra-compartir.html">
+<link rel="import" href="eventos-aqui.html">
+<link rel="import" href="basic-info.html">
+<link rel="import" href="../business-hours.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../shared-info-card-styles.html">
+
+<dom-module id="recipe-info-card">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="shared-info-card-styles">
+      #maps_button{
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+    </style>
+
+    <iron-localstorage
+      id="localstorage"
+      name="my-app-storage"
+      value="{{userInfo}}"
+      on-iron-localstorage-load="_localStorageLoad"
+      on-iron-localstorage-load-empty="_onLocalStorageEmpty">
+    </iron-localstorage>
+
+    <iron-ajax
+      id="ajax"
+      url="{{url}}"
+      loading="{{isLoading}}"
+      on-response="handleResponse">
+    </iron-ajax>
+
+    <firebase-query
+      log
+      app-name="mapetitecuisine"
+      path="/recipes"
+      equal-to="{{url}}"
+      data="{{recipeInfo}}" >
+    </firebase-query>
+
+    <app-location route="{{route}}"></app-location>
+
+    <!-- Barra de compartir -->
+    <barra-compartir name="[[data.response.basicInfo.0.name]]" path="[[route.path]]"></barra-compartir>
+
+    <!-- Cover -->
+    <div id="cover" class="layout vertical">
+      <iron-image src="[[_generateImageUrl(data.response.basicInfo.0.image)]]" preload fade sizing="cover"></iron-image>
+      <div id="cover_info" class="info_section layout vertical flex">
+        <div class="layout vertical end">
+          <div class="paper-font-display1">[[data.response.ratings.average]]</div>
+          <paper-rating rating="[[data.response.ratings.average]]" disabled></paper-rating>
+          <div id="rating_count_cover" class="cover_item paper-font-body1">
+            <iron-icon icon="social:person"></iron-icon>
+            [[data.response.ratings.ratingCount]]
+          </div>
+        </div>
+        <div class="layout horizontal end flex">
+          <div>
+            <h1>[[data.response.basicInfo.0.name]]</h1> <!-- TODO: Limitar a 70 caracteres -->
+            <div class="cover_item layout horizontal center">
+              <iron-icon icon="[[_pickTypeIcon(data.response.basicInfo.0.type)]]"></iron-icon>
+              <div class="paper-font-subhead">[[data.response.basicInfo.0.category.main.name]]</div>
+            </div>
+            <div class="cover_item layout horizontal center">
+              <iron-icon icon="maps:place"></iron-icon>
+              <div class="paper-font-subhead">
+                [[_joinLocations(data.response.locations)]]
+              </div>
+            </div>
+            <template is="dom-if" if="[[data.response.basicInfo.0.priceRange]]" restamp="true">
+              <div class="cover_item layout horizontal center">
+                <iron-icon icon="editor:attach-money"></iron-icon>
+                <div class="paper-font-subhead">[[data.response.basicInfo.0.priceRange.description]] / [[data.response.basicInfo.0.priceRange.range]]</div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+      <paper-fab id="favorite_button" icon="favorite" active="[[data.response.basicInfo.0.userFavorite]]" toggles on-tap="_toggleFavorite"></paper-fab>
+    </div>
+
+    <!-- Eventos aquí -->
+    <template is="dom-if" if="[[_hasItems(data.response.eventsHere)]]">
+      <eventos-aqui data="[[data.response.eventsHere]]"></eventos-aqui>
+      <hr>
+    </template>
+
+    <!-- Información básica -->
+    <basic-info
+      type="place"
+      description="[[data.response.basicInfo.0.description]]"
+      category-icon="[[_pickTypeIcon(data.response.basicInfo.0.type)]]"
+      category-text="[[_pickTypeText(data.response.basicInfo.0.type)]]"
+      main-category="[[data.response.basicInfo.0.category.main.name]]"
+      secondary-category="[[data.response.basicInfo.0.category.secondary]]"
+      has-info="[[data.response.basicInfo.0.hasMenu]]"
+      info-icon="maps:restaurant-menu"
+      info-text="Menú del restaurante"
+      info-download-text="Descargar menú"
+      has-services="[[_hasItems(data.response.basicInfo.0.services)]]"
+      services="[[data.response.basicInfo.0.services]]"
+      payments="[[data.response.basicInfo.0.paymentAccepted]]"
+      website="[[data.response.basicInfo.0.website]]"
+      social-network="[[_hasItems(data.response.basicInfo.0.social_networks)]]"
+      social-icon="social:public"
+      social-text="Redes sociales"
+      social-network-array="[[data.response.basicInfo.0.social_networks]]">
+    </basic-info>
+
+    <hr>
+
+    <div class="info_section">
+      <!-- Sucursales -->
+      <div class="info_item">
+        <div class="section_title layout horizontal center">
+          <iron-icon icon="maps:place"></iron-icon>
+          <div class="paper-font-subhead">Sucursales</div>
+        </div>
+        <!-- Mapa -->
+        <div id="map_container" class="layout vertical center-center">
+          <template is="dom-if" if="{{!mapVisible}}" restamp="true">
+            <paper-button class="raised_button" raised on-tap="showMap">
+              Mostrar mapa
+            </paper-button>
+          </template>
+          <template is="dom-if" if="{{mapVisible}}">
+            <google-map disable-map-type-control fit-to-markers single-info-window api-key="AIzaSyD2pssWo-hYkpweONkIKheKGp8A06XXSAM">
+              <template is="dom-repeat" items="[[data.response.locations]]" as="location">
+                <google-map-marker latitude="[[location.lat]]" longitude="[[location.lng]]" title="[[location.name]]">
+                  <div><strong>[[location.name]]</strong></div>
+                  <i>Dirección</i>
+                  <div>[[location.address]]</div>
+                  <template is="dom-if" if="[[_hasItems(location.phones)]]">
+                    <i>Teléfonos</i>
+                    <template is="dom-repeat" items="[[location.phones]]" as="phone">
+                      <div>[[phone]]</div>
+                    </template>
+                  </template>
+                </google-map-marker>
+              </template>
+            </google-map>
+          </template>
+        </div>
+
+        <div class="layout horizontal wrap">
+          <template is="dom-repeat" items="[[data.response.locations]]" as="location">
+            <div class="sucursal_info">
+              <div class="sucursal_title paper-font-subhead">[[location.name]]</div>
+              <business-hours
+                hours-open="[[location.hoursOpen]]"
+                opened-text="Abierto ahora"
+                opening-prefix="Abre en"
+                closed-text="Cerrado"
+                closing-prefix="Cierra en">
+              </business-hours>
+
+              <div class="sucursal_info_row paper-font-body1 layout horizontal">
+                <iron-icon icon="maps:place"></iron-icon>
+                <div>[[location.address]]</div>
+              </div>
+
+              <template is="dom-if" if="[[_hasItems(location.phones)]]">
+                <div class="sucursal_info_row paper-font-body1 layout horizontal">
+                  <iron-icon icon="maps:local-phone"></iron-icon>
+                  <div>
+                    <template is="dom-repeat" items="[[location.phones]]" as="phone">
+                      <div>[[phone]]</div>
+                    </template>
+                  </div>
+                </div>
+              </template>
+
+              <template is="dom-if" if="[[location.makesDeliveries]]">
+                <div class="sucursal_info_row paper-font-body1 layout horizontal center wrap">
+                  <iron-icon icon="maps:local-shipping"></iron-icon>
+                  <div>Domicilios</div>
+                </div>
+              </template>
+
+              <template is="dom-if" if="[[location.acceptsReservations]]">
+                <div class="sucursal_info_row paper-font-body1 layout horizontal center wrap">
+                  <iron-icon icon="notification:event-available"></iron-icon>
+                  <div>Reservaciones</div>
+                </div>
+              </template>
+
+              <a class="link" target="_blank" rel="noopener" href="https://www.google.com/maps?saddr=My+Location&daddr=[[location.lat]],[[location.lng]]">
+                <paper-button id="maps_button" class="paper-font-button">
+                  <iron-icon icon="maps:directions"></iron-icon>
+                  Navegar en Maps
+                </paper-button>
+              </a>
+            </div>
+          </template>
+        </div>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <template is="dom-if" if="[[_hasGallery(data.response.gallery.images, data.response.gallery.videos)]]">
+      <div class="info_section">
+        <!-- Galería de imágenes -->
+        <template is="dom-if" if="[[_hasItems(data.response.gallery.images)]]">
+          <div class="info_item">
+            <div class="section_title layout horizontal center">
+              <iron-icon icon="image:collections"></iron-icon>
+              <div class="paper-font-subhead">Galería de imágenes</div>
+            </div>
+            <div class="app-grid">
+              <template is="dom-repeat" items="[[data.response.gallery.images]]" as="image">
+                <iron-image src="[[_generateImageUrl(image)]]" preload fade sizing="cover" class="gallery_thumbnail" on-tap="_showGallery"></iron-image>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <!-- Videos -->
+        <template is="dom-if" if="[[_hasItems(data.response.gallery.videos)]]">
+          <div class="info_item">
+            <div class="section_title layout horizontal center">
+              <iron-icon icon="theaters"></iron-icon>
+              <div class="paper-font-subhead">Videos</div>
+            </div>
+            <div class="app-grid">
+              <template is="dom-repeat" items="[[data.response.gallery.videos]]" as="video">
+                <iron-image src="[[_getVideoThumbnail(video)]]" preload fade sizing="cover" class="gallery_thumbnail" on-tap="_showVideo"></iron-image>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+      <hr>
+    </template>
+
+    <template is="dom-if" if="[[_hasSpecialInfo(data.response.specialInfo.chef, data.response.specialInfo.recommendedProduct)]]">
+      <div class="info_section">
+        <div class="info_row">
+          <!-- Chef de la casa -->
+          <template is="dom-if" if="[[data.response.specialInfo.chef]]">
+            <div class="info_item flex">
+              <div class="section_title layout horizontal center">
+                <iron-icon icon="social:person"></iron-icon>
+                <div class="paper-font-subhead">Chef de la casa</div>
+              </div>
+              <iron-image src="[[_generateImageUrl(data.response.specialInfo.chef.image)]]" preload fade sizing="cover" class="special_info_image"></iron-image>
+              <div class="info_item_title paper-font-subhead">[[data.response.specialInfo.chef.name]]</div>
+              <p class="paper-font-body1">[[data.response.specialInfo.chef.description]]</p>
+            </div>
+          </template>
+          <!-- Nuestro recomendado -->
+          <template is="dom-if" if="[[data.response.specialInfo.recommendedProduct]]">
+            <div class="info_item flex">
+              <div class="section_title layout horizontal center">
+                <iron-icon icon="star"></iron-icon>
+                <div class="paper-font-subhead">Nuestro recomendado</div>
+              </div>
+              <iron-image src="[[_generateImageUrl(data.response.specialInfo.recommendedProduct.image)]]" preload fade sizing="cover" class="special_info_image"></iron-image>
+              <div class="info_item_title paper-font-subhead">[[data.response.specialInfo.recommendedProduct.name]]</div>
+              <p class="paper-font-body1">[[data.response.specialInfo.recommendedProduct.description]]</p>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <hr>
+    </template>
+
+    <template is="dom-if" if="[[_hasItems(data.response.promotions)]]">
+      <div class="info_section">
+        <!-- Promociones -->
+        <div class="info_item">
+          <div class="section_title layout horizontal center">
+            <iron-icon icon="maps:local-offer"></iron-icon>
+            <div class="paper-font-subhead">Promociones</div>
+          </div>
+          <div class="layout horizontal wrap">
+            <template is="dom-repeat" items="[[data.response.promotions]]" as="promotion">
+              <div class="sucursal_info">
+                <div class="sucursal_title paper-font-subhead">[[promotion.name]]</div>
+                <business-hours
+                  hours-open="[[promotion.hoursOpen]]"
+                  opened-text="Activa ahora"
+                  opening-prefix="Inicia en"
+                  closed-text="Inactiva ahora"
+                  closing-prefix="Finaliza en">
+                </business-hours>
+                <div class="sucursal_info_row layout horizontal center wrap">
+                  <template is="dom-repeat" items="[[promotion.locations]]" as="location">
+                    <div class="chip_item chip_item_small noselect paper-font-caption">
+                      [[location]]
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+    </template>
+
+    <template is="dom-if" if="[[data.response.dressCode]]">
+      <div class="info_section">
+        <!-- Código de vestimenta -->
+        <div class="info_item">
+          <div class="section_title layout horizontal center">
+            <iron-icon icon="book"></iron-icon>
+            <div class="paper-font-subhead">Código de vestimenta</div>
+          </div>
+          <p class="paper-font-body1">[[data.response.dressCode]]</p>
+        </div>
+      </div>
+
+      <hr>
+    </template>
+
+    <div class="info_section">
+      <!-- Calificaciones -->
+      <div class="info_item">
+        <div class="section_title layout horizontal center">
+          <iron-icon icon="stars"></iron-icon>
+          <div class="paper-font-subhead">Calificaciones</div>
+        </div>
+        <div id="ratingScore" class="layout horizontal center">
+          <div>
+            <div id="ratingText" class="layout horizontal end">
+              <div class="paper-font-display3">[[data.response.ratings.average]]</div>
+              <div class="paper-font-display1">/ 5</div>
+            </div>
+            <paper-rating rating="[[data.response.ratings.average]]" disabled></paper-rating>
+          </div>
+          <span class="flex"></span>
+          <paper-button raised class="raised_button" on-tap="_openRating">Calificar</paper-button>
+        </div>
+        <material-progress-bars max="[[data.response.ratings.ratingCount]]" bar-height="18" animated legend-label="[[data.response.ratings.ratingCount]] calificaciones">
+          <template is="dom-repeat" items="[[data.response.ratings.ratingByStars]]" as="rating">
+            <div class$="bar rating_bar[[rating.stars]]" data-value$="[[rating.count]]" data-legend$="[[_getLegend(rating.stars)]]">
+              <span>[[rating.count]]</span>
+            </div>
+          </template>
+        </material-progress-bars>
+
+        <template is="dom-if" if="[[_hasItems(data.response.ratings.reviews)]]">
+          <div id="reviews_title" class="layout horizontal center">
+            <div id="reviews_title_text">
+              <div class="paper-font-subhead">Reseñas</div>
+            </div>
+            <span class="flex"></span>
+            <paper-menu-button horizontal-align="right">
+              <paper-button class="dropdown-trigger" tabindex="0">
+                <iron-icon icon="sort"></iron-icon>
+                <span class="textOrderBy">Ordenar por</span>
+              </paper-button>
+
+              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{sortVal}}">
+                <paper-item value="rating">Mejores calif.</paper-item>
+                <paper-item value="newest">Más nuevos</paper-item>
+                <paper-item value="oldest">Más antiguos</paper-item>
+              </paper-menu>
+            </paper-menu-button>
+          </div>
+
+          <div id="reviews_container" class="layout horizontal wrap">
+            <template is="dom-repeat" items="[[data.response.ratings.reviews]]" as="review">
+              <div class="review">
+                <div class="layout horizontal center">
+                  <iron-image src="[[review.user.image]]" preload fade sizing="cover" class="reviewer_image"></iron-image>
+                  <div>
+                    <div class="reviewer_name paper-font-body2">[[review.user.name]]</div>
+                    <paper-rating class="review_stars" rating="[[review.rating]]" disabled></paper-rating>
+                  </div>
+                  <span class="flex"></span>
+                  <moment-element class="review_time_ago paper-font-caption" datetime="[[review.date]]" from="now"></moment-element>
+                </div>
+                <p class="paper-font-body1">[[review.description]]</p>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+    </div>
+
+
+    <paper-dialog id="gallery_dialog" class="no_text_dialog layout vertical center-center" with-backdrop on-iron-overlay-opened="patchOverlay" on-iron-overlay-closed="_restoreDocumentScrolling">
+      <paper-icon-button class="close_dialog_icon" icon="close" dialog-dismiss></paper-icon-button>
+      <template is="dom-if" if="[[_hasGallery(data.response.gallery.images, data.response.gallery.videos)]]">
+        <l2t-paper-slider id="gallery_slider" total-slides="[[_countItems(data.response.gallery.images)]]">
+          <template is="dom-repeat" items="[[data.response.gallery.images]]" as="image">
+            <paper-slide>
+              <iron-image src="[[_generateImageUrl(image)]]" preload fade sizing="contain"></iron-image>
+            </paper-slide>
+          </template>
+        </l2t-paper-slider>
+      </template>
+    </paper-dialog>
+
+    <paper-dialog id="video_dialog" class="no_text_dialog" with-backdrop on-iron-overlay-opened="patchOverlay" on-iron-overlay-closed="_restoreDocumentScrolling">
+      <paper-icon-button class="close_dialog_icon" icon="close" dialog-dismiss></paper-icon-button>
+      <google-youtube
+        id="video_player"
+        video-id="[[_videoId]]"
+        showinfo="0"
+        rel="0"
+        fluid>
+      </google-youtube>
+    </paper-dialog>
+
+    <paper-dialog id="rating_dialog" with-backdrop on-iron-overlay-opened="patchOverlay" on-iron-overlay-closed="_restoreDocumentScrolling">
+      <div class="layout vertical center">
+        <iron-image id="review_image" src="https://source.unsplash.com/random/60x60" preload fade sizing="cover"></iron-image>
+        <div class="paper-font-body1">Tu calificación</div>
+        <star-rating id="review_rating"></star-rating>
+        <div class="paper-font-body1">Reseña (opcional)</div>
+        <paper-textarea id="review_text" rows="3" no-label-float maxlength="500" char-counter></paper-textarea>
+      </div>
+      <div class="buttons">
+        <paper-button noink dialog-dismiss>Cancelar</paper-button>
+        <paper-button noink on-tap="_submitRating">Enviar</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-toast id="toast"></paper-toast>
+
+    <paper-tooltip animation-delay="100" id="favorite_tooltip" for="favorite_button" position="top"></paper-tooltip>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'recipe-info-card',
+
+      attached: function () {
+        this.mapVisible = false;
+
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+
+      _localStorageLoad: function () {
+        this.$.ajax.params = {
+          'id': this.userInfo.user.id,
+          'token': this.userInfo.token
+        };
+        this.$.ajax.generateRequest();
+      },
+      _onLocalStorageEmpty: function () {
+        this.$.ajax.generateRequest();
+      },
+
+      _generateImageUrl: function (url_img) {
+        return "http://localhost:8000" + url_img;
+      },
+      handleResponse: function (response) {
+        this.data = response.detail.response;
+
+        //Configurar mensaje del tooltip de favorito
+        var isFavorite = this.$.favorite_button.active;
+        if (isFavorite) {
+          Polymer.dom(document.getElementById('favorite_tooltip')).textContent = "Eliminar de favoritos";
+        } else{
+          Polymer.dom(document.getElementById('favorite_tooltip')).textContent = "Agregar a favoritos";
+        }
+      },
+      showMap: function () {
+        this.mapVisible = true;
+      },
+      _toggleFavorite: function (e) {
+        //TODO: Ejecutar un POST request con iron-ajax para marcar/desmarcar favorito con el id del restaurante
+        var isFavorite = e.target.active;
+        if (isFavorite) {
+          this.$.toast.text = "Agregado a favoritos";
+        } else{
+          this.$.toast.text = "Eliminado de favoritos";
+        }
+        this.$.toast.show();
+
+        this.$.favorite_button.classList.add("animate");
+        this.async(function () {
+          this.$.favorite_button.classList.remove("animate");
+          if (isFavorite) {
+            this.$.favorite_tooltip.textContent = "Eliminar de favoritos";
+          } else{
+            this.$.favorite_tooltip.textContent = "Agregar a favoritos";
+          }
+        },this.$.toast.duration);
+      },
+      _joinLocations: function (locations) {
+        return locations.map(function(location){
+          return location.name;
+        }).join(" | ");
+      },
+      _getVideoIdFromUrl: function (url) {
+        var videoId = "";
+        var regExp = /(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/;
+        var match = url.match(regExp);
+
+        //YouTube
+        if (match && match[1].length==11) {
+          videoId = match[1];
+        }
+        return videoId;
+      },
+      _getVideoThumbnail: function (url) {
+        var videoId = this._getVideoIdFromUrl(url);
+        return "http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg";
+      },
+      _showGallery: function (e) {
+        this.$.gallery_dialog.open();
+        this.$$("#gallery_slider").movePos(e.model.index);
+      },
+      _showVideo: function (e) {
+        var videoId = this._getVideoIdFromUrl(e.model.video);
+        this._videoId = videoId;
+        this.$.video_dialog.open();
+      },
+      _openRating: function (e) {
+        this.$.rating_dialog.open();
+      },
+      _submitRating: function () {
+        console.log("Enviar review", this.$.review_rating.rate, this.$.review_text.value);
+        // TODO: Enviar review y mostrar un ícono de carga en el diálogo
+      },
+      _pickTypeIcon: function (type) {
+        return type == "restaurant" ? "maps:restaurant" : "image:music-note";
+      },
+      _pickTypeText:function (type) {
+        return type == "restaurant" ? "Tipo de comida" : "Tipo de música";
+      },
+      _hasGallery: function (hasImages, hasVideos) {
+        return (this._hasItems(hasImages) || this._hasItems(hasVideos));
+      },
+      _hasSpecialInfo: function (hasChef, hasRecommendedProduct) {
+        return (hasChef || hasRecommendedProduct);
+      },
+      _countItems: function (array) {
+        return array.length;
+      },
+      _hasItems: function (array) {
+        return array.length > 0;
+      },
+      _getLegend: function (stars) {
+        switch (stars) {
+          case 1:
+            return "Malo";
+            break;
+          case 2:
+            return "Regular";
+            break;
+          case 3:
+            return "Aceptable";
+            break;
+          case 4:
+            return "Bueno";
+            break;
+          case 5:
+            return "Excelente";
+            break;
+        }
+      },
+      patchOverlay: function (e) {
+        document.body.style.overflow = 'hidden';
+        if (e.target.withBackdrop) {
+          e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+        }
+      },
+      _restoreDocumentScrolling: function(e) {
+        document.body.style.overflow = '';
+        this._videoId = "";
+      }
+    });
+  </script>
+</dom-module>
