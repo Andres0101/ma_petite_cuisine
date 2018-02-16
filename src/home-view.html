@@ -58,7 +58,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-name="mapetitecuisine"
       path="/recipes"
       data="{{recipes}}"
-      limit-to-first=5>
+      limit-to-first=5 >
     </firebase-query>
 
     <!-- Montrer un placeholder du module en obtenant les résultats -->
@@ -73,8 +73,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="cards_container">
       <div class="module_title layout horizontal center">
         <div>
-          <div class="module_title_title paper-font-headline">Recettes</div>
-          <div class="module_title_subtitle paper-font-body1">Les plus récent</div>
+          <div class="module_title_title paper-font-headline">Quoi de neuf cette semaine?</div>
+          <div class="module_title_subtitle paper-font-body1">Découvrez nos nouvelles recettes</div>
         </div>
         <span class="flex"></span>
         <a href="/recettes" class="more_button_text link">
@@ -174,6 +174,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _recipeChanged: function (newData, oldData) {
         this.loadingData = false;
         this.fire('show-progress', false);
+      },
+
+      _get: function (path) {
+         storageRef.child(path).getDownloadURL().then(function(url) {
+          // Once we have the download URL, we set it to our img element
+          console.log(url);
+        }).catch(function(error) {
+          // If anything goes wrong while getting the download URL, log the error
+          console.error(error);
+        });
       }
     });
   </script>
