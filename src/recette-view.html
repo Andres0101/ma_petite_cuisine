@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route route="{{route}}" pattern="/recette/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
     <div class="cards_container">
-      <place-info-card url="/recipes/{{routeData.page}}"></place-info-card>
+      <place-info-card url="{{routeData.page}}"></place-info-card>
     </div>
 
   </template>
