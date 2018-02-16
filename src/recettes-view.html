@@ -102,7 +102,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <firebase-query
-      log
       id="query"
       app-name="mapetitecuisine"
       path="/recipes"
@@ -151,7 +150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             rating="[[recipe.rating]]"
             price="[[recipe.price_range]]"
             description="[[recipe.description]]"
-            category="[[recipe.categories]]">
+            categories="[[_getCategories(recipe.categories)]]">
           </plan-card>
         </template>
       </div>
@@ -229,7 +228,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               return a.price_range > b.price_range ? -1 : 1;
             };
         }
-      }
+      },
+      _getCategories: function (categories) {
+        var list = [];
+
+        for (var key in categories) {
+          if (categories.hasOwnProperty(key)) {
+            var obj = categories[key];
+            list.push(key);
+          }
+        }
+        return list;
+      },
     });
   </script>
 </dom-module>

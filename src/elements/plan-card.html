@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../../bower_components/paper-rating/paper-rating.html">
 <link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
@@ -40,7 +41,7 @@
       .description {
         font-size: 13px;
         color: var(--paper-grey-600);
-        margin-top: 5px;
+        margin: 5px 0;
         @apply(--plan-card-description);
       }
       .location {
@@ -121,6 +122,15 @@
       }
     </style>
 
+    <template is="dom-repeat" items="{{categories}}" as="categoryValue">
+      <firebase-query
+        app-name="mapetitecuisine"
+        path="/categories"
+        equal-to="{{categoryValue}}"
+        data="{{categoryDetail}}" >
+      </firebase-query>
+    </template>
+
     <a href="{{url}}" class="link">
       <div class="plan_card">
         <iron-image class="image" src="{{image}}" preload fade sizing="cover"></iron-image>
@@ -136,20 +146,19 @@
                   <div class="card_date paper-font-body2">{{date}}</div>
                 </div>
               </template>
-              <template is="dom-if" if="{{_hasRating(rating)}}" restamp="true">
-                <paper-rating rating="{{rating}}" disabled></paper-rating>
+              <paper-rating rating="{{rating}}" disabled></paper-rating>
+              <!-- <span class="flex"></span>
+              <div class="card_price paper-font-body2">{{_generatePriceRange(price)}}</div> -->
+            </div>
+            <div class="layout horizontal">
+              <template is="dom-repeat" items="{{categoryDetail}}" as="category">
+                <div class="chip_item chip_item_small noselect paper-font-caption">
+                  <iron-icon icon="[[category.icon]]"></iron-icon>
+                  <!-- [[category.name]] -->
+                </div>
               </template>
-              <span class="flex"></span>
-              <div class="card_price paper-font-body2">{{_generatePriceRange(price)}}</div>
             </div>
             <p class="description overflow">{{description}}</p>
-            <template is="dom-if" if="{{category}}">
-              <span>{{_getCategoryName(category)}}</span>
-              <div class="location layout horizontal center">
-                <iron-icon class="location_icon" icon="communication:location-on"></iron-icon>
-                <span class="overflow">{{location}}</span>
-              </div>
-            </template>
             <!-- <template is="dom-if" if="{{location}}">
               <div class="location layout horizontal center">
                 <iron-icon class="location_icon" icon="communication:location-on"></iron-icon>
@@ -200,24 +209,18 @@
           type: String,
           reflectToAttribute: true
         },
-        category:{
+        categories:{
           type: Array,
           reflectToAttribute: true
         }
-      },
-      _hasRating: function(rating) {
-        return rating >= 0;
-      },
-      _generatePriceRange: function (price) {
-        var temp = "";
-        for (var i = 0; i < price; i++) {
-          temp = temp + "$";
-        }
-        return temp;
-      },
-      _getCategoryName: function (categories) {
-        console.log(categories);
       }
+      // _generatePriceRange: function (price) {
+      //   var temp = "";
+      //   for (var i = 0; i < price; i++) {
+      //     temp = temp + "$";
+      //   }
+      //   return temp;
+      // }
     })
   </script>
 </dom-module>
