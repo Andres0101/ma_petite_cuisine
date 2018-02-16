@@ -77,23 +77,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-location route="{{route}}"></app-location>
 
     <!-- Barra de compartir -->
-    <barra-compartir name="[[data.response.basicInfo.0.name]]" path="[[route.path]]"></barra-compartir>
+    <!-- <barra-compartir name="[[data.response.basicInfo.0.name]]" path="[[route.path]]"></barra-compartir> -->
 
     <!-- Cover -->
     <div id="cover" class="layout vertical">
-      <iron-image src="[[_generateImageUrl(data.response.basicInfo.0.image)]]" preload fade sizing="cover"></iron-image>
+      <iron-image src="[[recipeInfo.0.image]]" preload fade sizing="cover"></iron-image>
       <div id="cover_info" class="info_section layout vertical flex">
         <div class="layout vertical end">
-          <div class="paper-font-display1">[[data.response.ratings.average]]</div>
-          <paper-rating rating="[[data.response.ratings.average]]" disabled></paper-rating>
+          <div class="paper-font-display1">[[recipeInfo.0.rating]]</div>
+          <paper-rating rating="[[recipeInfo.0.rating]]" disabled></paper-rating>
           <div id="rating_count_cover" class="cover_item paper-font-body1">
             <iron-icon icon="social:person"></iron-icon>
-            [[data.response.ratings.ratingCount]]
+            [[recipeInfo.0.countPeopleRated]]
           </div>
         </div>
         <div class="layout horizontal end flex">
           <div>
-            <h1>[[data.response.basicInfo.0.name]]</h1> <!-- TODO: Limitar a 70 caracteres -->
+            <h1>[[recipeInfo.0.name]]</h1> <!-- TODO: Limitar a 70 caracteres -->
             <div class="cover_item layout horizontal center">
               <iron-icon icon="[[_pickTypeIcon(data.response.basicInfo.0.type)]]"></iron-icon>
               <div class="paper-font-subhead">[[data.response.basicInfo.0.category.main.name]]</div>
@@ -104,12 +104,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 [[_joinLocations(data.response.locations)]]
               </div>
             </div>
-            <template is="dom-if" if="[[data.response.basicInfo.0.priceRange]]" restamp="true">
-              <div class="cover_item layout horizontal center">
-                <iron-icon icon="editor:attach-money"></iron-icon>
-                <div class="paper-font-subhead">[[data.response.basicInfo.0.priceRange.description]] / [[data.response.basicInfo.0.priceRange.range]]</div>
-              </div>
-            </template>
+            <div class="cover_item layout horizontal center">
+              <iron-icon icon="editor:attach-money"></iron-icon>
+              <div class="paper-font-subhead">Entre $20.000 y $50.000 / $$</div>
+            </div>
           </div>
         </div>
       </div>
@@ -125,7 +123,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Información básica -->
     <basic-info
       type="place"
-      description="[[data.response.basicInfo.0.description]]"
+      description="[[recipeInfo.0.description]]"
       category-icon="[[_pickTypeIcon(data.response.basicInfo.0.type)]]"
       category-text="[[_pickTypeText(data.response.basicInfo.0.type)]]"
       main-category="[[data.response.basicInfo.0.category.main.name]]"
@@ -247,7 +245,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             <div class="app-grid">
               <template is="dom-repeat" items="[[data.response.gallery.images]]" as="image">
-                <iron-image src="[[_generateImageUrl(image)]]" preload fade sizing="cover" class="gallery_thumbnail" on-tap="_showGallery"></iron-image>
+                <iron-image src="[[image]]" preload fade sizing="cover" class="gallery_thumbnail" on-tap="_showGallery"></iron-image>
               </template>
             </div>
           </div>
@@ -281,7 +279,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <iron-icon icon="social:person"></iron-icon>
                 <div class="paper-font-subhead">Chef de la casa</div>
               </div>
-              <iron-image src="[[_generateImageUrl(data.response.specialInfo.chef.image)]]" preload fade sizing="cover" class="special_info_image"></iron-image>
+              <iron-image src="[[data.response.specialInfo.chef.image]]" preload fade sizing="cover" class="special_info_image"></iron-image>
               <div class="info_item_title paper-font-subhead">[[data.response.specialInfo.chef.name]]</div>
               <p class="paper-font-body1">[[data.response.specialInfo.chef.description]]</p>
             </div>
@@ -293,7 +291,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <iron-icon icon="star"></iron-icon>
                 <div class="paper-font-subhead">Nuestro recomendado</div>
               </div>
-              <iron-image src="[[_generateImageUrl(data.response.specialInfo.recommendedProduct.image)]]" preload fade sizing="cover" class="special_info_image"></iron-image>
+              <iron-image src="[[data.response.specialInfo.recommendedProduct.image]]" preload fade sizing="cover" class="special_info_image"></iron-image>
               <div class="info_item_title paper-font-subhead">[[data.response.specialInfo.recommendedProduct.name]]</div>
               <p class="paper-font-body1">[[data.response.specialInfo.recommendedProduct.description]]</p>
             </div>
@@ -364,15 +362,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="ratingScore" class="layout horizontal center">
           <div>
             <div id="ratingText" class="layout horizontal end">
-              <div class="paper-font-display3">[[data.response.ratings.average]]</div>
+              <div class="paper-font-display3">[[recipeInfo.0.rating]]</div>
               <div class="paper-font-display1">/ 5</div>
             </div>
-            <paper-rating rating="[[data.response.ratings.average]]" disabled></paper-rating>
+            <paper-rating rating="[[recipeInfo.0.rating]]" disabled></paper-rating>
           </div>
           <span class="flex"></span>
           <paper-button raised class="raised_button" on-tap="_openRating">Calificar</paper-button>
         </div>
-        <material-progress-bars max="[[data.response.ratings.ratingCount]]" bar-height="18" animated legend-label="[[data.response.ratings.ratingCount]] calificaciones">
+        <material-progress-bars max="[[recipeInfo.0.countPeopleRated]]" bar-height="18" animated legend-label="[[recipeInfo.0.countPeopleRated]] calificaciones">
           <template is="dom-repeat" items="[[data.response.ratings.ratingByStars]]" as="rating">
             <div class$="bar rating_bar[[rating.stars]]" data-value$="[[rating.count]]" data-legend$="[[_getLegend(rating.stars)]]">
               <span>[[rating.count]]</span>
@@ -427,7 +425,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <l2t-paper-slider id="gallery_slider" total-slides="[[_countItems(data.response.gallery.images)]]">
           <template is="dom-repeat" items="[[data.response.gallery.images]]" as="image">
             <paper-slide>
-              <iron-image src="[[_generateImageUrl(image)]]" preload fade sizing="contain"></iron-image>
+              <iron-image src="[[image]]" preload fade sizing="contain"></iron-image>
             </paper-slide>
           </template>
         </l2t-paper-slider>
@@ -492,9 +490,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.ajax.generateRequest();
       },
 
-      _generateImageUrl: function (url_img) {
-        return "http://localhost:8000" + url_img;
-      },
       handleResponse: function (response) {
         this.data = response.detail.response;
 
