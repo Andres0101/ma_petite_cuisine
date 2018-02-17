@@ -166,13 +166,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         recipes: {
           type: Array,
           observer: '_recipeChanged'
+        },
+        isLoading: {
+          type: Boolean,
+          value: true
+        }
+      },
+
+      ready: function () {
+        if (this.isLoading) {
+          this.fire('show-progress', true);
+        } else {
+          this.isLoading = false;
+          this.fire('show-progress', false);
         }
       },
 
       attached: function() {
-        this.isLoading = true;
-        this.fire('show-progress', true);
-
         this._updateGridStyles = this._updateGridStyles || function() {
           this.updateStyles();
         }.bind(this);
@@ -183,8 +193,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _recipeChanged: function (newData, oldData) {
-        this.isLoading = false;
-        this.fire('show-progress', false);
+        if (newData.length > 0) {
+          this.isLoading = false;
+          this.fire('show-progress', false);
+        }
       },
 
       _loadMoreData: function() {

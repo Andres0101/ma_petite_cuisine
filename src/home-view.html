@@ -138,12 +138,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      attached: function () {
-        this.loadingData = true;
-      },
-
       ready: function() {
-        this.fire('show-progress', true);
+        if (this.loadingData) {
+          this.fire('show-progress', true);
+        } else {
+          this.loadingData = false;
+          this.fire('show-progress', false);
+        }
 
         this._updateGridStyles = this._updateGridStyles || function() {
           this.updateStyles();
@@ -172,8 +173,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.homeData = data.detail.response;
       },
       _recipeChanged: function (newData, oldData) {
-        this.loadingData = false;
-        this.fire('show-progress', false);
+        if (newData.length > 0) {
+          this.loadingData = false;
+          this.fire('show-progress', false);
+        }
       },
       _getCategories: function (categories) {
         var list = [];
