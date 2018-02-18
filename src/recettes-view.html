@@ -101,12 +101,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <firebase-query
-      id="query"
-      app-name="mapetitecuisine"
-      path="/recipes"
-      data="{{recipes}}" >
-    </firebase-query>
+    <template is="dom-if" if="[[!type]]" restamp="true">
+      <firebase-query
+        app-name="mapetitecuisine"
+        path="/recipes"
+        data="{{recipes}}" >
+      </firebase-query>
+    </template>
+
+    <template is="dom-if" if="[[type]]" restamp="true">
+      <firebase-query
+        app-name="mapetitecuisine"
+        path="/recipes"
+        order-by-child="type"
+        equal-to="{{type}}"
+        data="{{recipes}}" >
+      </firebase-query>
+    </template>
 
     <div class="cards_container">
       <div class="module_title layout horizontal center">
@@ -122,9 +133,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-button>
 
           <paper-menu class="dropdown-content" attr-for-selected="value" on-iron-select="sortSelected">
-            <paper-item value="rating">Entrée</paper-item>
-            <paper-item value="cheapest">Plat</paper-item>
-            <paper-item value="expensive">Dessert</paper-item>
+            <paper-item value="entree">Entrée</paper-item>
+            <paper-item value="plat">Plat</paper-item>
+            <paper-item value="dessert">Dessert</paper-item>
           </paper-menu>
         </paper-menu-button>
       </div>
@@ -170,6 +181,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         isLoading: {
           type: Boolean,
           value: true
+        },
+        type: {
+          type: String,
+          value: ""
         }
       },
 
@@ -199,48 +214,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      _loadMoreData: function() {
-        if (this.$.ajax.lastRequest) {
-          this.$.ajax.lastRequest.abort();
-        }
-        this.page ++;
-        this.$.ajax.generateRequest();
-      },
-
-      // TODO: Ordenar restaurantes desde el backend
       sortSelected: function (e) {
         this.isLoading = true;
         this.fire('show-progress', true);
-
-        this.order = "";
-        this.order = e.target.selected;
-
-        // Al momento de seleccionar un tipo de ordenamiento se reinicia los valores de page e items
-        this.page = 0;
-        this.$.list.items = [];
-
-        this.debounce('_loadData', this._loadMoreData, 60);
+        this.type = e.target.selected;
       },
 
-      _sort: function(val) {
-        switch(val) {
-          case 'rating':
-            return function(a, b) {
-              if (a.average_ranking_total === b.average_ranking_total) return 0;
-              return a.average_ranking_total > b.average_ranking_total ? -1 : 1;
-            };
-          case 'cheapest':
-            return function(a, b) {
-              if (a.price_range === b.price_range) return 0;
-              return a.price_range < b.price_range ? -1 : 1;
-            };
-          case 'expensive':
-            return function(a, b) {
-              if (a.price_range === b.price_range) return 0;
-              return a.price_range > b.price_range ? -1 : 1;
-            };
-        }
-      },
       _getCategories: function (categories) {
         var list = [];
 
