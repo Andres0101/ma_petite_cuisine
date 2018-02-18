@@ -3,8 +3,7 @@
   "shell": "src/petite-cuisine.html",
   "fragments": [
     "src/home-view.html",
-    "src/eventos-view.html",
-    "src/eventos-category-view.html",
+    "src/debutant-view.html",
     "src/recettes-view.html",
     "src/recette-view.html",
     "src/restaurantes-view.html",
