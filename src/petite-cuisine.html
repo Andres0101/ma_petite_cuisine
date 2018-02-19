@@ -9,6 +9,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
@@ -42,9 +45,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
-
-<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 
 <link rel="import" href="../bower_components/bottom-nav/bottom-nav.html">
 <link rel="import" href="../bower_components/byutv-jsonp/byutv-jsonp.html">
@@ -522,12 +522,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <iron-localstorage
+    <!-- <iron-localstorage
       id="localstorage"
       name="my-app-storage"
       value="{{userInfo}}"
       on-iron-localstorage-load-empty="_onLocalStorageEmpty">
-    </iron-localstorage>
+    </iron-localstorage> -->
 
     <!-- Ajax para el autocompletado -->
     <byutv-jsonp
@@ -584,7 +584,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-icon icon="arrow-drop-down"></iron-icon>
                   </paper-button>
                   <paper-menu class="dropdown-content">
-                    <a href="/usuario/publicaciones" class="link">
+                    <a href="/utilisateur/fiche-recettes" class="link">
                       <paper-item>Mon compte</paper-item>
                     </a>
                     <hr>
@@ -706,8 +706,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar id="dashboard_header" class="middle layout vertical center flex">
             <!-- Montrer l'info de l'utilisateur -->
             <iron-image id="user_picture" src="{{user.avatar}}" preload fade sizing="contain"></iron-image>
-            <div id="user_full_name" class="paper-font-headline">{{userInfo.user.name}}</div>
-            <div id="user_bio" class="paper-font-body1">{{userInfo.user.description}}</div>
+            <div id="user_full_name" class="paper-font-headline">{{user.name}}</div>
+            <!-- <div id="user_bio" class="paper-font-body1">{{user.description}}</div> -->
             <div id="user_social_links">
               <a href="https://facebook.com/{{userInfo.user.facebook_profile}}" hidden="{{!userInfo.user.facebook_profile}}" target="_blank" rel="noopener" class="link">
                 <paper-icon-button icon="my-icons:facebook"></paper-icon-button>
@@ -727,11 +727,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <!-- Pestañas -->
           <div id="dashboard_tabs" sticky>
             <paper-tabs selected="[[subroute.path]]" attr-for-selected="name" role="navigation">
-              <paper-tab name="/publicaciones" link>
-                <a class="link" href="/usuario/publicaciones" tabindex="-1">Recettes</a>
+              <paper-tab name="/fiche-recettes" link>
+                <a class="link" href="/utilisateur/fiche-recettes" tabindex="-1">Recettes</a>
               </paper-tab>
               <paper-tab name="/calificaciones" link>
-                <a class="link" href="/usuario/calificaciones" tabindex="-1">Liste des courses</a>
+                <a class="link" href="/utilisateur/calificaciones" tabindex="-1">Liste des courses</a>
               </paper-tab>
               <!-- <paper-tab name="/favoritos" link>
                 <a class="link" href="/usuario/favoritos" tabindex="-1">Favoritos</a>
@@ -766,7 +766,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <publicar-view name="publicar" route="{{subroute}}"></publicar-view>
 
-        <usuario-view name="usuario" route="{{subroute}}"></usuario-view>
+        <!-- User view -->
+        <utilisateur-view name="utilisateur" route="{{subroute}}" user-id="{{userInfo.uid}}"></utilisateur-view>
         <resultado-view name="resultado"></resultado-view>
         <error-view name="error"></error-view>
       </iron-pages>
@@ -1038,14 +1039,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Cacher les éléments du header en entrant dans l'utilisateur view
         this.hideHeader = false;
-        if (page == "usuario") {
+        if (page == "utilisateur") {
           this.async(function () {
-            if (this.user) {
+            if (this.userInfo) {
               this.userDashboard = true;
             } else {
               this._showPage404();
             }
-          });
+          }, 500);
         } else {
           this.userDashboard = false;
           if (page == "publicar") {
