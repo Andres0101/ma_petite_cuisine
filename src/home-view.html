@@ -130,10 +130,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-box effects="parallax-background" effects-config='{"parallax-background":{"scalar": 1.4}}'>
       <div class="container layout vertical center">
         <span class="dark module_title_title comment_marche_title paper-font-headline">Ma Petite Cuisine, comment ça marche?</span>
-        <div class="comment_marche_info layout horizontal center">
-          <span class="flex">1</span>
-          <span class="flex">1</span>
-          <span class="flex">1</span>
+        <div class="comment_marche_info layout horizontal">
+          <div class="layout vertical center flex">
+            <iron-icon icon="favorite"></iron-icon>
+            <span class="text">Choisis ce qui te fait envie</span>
+          </div>
+          <div class="layout vertical center flex">
+            <iron-icon icon="list"></iron-icon>
+            <span class="text">Crée ta liste de course selon les ingredients</span>
+          </div>
+          <div class="layout vertical center flex">
+            <iron-icon icon="shopping-basket"></iron-icon>
+            <span class="text">Commande directement tes course chez un de nos partenaires</span>
+          </div>
         </div>
       </div>
     </app-box>
