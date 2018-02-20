@@ -21,8 +21,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       :host {
         --app-primary-color: #333;
-        --app-secondary-color: var(--paper-green-400);
-        --app-purple-color: var(--paper-deep-purple-500);
+        --app-secondary-color: var(--paper-deep-purple-500);
+        --app-button-color: var(--paper-green-400);
         --app-background-color: #F2F2F2;
 
         /*Redes sociales*/
@@ -46,14 +46,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .paper-font-caption {@apply(--paper-font-caption);}
       .paper-font-menu {@apply(--paper-font-menu);}
       .paper-font-button {@apply(--paper-font-button);}
-
-      /* Plan Ciudad */
-      .plan_ciudad_color {
-        color: var(--app-secondary-color);
-      }
-      .plan_ciudad_bg_color {
-        background-color: var(--app-secondary-color);
-      }
 
       /*Quitar el highlight al hacer tap en Chrome*/
       * {
@@ -122,15 +114,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 10px 5px 20px;
       }
       .view-more-recipe {
-        background-color: var(--app-secondary-color);
-        color: white;
-        --paper-fab-background: var(--app-secondary-color);
+        color: var(--app-button-color);
+        border: 2px solid var(--app-button-color);
       }
       .ajouter-recette {
         width: 100%;
-        background-color: var(--app-purple-color);
-        color: white;
-        --paper-fab-background: var(--app-purple-color);
+        color: var(--app-secondary-color);
+        border: 2px solid var(--app-secondary-color);
       }
 
       h1 {
@@ -257,6 +247,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 2px 0;
         @apply(--paper-font-button);
         min-width: 4.14em;
+        border-radius: 20px;
       }
       /* -> Margin del ícono cuando el botón tiene uno adentro */
       paper-button iron-icon:first-child{
