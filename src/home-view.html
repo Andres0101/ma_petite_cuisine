@@ -11,6 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
+<link rel="import" href="../bower_components/app-layout/app-box/app-box.html">
+
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
@@ -31,6 +33,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .items_placeholder{
         margin-top: -4px;
+      }
+
+      app-box {
+        width: 100%;
+        height: 300px;
+        color: white;
+        margin-top: 40px;
+        --app-box-background-front-layer: {
+          background-image: url('http://source.unsplash.com/1920x500/?food');
+          margin-top: -200px;
+          height: 500px;
+        };
+      }
+      app-box .container {
+        background-color: rgba(51,51,51,0.8);
+        height: 100%;
+      }
+      app-box span {
+        text-align: center;
+      }
+      app-box paper-button {
+        margin-top: 12px;
+        padding: 8px 24px;
       }
 
       @media (max-width: 900px) {
@@ -61,15 +86,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-query>
 
     <div class="cards_container">
-      <div class="module_title layout horizontal center">
-        <div>
-          <div class="module_title_title paper-font-headline">Quoi de neuf cette semaine?</div>
-          <div class="module_title_subtitle paper-font-body1">Découvrez nos nouvelles recettes</div>
-        </div>
-        <span class="flex"></span>
-        <a href="/recettes" class="more_button_text link">
-          <paper-button noink class="view-more-recipe">Plus</paper-button>
-        </a>
+      <div class="module_title">
+        <div class="module_title_title paper-font-headline">Quoi de neuf cette semaine?</div>
+        <div class="module_title_subtitle paper-font-body1">Découvrez nos nouvelles recettes</div>
       </div>
 
       <!-- Montrer un placeholder du module en obtenant les résultats -->
@@ -81,6 +100,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </template>
 
+      <!-- 5 recettes les plus récentes -->
       <div class="app-grid">
         <template is="dom-repeat" items="{{recipes}}" as="recipe">
           <plan-card
@@ -94,27 +114,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             categories="[[_getCategories(recipe.categories)]]">
           </plan-card>
         </template>
-        <!-- Si no es parallax, muestra la carta con el fab de ver más -->
-        <!-- <template is="dom-if" if="{{!parallax}}" restamp="true">
-          <view-more-card
-            url="[[data.btn_slug]]"
-            image="[[_generateImageButton(data.items.0.content_type)]]"
-            title="[[data.btn_name]]"
-            contentype="[[data.items.0.content_type]]"
-            class="more_button_fab">
-          </view-more-card>
-        </template> -->
       </div>
+
+      <template is="dom-if" if="{{!loadingData}}" restamp="true">
+        <div class="button_plus layout horizontal center">
+          <span class="flex"></span>
+          <a href="/recettes" class="more_button_text link">
+            <paper-button noink class="view-more-recipe">Plus de recettes</paper-button>
+          </a>
+        </div>
+      </template>
     </div>
 
-    <template is="dom-repeat" items="{{homeData}}" as="module">
+    <!-- Comment ça marche -->
+    <app-box effects="parallax-background" effects-config='{"parallax-background":{"scalar": 1.4}}'>
+      <div class="container layout vertical center">
+        <span class="dark module_title_title comment_marche_title paper-font-headline">Ma Petite Cuisine, comment ça marche?</span>
+        <div class="comment_marche_info layout horizontal center">
+          <span class="flex">1</span>
+          <span class="flex">1</span>
+          <span class="flex">1</span>
+        </div>
+      </div>
+    </app-box>
+
+    <!-- <template is="dom-repeat" items="{{homeData}}" as="module">
       <module-element
         has-title="[[_hasTitle(module.template)]]"
         parallax="[[_isParallax(module.template)]]"
         recomendado="[[_moduleRecomendado(module.template)]]"
         data="[[module]]">
       </module-element>
-    </template>
+    </template> -->
 
   </template>
 
