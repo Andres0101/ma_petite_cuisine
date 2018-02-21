@@ -9,12 +9,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../../../bower_components/iron-icons/places-icons.html">
 
 <link rel="import" href="../../shared-styles.html">
@@ -27,17 +28,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 20px;
       }
 
-      .section_title{
-        color: rgba(0, 0, 0, 0.75);
+      .section_title {
+        color: var(--paper-grey-800);
         margin: 12px 0;
       }
-      .section_title iron-icon{
+      .section_title iron-icon {
         margin-right: 12px;
       }
-      .section_title div{
+      .section_title div {
         font-weight: 500;
       }
-      .info_row{
+      .info_row {
         @apply(--layout-horizontal);
       }
       .info_item{
@@ -48,146 +49,94 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         max-width: 600px;
         color: #666;
       }
+      .ingredient_utensil_content {
+        color: var(--paper-grey-600);
+      }
+      .ingredient_utensil_content iron-icon {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        margin: 0 12px 0 35px;
+      }
 
       @media (max-width: 600px) {
         :host {
           padding: 10px;
         }
-        .info_row{
+        .info_row {
           @apply(--layout-vertical);
         }
       }
     </style>
 
-    <!-- Publicado por -->
-    <template is="dom-if" if="[[_isEvent(type)]]" restamp="true">
-      <div class="info_item">
-        <div class="section_title layout horizontal center">
-          <iron-icon icon="editor:publish"></iron-icon>
-          <div class="paper-font-subhead">Publicado por</div>
-        </div>
-        <a href="http://localhost:8080/usuario/[[publisherId]]" class="link noselect chip_item clickable_chip_item paper-font-body1">
-          [[publisherName]]
-        </a>
-      </div>
+    <!-- Obtenir les catégories de la recette -->
+    <template is="dom-repeat" items="{{categories}}" as="categoryValue">
+      <firebase-query
+        app-name="mapetitecuisine"
+        path="/categories"
+        equal-to="{{categoryValue}}"
+        data="{{categoryDetail}}" >
+      </firebase-query>
     </template>
 
-    <!-- Descripción -->
-    <div class="info_item">
-      <div class="section_title layout horizontal center">
-        <iron-icon icon="description"></iron-icon>
-        <div class="paper-font-subhead">Descripción</div>
-      </div>
-      <p class="paper-font-body1">[[description]]</p>
-    </div>
+    <!-- Obtenir les ustensils de la recette -->
+    <template is="dom-repeat" items="{{utensils}}" as="utensilValue">
+      <firebase-query
+        app-name="mapetitecuisine"
+        path="/utensils"
+        equal-to="{{utensilValue}}"
+        data="{{utensilDetail}}" >
+      </firebase-query>
+    </template>
 
+    <!-- Catégories -->
     <div class="info_row">
-      <!-- Categoría -->
       <div class="info_item flex">
         <div class="section_title layout horizontal center">
-          <iron-icon icon="[[categoryIcon]]"></iron-icon>
-          <div class="paper-font-subhead">[[categoryText]]</div>
+          <iron-icon icon="bookmark"></iron-icon>
+          <div class="paper-font-subhead">Catégories</div>
         </div>
         <div class="layout horizontal wrap">
-          <div class="noselect chip_item paper-font-body1">
-            <iron-icon icon="bookmark"></iron-icon>
-            [[mainCategory]]
-          </div>
-          <template is="dom-repeat" items="[[secondaryCategory]]" as="categoria">
+          <template is="dom-repeat" items="[[categoryDetail]]" as="category">
             <div class="noselect chip_item paper-font-body1">
-              [[categoria.name]]
+              <iron-icon icon="[[category.icon]]"></iron-icon>
+              [[category.name]]
             </div>
           </template>
         </div>
       </div>
-      <!-- Información adicional / Menú -->
-      <template is="dom-if" if="[[hasInfo]]">
-        <div class="info_item flex">
-          <div class="section_title layout horizontal center">
-            <iron-icon icon="[[infoIcon]]"></iron-icon>
-            <div class="paper-font-subhead">[[infoText]]</div>
-          </div>
-          <a href="[[hasInfo]]" class="link" download tabindex="-1">
-            <paper-button raised class="raised_button">[[infoDownloadText]]</paper-button>
-          </a>
-        </div>
-      </template>
     </div>
 
-    <template is="dom-if" if="[[!_isEvent(type)]]" restamp="true">
-      <div class="info_row">
-        <!-- Servicios -->
-        <template is="dom-if" if="[[hasServices]]">
-          <div class="info_item flex">
-            <div class="section_title layout horizontal center">
-              <iron-icon icon="places:room-service"></iron-icon>
-              <div class="paper-font-subhead">Servicios adicionales</div>
-            </div>
-            <div class="layout horizontal wrap">
-              <template is="dom-repeat" items="[[services]]" as="servicio">
-                <div class="noselect chip_item paper-font-body1">
-                  [[servicio]]
-                </div>
-              </template>
-            </div>
+    <div class="info_row">
+      <!-- Ingrédients -->
+      <div class="info_item flex">
+        <div class="section_title layout horizontal center">
+          <iron-icon icon="places:room-service"></iron-icon>
+          <div class="paper-font-subhead">Ingrédients</div>
+        </div>
+        <template is="dom-repeat" items="[[ingredients]]" as="ingredient">
+          <div class="ingredient_utensil_content layout horizontal paper-font-body1">
+            <iron-icon icon="arrow-forward"></iron-icon>
+            [[ingredient]]
           </div>
         </template>
-        <!-- Métodos de pago -->
-        <div class="info_item flex">
-          <div class="section_title layout horizontal center">
-            <iron-icon icon="credit-card"></iron-icon>
-            <div class="paper-font-subhead">Métodos de pago</div>
-          </div>
-          <div class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[payments]]" as="metodoPago">
-              <div class="noselect chip_item paper-font-body1">
-                [[metodoPago]]
-              </div>
-            </template>
-          </div>
-        </div>
       </div>
-    </template>
-
-    <div class="info_row">
-      <template is="dom-if" if="[[website]]">
-        <!-- Página web -->
-        <div class="info_item flex">
-          <div class="section_title layout horizontal center">
-            <iron-icon icon="language"></iron-icon>
-            <div class="paper-font-subhead">Página web</div>
-          </div>
-          <a href="[[website]]" class="link noselect chip_item clickable_chip_item paper-font-body1" target="_blank" rel="noopener">
-            [[website]]
-          </a>
+      <!-- Ustensils -->
+      <div class="info_item flex">
+        <div class="section_title layout horizontal center">
+          <iron-icon icon="maps:restaurant"></iron-icon>
+          <div class="paper-font-subhead">Ustensils</div>
         </div>
-      </template>
-      <!-- Redes sociales -->
-      <template is="dom-if" if="[[socialNetwork]]">
-        <div class="info_item flex">
-          <div class="section_title layout horizontal center">
-            <iron-icon icon="[[socialIcon]]"></iron-icon>
-            <div class="paper-font-subhead">[[socialText]]</div>
-          </div>
-
-          <template is="dom-if" if="[[_isEvent(type)]]" restamp="true">
-            <a href="[[socialNetwork]]" class="link" download tabindex="-1">
-              <paper-button raised class="fb">Ver en Facebook</paper-button>
-            </a>
-          </template>
-
-          <template is="dom-if" if="[[!_isEvent(type)]]" restamp="true">
-            <div class="layout horizontal wrap">
-              <template is="dom-repeat" items="[[socialNetworkArray]]" as="socialNetwork">
-                <a href="[[socialNetwork.url]]" class="link noselect chip_item clickable_chip_item paper-font-body1" target="_blank" rel="noopener">
-                  <iron-icon icon="my-icons:[[_getSocialIcon(socialNetwork.name)]]"></iron-icon>
-                  [[socialNetwork.name]]
-                </a>
-              </template>
+        <div class="layout horizontal wrap">
+          <template is="dom-repeat" items="[[utensilDetail]]" as="utensil">
+            <div class="ingredient_utensil_content layout horizontal paper-font-body1">
+              <iron-icon icon="[[utensil.icon]]"></iron-icon>
+              [[utensil.name]]
             </div>
           </template>
         </div>
-      </template>
+      </div>
     </div>
 
   </template>
@@ -197,49 +146,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'basic-info',
 
       properties: {
-        type: String,
-        publisherId: String,
-        publisherName: String,
-        description: String,
-        categoryIcon: String,
-        categoryText: String,
-        mainCategory: String,
-        secondaryCategory: Array,
-        hasInfo: String,
-        infoIcon: String,
-        infoText: String,
-        infoDownloadText: String,
-        hasServices: String,
-        services: Array,
-        payments: Array,
-        website: String,
-        socialNetwork: String,
-        socialIcon: String,
-        socialText: String,
-        socialNetworkArray: Array
-      },
-
-      _isEvent: function (type) {
-        return type === 'event';
-      },
-      _getSocialIcon: function (socialNetwork) {
-        switch (socialNetwork) {
-          case "Facebook":
-            return "facebook";
-            break;
-          case "Instagram":
-            return "instagram";
-            break;
-          case "Twitter":
-            return "twitter";
-            break;
-          case "YouTube":
-            return "youtube";
-            break;
-          case "Snapchat":
-            return "snapchat";
-            break;
-        }
+        categories: Array,
+        ingredients: Array,
+        utensils: Array
       }
     });
   </script>

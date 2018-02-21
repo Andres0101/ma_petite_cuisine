@@ -16,27 +16,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       :host {
         width: 100%;
-        max-width: 800px;
         background-color: white;
         @apply(--shadow-elevation-2dp);
         border-radius: 2px;
 
         --app-grid-columns: 4;
         --app-grid-gutter: 4px;
-      }
-
-      #cover{
-        position: relative;
-        width: 100%;
-        height: 300px;
-        color: white;
-        background-color: var(--app-primary-color);
-      }
-      #cover iron-image{
-        width: 100%;
-        height: 100%;
-        background-color: var(--app-primary-color);
-        opacity: 0.5;
       }
       #cover_info{
         position: absolute;
@@ -51,7 +36,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin: -2px;
         }
       }
-      .cover_item{
+      .cover_item {
+        color: var(--paper-grey-600);
         margin: 2px 0;
       }
       .cover_item iron-icon{
@@ -59,9 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 20px;
         min-width: 20px;
         min-height: 20px;
-
         margin-right: 12px;
-        color: rgba(255, 255, 255, 0.7);
       }
       #rating_count_cover{
         margin-right: 4px;
