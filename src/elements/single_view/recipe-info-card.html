@@ -28,7 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../bower_components/dom-repeat-n/dom-repeat-n.html">
 <link rel="import" href="../../../bower_components/material-progress/material-progress-bars.html">
 <link rel="import" href="../../../bower_components/paper-rating/paper-rating.html">
-<link rel="import" href="../../../bower_components/star-rating/star-rating.html">
 
 <link rel="import" href="basic-info.html">
 <link rel="import" href="../../shared-styles.html">
@@ -75,6 +74,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #buttons paper-button {
         margin-right: 6px;
       }
+      #toast {
+        z-index: 999 !important;
+      }
+
       @media (max-width: 1100px) {
         #video {
           width: 100%;
@@ -126,7 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="cards_container layout vertical center">
         <google-youtube
           id="video"
-          video-id="aQUuhcN6x-o&feature=youtu.be"
+          video-id="aQUuhcN6x-o"
           iv_load_policy="3"
           rel="0"
           showinfo="0"
@@ -201,8 +204,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-dialog id="rating_dialog" with-backdrop on-iron-overlay-opened="patchOverlay" on-iron-overlay-closed="_restoreDocumentScrolling">
       <div class="layout vertical center">
         <iron-image id="review_image" src="https://source.unsplash.com/random/60x60" preload fade sizing="cover"></iron-image>
-        <div class="paper-font-body1">Tu calificación</div>
-        <star-rating id="review_rating"></star-rating>
+        <div class="paper-font-body1">Votre notation</div>
+        <paper-rating id="review_rating" rating="0"></paper-rating>
       </div>
       <div class="buttons">
         <paper-button noink dialog-dismiss>Annuler</paper-button>
@@ -279,7 +282,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.rating_dialog.open();
       },
       _submitRating: function () {
-        console.log("Enviar review", this.$.review_rating.rate, this.$.review_text.value);
+        if (this.$.review_rating.rating != 0) {
+          console.log("Envoyer note", this.$.review_rating.rating);
+          this.$.rating_dialog.close();
+          this.$.review_rating.rating = 0;
+        } else {
+          this.$.toast.text = "Eliminado de favoritos";
+          this.$.toast.show();
+        }
         // TODO: Enviar review y mostrar un ícono de carga en el diálogo
       },
       _getCategories: function (categories) {
