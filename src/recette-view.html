@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route route="{{route}}" pattern="/recette/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
     <div class="cards_container">
-      <recipe-info-card url="{{routeData.page}}"></recipe-info-card>
+      <recipe-info-card url="{{routeData.page}}" user="{{userId}}"></recipe-info-card>
     </div>
 
   </template>
@@ -59,6 +59,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'recette-view',
+      properties: {
+        userId:{
+          type: String
+        }
+      }
     });
   </script>
 </dom-module>

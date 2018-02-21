@@ -736,7 +736,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <prix-view name="prix"></prix-view>
         <vegan-view name="vegan"></vegan-view>
         <!-- Single view -->
-        <recette-view name="recette"></recette-view>
+        <recette-view name="recette" user-id="{{userInfo.uid}}"></recette-view>
         <bar-view name="bar"></bar-view>
         <discoteca-view name="discoteca"></discoteca-view>
         <evento-view name="evento"></evento-view>
@@ -888,8 +888,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </paper-dialog>
 
     <paper-toast id="pc_toast" on-iron-overlay-opened="_disableDocumentScrolling">
-      <template is="dom-if" if="{{_resetLoginFb}}" restamp="true">
-        <paper-button on-tap="resetToast">Connexion</paper-button>
+      <template is="dom-if" if="{{_userWantToConnect}}" restamp="true">
+        <paper-button on-tap="_showLoginDialog">Connexion</paper-button>
       </template>
     </paper-toast>
 
@@ -934,7 +934,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       listeners: {
         'show-404': '_showPage404',
-        'show-progress': '_showProgress'
+        'show-progress': '_showProgress',
+        'show-logintoast': '_showLoginToast'
       },
 
       attached: function () {
@@ -947,6 +948,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         moment.updateLocale('es', { months : __months });
 
         var self = this;
+        this._userWantToConnect = false;
         this._resetLoginFb = false;
         this._passwordVisible = false;
         this.checkingUserInfo = false; // Spinner
@@ -1031,12 +1033,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
+      // Listeners
       _showPage404: function() {
         this.page = 'error';
       },
-
       _showProgress: function (event) {
         this.progress = event.detail;
+      },
+      _showLoginToast: function (event) {
+        this._userWantToConnect = true;
+        this.$.pc_toast.text = "Connectez-vous pour noter cette recette";
+        this.$.pc_toast.duration = 0;
+        this.$.pc_toast.show();
       },
 
       _showLoginDialog: function () {
@@ -1089,6 +1097,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           self.$.pc_toast.show();
           self.$.loginPassword.value = "";
         });
+        this.resetToast();
       },
 
       // Connexion avec Facebook
@@ -1107,6 +1116,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             profile_picture : user.photoURL,
             type_login: 'facebook'
           });
+          
+          this.resetToast();
         }).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;

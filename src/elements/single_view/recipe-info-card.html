@@ -227,6 +227,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         recipeRating: {
           type: Object,
           observer: '_checkRating'
+        },
+        user:{
+          type: String
         }
       },
 
@@ -279,7 +282,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }).join(" | ");
       },
       _openRating: function (e) {
-        this.$.rating_dialog.open();
+        if (this.user) {
+          this.$.rating_dialog.open();
+        } else {
+          this.fire('show-logintoast', true);
+        }
       },
       _submitRating: function () {
         if (this.$.review_rating.rating != 0) {
