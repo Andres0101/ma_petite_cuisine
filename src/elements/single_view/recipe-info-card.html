@@ -195,44 +195,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
           </template>
         </material-progress-bars>
-
-        <!-- <template is="dom-if" if="[[_hasItems(data.response.ratings.reviews)]]">
-          <div id="reviews_title" class="layout horizontal center">
-            <div id="reviews_title_text">
-              <div class="paper-font-subhead">Reseñas</div>
-            </div>
-            <span class="flex"></span>
-            <paper-menu-button horizontal-align="right">
-              <paper-button class="dropdown-trigger" tabindex="0">
-                <iron-icon icon="sort"></iron-icon>
-                <span class="textOrderBy">Ordenar por</span>
-              </paper-button>
-
-              <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{sortVal}}">
-                <paper-item value="rating">Mejores calif.</paper-item>
-                <paper-item value="newest">Más nuevos</paper-item>
-                <paper-item value="oldest">Más antiguos</paper-item>
-              </paper-menu>
-            </paper-menu-button>
-          </div>
-
-          <div id="reviews_container" class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[data.response.ratings.reviews]]" as="review">
-              <div class="review">
-                <div class="layout horizontal center">
-                  <iron-image src="[[review.user.image]]" preload fade sizing="cover" class="reviewer_image"></iron-image>
-                  <div>
-                    <div class="reviewer_name paper-font-body2">[[review.user.name]]</div>
-                    <paper-rating class="review_stars" rating="[[review.rating]]" disabled></paper-rating>
-                  </div>
-                  <span class="flex"></span>
-                  <moment-element class="review_time_ago paper-font-caption" datetime="[[review.date]]" from="now"></moment-element>
-                </div>
-                <p class="paper-font-body1">[[review.description]]</p>
-              </div>
-            </template>
-          </div>
-        </template> -->
       </div>
     </div>
 
@@ -241,8 +203,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-image id="review_image" src="https://source.unsplash.com/random/60x60" preload fade sizing="cover"></iron-image>
         <div class="paper-font-body1">Tu calificación</div>
         <star-rating id="review_rating"></star-rating>
-        <!-- <div class="paper-font-body1">Reseña (opcional)</div>
-        <paper-textarea id="review_text" rows="3" no-label-float maxlength="500" char-counter></paper-textarea> -->
       </div>
       <div class="buttons">
         <paper-button noink dialog-dismiss>Annuler</paper-button>
