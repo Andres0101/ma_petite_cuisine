@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../../bower_components/polymerfire/firebase-storage-ref.html">
 <link rel="import" href="../../../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
@@ -108,6 +109,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <!-- Obtenir l'image de la recette -->
+    <firebase-storage-ref
+      app-name="mapetitecuisine"
+      path="[[recipeInfo.0.image]]"
+      download-url="{{imageUrl}}" >
+    </firebase-storage-ref>
+
     <!-- Obtenir les details de la recette -->
     <firebase-query
       app-name="mapetitecuisine"
@@ -129,14 +137,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="cards_container layout vertical center">
         <google-youtube
           id="video"
-          video-id="aQUuhcN6x-o"
+          video-id="[[recipeInfo.0.videoId]]"
           iv_load_policy="3"
           rel="0"
           showinfo="0"
           fluid>
         </google-youtube>
         <div id="info_recipe" class="layout horizontal center-justified">
-          <iron-image id="cover" src="[[recipeInfo.0.image]]" preload fade sizing="cover"></iron-image>
+          <iron-image id="cover" src="[[imageUrl]]" preload fade sizing="cover"></iron-image>
           <div id="recipe_text" class="layout vertical">
             <div class="layout vertical end">
               <paper-rating rating="[[recipeInfo.0.rating]]" disabled></paper-rating>
