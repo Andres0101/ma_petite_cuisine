@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -548,6 +549,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       provider="facebook">
     </firebase-auth>
 
+    <template is="dom-if" if="{{userInfo}}" restamp="true">
+      <firebase-document
+        id="doc"
+        app-name="mapetitecuisine"
+        path="/basket/{{userInfo.uid}}"
+        data="{{basketUser}}" >
+      </firebase-document>
+    </template>
+
     <div id="header_layout">
       <!-- Header du site -->
       <template is="dom-if" if="{{!userDashboard}}" restamp="true">
@@ -935,7 +945,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       listeners: {
         'show-404': '_showPage404',
         'show-progress': '_showProgress',
-        'show-logintoast': '_showLoginToast'
+        'show-logintoast': '_showLoginToast',
+        'save-recipe': '_saveRecipe'
       },
 
       attached: function () {
@@ -1045,6 +1056,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.pc_toast.text = "Connectez-vous pour noter cette recette";
         this.$.pc_toast.duration = 0;
         this.$.pc_toast.show();
+      },
+      _saveRecipe: function (event) {
+        var recipeName = event.detail
+        this.$$('#doc').data[recipeName] = true;
+
+        this.$$('#doc').saveValue("basket/", this.userInfo.uid);
       },
 
       _showLoginDialog: function () {

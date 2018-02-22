@@ -40,22 +40,28 @@
         @apply(--plan-card-title);
       }
       .card_content {
-        padding: 16px;
+        padding: 16px 16px 0;
         @apply(--plan-card-content);
       }
       .categories-recipe {
         padding: 6px 0;
         box-sizing: border-box;
       }
+      .button_add_content {
+        padding: 0 16px 16px;
+      }
 
       @media (max-width: 600px) {
         /* Info */
         .card_content {
-          padding: 12px;
+          padding: 12px 12px 0;
         }
         .card_title {
           line-height: 14px;
           font-size: 14px;
+        }
+        .button_add_content {
+          padding: 0 12px 12px;
         }
       }
     </style>
@@ -75,8 +81,8 @@
       </firebase-query>
     </template>
 
-    <a href="{{url}}" class="link">
-      <div class="plan_card">
+    <div class="plan_card">
+      <a href="{{url}}" class="link">
         <iron-image class="image" src="{{imageUrl}}" preload fade sizing="cover"></iron-image>
         <div class="fix_overflow layout vertical">
           <div class="card_content">
@@ -91,12 +97,14 @@
                 </div>
               </template>
             </div>
-            <paper-button noink class="ajouter-recette">Ajouter à ma liste</paper-button>
           </div>
         </div>
         <paper-ripple></paper-ripple>
+      </a>
+      <div class="button_add_content">
+        <paper-button noink class="ajouter-recette" on-tap="_save">Ajouter à ma liste</paper-button>
       </div>
-    </a>
+    </div>
 
   </template>
   <script>
@@ -140,6 +148,11 @@
           type: Array,
           reflectToAttribute: true
         }
+      },
+
+      _save: function () {
+        var recipeName = this.url.replace('recette/','');
+        this.fire('save-recipe', recipeName);
       }
     })
   </script>
