@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../../../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
@@ -116,12 +117,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-query>
 
     <!-- Obtenir la note de la recette -->
-    <firebase-query
+    <firebase-document
       app-name="mapetitecuisine"
-      path="/rating"
-      equal-to="{{url}}"
-      data="{{recipeRating}}" >
-    </firebase-query>
+      path="/rating/{{url}}"
+      data="{{recipeRating}}">
+    </firebase-document>
 
     <app-location route="{{route}}"></app-location>
 
@@ -226,7 +226,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         recipeRating: {
           type: Object,
-          observer: '_checkRating'
+          observer: '_getRating'
         },
         user:{
           type: String
@@ -242,16 +242,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       detached: function() {
         window.removeEventListener('resize', this._updateGridStyles);
       },
-      _checkRating: function (newData, oldData) {
+      _getRating: function (newData, oldData) {
         var list = [];
 
-        for (var i = 0; i < newData.length; i++) {
-          var obj = newData[i];
-          for (var key in obj) {
-            if (typeof obj[key] != 'string') {
-              list.push(obj[key]);
-            }
-          }
+        for (var key in newData) {
+          list.push(newData[key]);
         }
 
         this.ratingByStars = list;
