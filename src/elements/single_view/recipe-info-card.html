@@ -288,7 +288,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.user) {
           this.$.rating_dialog.open();
         } else {
-          this.fire('show-logintoast', true);
+          this.fire('show-logintoast');
         }
       },
       _submitRating: function () {

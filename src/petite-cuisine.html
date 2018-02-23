@@ -924,7 +924,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         userBasketDetail: {
           type: Array,
-          value: []
+          value: ["noUser"]
         },
         target: {
           type: Object,
@@ -1062,8 +1062,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _showLoginToast: function (event) {
         this._userWantToConnect = true;
-        this.$.pc_toast.text = "Connectez-vous pour noter cette recette";
-        this.$.pc_toast.duration = 0;
+        this.$.pc_toast.text = "Connectez-vous pour habiliter la fonction";
+        this.$.pc_toast.duration = 5000;
         this.$.pc_toast.show();
       },
       _saveRecipe: function (event) {
@@ -1080,6 +1080,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _showLoginDialog: function () {
+        this._userWantToConnect = false;
         this._showLoginInfo();
         this.$.login_dialog.open();
         this.async(function () {
@@ -1372,6 +1373,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // Sign-out successful.
           self.$.pc_toast.text = "Déconnexion réussie";
           self.$.pc_toast.show();
+          self.set("userBasketDetail", ["noUser"]);
         }).catch(function(error) {});
       },
 

@@ -170,7 +170,12 @@
 
       _save: function () {
         var recipeName = this.url.replace('recette/','');
-        this.fire('save-recipe', recipeName);
+
+        if (this.existRecipe.indexOf("noUser") > -1) {
+          this.fire('show-logintoast');
+        } else {
+          this.fire('save-recipe', recipeName);
+        }
       },
       _remove: function () {
         var recipeName = this.url.replace('recette/','');
