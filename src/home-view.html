@@ -111,7 +111,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             rating="[[recipe.rating]]"
             price="[[recipe.price_range]]"
             description="[[recipe.description]]"
-            categories="[[_getCategories(recipe.categories)]]">
+            categories="[[_getCategories(recipe.categories)]]"
+            exist-recipe="{{userBasket}}">
           </plan-card>
         </template>
       </div>
@@ -174,6 +175,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         loadingData: {
           type: Boolean,
           value: true
+        },
+        userBasket: {
+          type: Array
         }
       },
 
@@ -232,16 +236,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
         return list;
-      },
-
-      _get: function (path) {
-         storageRef.child(path).getDownloadURL().then(function(url) {
-          // Once we have the download URL, we set it to our img element
-          console.log(url);
-        }).catch(function(error) {
-          // If anything goes wrong while getting the download URL, log the error
-          console.error(error);
-        });
       }
     });
   </script>

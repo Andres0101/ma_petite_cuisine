@@ -102,7 +102,12 @@
         <paper-ripple></paper-ripple>
       </a>
       <div class="button_add_content">
-        <paper-button noink class="ajouter-recette" on-tap="_save">Ajouter à ma liste</paper-button>
+        <template is="dom-if" if="{{!_alreadyInUserBasket(existRecipe, url)}}" restamp="true">
+          <paper-button noink class="add_recette" on-tap="_save">Ajouter à ma liste</paper-button>
+        </template>
+        <template is="dom-if" if="{{_alreadyInUserBasket(existRecipe, url)}}" restamp="true">
+          <paper-button noink class="delete_recette" on-tap="_remove">Retirer de ma liste</paper-button>
+        </template>
       </div>
     </div>
 
@@ -147,12 +152,29 @@
         categories:{
           type: Array,
           reflectToAttribute: true
+        },
+        existRecipe: {
+          type: Array
+        }
+      },
+
+      _alreadyInUserBasket: function (recipes, recipeName) {
+        recipeName = recipeName.replace('recette/','');
+
+        if (recipes.indexOf(recipeName) > -1) {
+          return true;
+        } else {
+          return false;
         }
       },
 
       _save: function () {
         var recipeName = this.url.replace('recette/','');
         this.fire('save-recipe', recipeName);
+      },
+      _remove: function () {
+        var recipeName = this.url.replace('recette/','');
+        this.fire('delete-recipe', recipeName);
       }
     })
   </script>

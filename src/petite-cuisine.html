@@ -25,7 +25,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-icons/places-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
@@ -509,13 +508,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <!-- <iron-localstorage
-      id="localstorage"
-      name="my-app-storage"
-      value="{{userInfo}}"
-      on-iron-localstorage-load-empty="_onLocalStorageEmpty">
-    </iron-localstorage> -->
-
     <!-- Ajax para el autocompletado -->
     <byutv-jsonp
       id="ajax"
@@ -553,8 +545,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <firebase-document
         id="doc"
         app-name="mapetitecuisine"
-        path="/basket/{{userInfo.uid}}"
-        data="{{basketUser}}" >
+        path="/basket/[[userInfo.uid]]"
+        data="{{userBasket}}" >
       </firebase-document>
     </template>
 
@@ -739,7 +731,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Contenu -->
       <iron-pages id="main_pages" selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
         <!-- Home -->
-        <home-view name="home"></home-view>
+        <home-view name="home" user-basket="{{userBasketDetail}}"></home-view>
         <!-- Subhomes -->
         <debutant-view name="debutant"></debutant-view>
         <temps-view name="temps"></temps-view>
@@ -897,7 +889,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </paper-dialog-scrollable>
     </paper-dialog>
 
-    <paper-toast id="pc_toast" on-iron-overlay-opened="_disableDocumentScrolling">
+    <paper-toast id="pc_toast">
       <template is="dom-if" if="{{_userWantToConnect}}" restamp="true">
         <paper-button on-tap="_showLoginDialog">Connexion</paper-button>
       </template>
@@ -922,13 +914,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
-        userLogged: {
-          type: Boolean,
-          value: false
-        },
         showClearButton: {
           type: Boolean,
           value: false
+        },
+        userBasket: {
+          type: Object,
+          observer: '_userBasket'
+        },
+        userBasketDetail: {
+          type: Array,
+          value: []
         },
         target: {
           type: Object,
@@ -946,7 +942,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'show-404': '_showPage404',
         'show-progress': '_showProgress',
         'show-logintoast': '_showLoginToast',
-        'save-recipe': '_saveRecipe'
+        'save-recipe': '_saveRecipe',
+        'delete-recipe': '_deleteRecipe'
       },
 
       attached: function () {
@@ -1014,9 +1011,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             };
           });
 
-          // this.userLogged = true;
           this.closeLoginDialog();
         }
+      },
+      _userBasket: function (newData, oldData) {
+        var list = [];
+
+        if (this.isEmpty(newData)) {
+          list.push("empty");
+        } else {
+          for (var key in newData) {
+            list.push(key);
+          }
+        }
+
+        this.userBasketDetail = list;
       },
 
       _pageChanged: function(page) {
@@ -1058,8 +1067,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.pc_toast.show();
       },
       _saveRecipe: function (event) {
-        var recipeName = event.detail
+        var recipeName = event.detail;
         this.$$('#doc').data[recipeName] = true;
+
+        this.$$('#doc').saveValue("basket/", this.userInfo.uid);
+      },
+      _deleteRecipe: function (event) {
+        var recipeName = event.detail;
+        delete this.$$('#doc').data[recipeName];
 
         this.$$('#doc').saveValue("basket/", this.userInfo.uid);
       },
@@ -1100,7 +1115,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var email = this.$.loginEmail.value;
         var password = this.$.loginPassword.value;
 
-        this.$.auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+        this.$.auth.signInWithEmailAndPassword(email, password).then(function(response) {
+          self.resetToast();
+        }).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -1114,7 +1131,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           self.$.pc_toast.show();
           self.$.loginPassword.value = "";
         });
-        this.resetToast();
       },
 
       // Connexion avec Facebook
@@ -1133,7 +1149,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             profile_picture : user.photoURL,
             type_login: 'facebook'
           });
-          
+
           this.resetToast();
         }).catch(function(error) {
           // Handle Errors here.
@@ -1229,19 +1245,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _sendEmailError: function (error) {
         this.$.pc_toast.text = error.detail.request.response.response;
         this.$.pc_toast.show();
-      },
-
-      // ============================= localstorage =============================
-      // Cambiar valores en el localstorage
-      updateFbUserImage: function() {
-        var self = this;
-        FB.api('/' + this.userInfo.user.idUserFb + '/picture?type=large', function(response) {
-          self.set('userInfo.user.avatar', response.data.url);
-        });
-      },
-      // Setear cambios en el localstorage realizados externamente
-      _onLocalStorageEmpty: function () {
-        this.userLogged = false;
       },
 
       // =============================== Buscador ===============================
@@ -1342,6 +1345,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _restoreDocumentScrolling: function() {
         document.body.style.overflow = '';
+      },
+
+      isEmpty: function(obj) {
+        for(var key in obj) {
+          if(obj.hasOwnProperty(key))
+            return false;
+        }
+        return true;
       },
 
       // Método del key event
