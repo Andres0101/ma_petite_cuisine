@@ -1,0 +1,236 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+
+<link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
+<link rel="import" href="elements/placeholder-card.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="liste-courses-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        --app-grid-columns: 5;
+        --app-grid-gutter: 5px;
+      }
+
+      .module_title {
+        padding: 25px 5px;
+        color: var(--secondary-text-color);
+      }
+
+      #list {
+        --iron-list-items-container: {
+          max-width: 800px;
+          margin: 10px auto;
+        };
+      }
+
+      .title,
+      .ingredient_container {
+        padding: 15px 20px;
+        background-color: white;
+        font-size: 15px;
+      }
+
+      .ingredient_container {
+        @apply(--layout-horizontal);
+        cursor: pointer;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+      }
+
+      .title {
+        font-weight: bold;
+        border: 1px solid #ddd;
+        color: var(--paper-grey-800);
+        margin-top: 20px;
+      }
+
+      .container {
+        border-bottom: 1px solid #ddd;
+      }
+
+      .ingredient_container iron-icon {
+        color: var(--paper-grey-600);
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        margin-right: 16px;
+      }
+
+      .ingredient_text {
+        line-height: 20px;
+        color: gray;
+        margin-left: 10px;
+      }
+
+      @media (max-width: 1000px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+      }
+      @media (max-width: 750px) {
+        :host {
+          --app-grid-columns: 2;
+          padding: 10px;
+        }
+        .module_title {
+          font-size: 18px;
+        }
+      }
+      @media (max-width: 500px) {
+        :host {
+          padding: 5px;
+        }
+      }
+      @media (max-width: 400px) {
+        :host {
+          --app-grid-gutter: 1px;
+          padding-left: 0;
+          padding-right: 0;
+        }
+        .module_title {
+          padding-left: 16px;
+        }
+      }
+    </style>
+
+    <template is="dom-repeat" items="{{userBasketRecipes}}" as="recipe">
+      <firebase-query
+        app-name="mapetitecuisine"
+        path="/recipes"
+        equal-to="{{recipe}}"
+        data="{{recipeDetail}}" >
+      </firebase-query>
+    </template>
+
+    <iron-media-query query="(max-width: 400px)" query-matches="{{isNarrow}}"></iron-media-query>
+
+    <div class="cards_container">
+      <div class="module_title layout horizontal center">
+        <div>
+          <div class="module_title_title paper-font-headline">Ma liste de courses</div>
+          <div class="module_title_subtitle paper-font-body1">Petite discription de la liste de courses</div>
+        </div>
+        <span class="flex"></span>
+        <paper-button class="view-more-recipe">Télécharger ma liste</paper-button>
+      </div>
+    </div>
+
+    <!-- Montrer un placeholder du module en obtenant les résultats -->
+    <template is="dom-if" if="{{isLoading}}" restamp="true">
+      <div class="app-grid items_placeholder">
+        <template is="dom-repeat-n" count="5">
+          <placeholder-card></placeholder-card>
+        </template>
+      </div>
+    </template>
+
+    <template is="dom-if" if="{{noData}}" restamp="true">
+      <span>You dont have recipes</span>
+    </template>
+
+    <iron-list id="list" items="[[recipeDetail]]" scroll-target="document">
+      <template>
+        <div class="container">
+          <div class="title">[[item.name]]</div>
+          <template is="dom-repeat" items="[[_getIngredients(item.ingredients)]]" as="ingredient">
+            <div class="ingredient_container">
+              <iron-icon icon="arrow-forward"></iron-icon>
+              <div class="ingredient_text">[[ingredient]]</div>
+            </div>
+          </template>
+        </div>
+      </template>
+    </iron-list>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'liste-courses-view',
+      properties:{
+        isLoading:{
+          type: Boolean,
+          value: true
+        },
+        noData:{
+          type: Boolean,
+          observer: '_noDataChanged'
+        },
+        userBasketRecipes:{
+          type: Array
+        },
+        recipeDetail:{
+          type: Array,
+          observer: '_recipeDetail'
+        }
+      },
+
+      ready: function () {
+        if (this.isLoading) {
+          this.fire('show-progress', true);
+        } else {
+          this.isLoading = false;
+          this.fire('show-progress', false);
+        }
+      },
+
+      attached: function() {
+        this._updateGridStyles = this._updateGridStyles || function() {
+          this.updateStyles();
+        }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+
+      _noDataChanged: function () {
+        if (this.noData) {
+          this.isLoading = false;
+          this.fire('show-progress', false);
+        } else {
+          this.isLoading = true;
+          this.fire('show-progress', true);
+        }
+      },
+
+      _recipeDetail: function (newData, oldData) {
+        if (newData.length > 0) {
+          this.isLoading = false;
+          this.fire('show-progress', false);
+        }
+      },
+
+      _getIngredients: function (ingredients) {
+        var list = [];
+
+        for (var key in ingredients) {
+          if (ingredients.hasOwnProperty(key)) {
+            list.push(ingredients[key]);
+          }
+        }
+        return list;
+      },
+    });
+  </script>
+</dom-module>
