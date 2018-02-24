@@ -105,7 +105,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             rating="[[recipe.rating]]"
             price="[[recipe.price_range]]"
             description="[[recipe.description]]"
-            categories="[[_getCategories(recipe.categories)]]">
+            categories="[[_getCategories(recipe.categories)]]"
+            exist-recipe="{{userBasket}}">
           </plan-card>
         </template>
       </div>
@@ -129,6 +130,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         recipesVegan: {
           type: Array,
           value: []
+        },
+        userBasket: {
+          type: Array
         }
       },
 

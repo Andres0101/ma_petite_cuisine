@@ -736,10 +736,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- Home -->
         <home-view name="home" user-basket="{{userBasketDetail}}"></home-view>
         <!-- Subhomes -->
-        <debutant-view name="debutant"></debutant-view>
-        <temps-view name="temps"></temps-view>
-        <prix-view name="prix"></prix-view>
-        <vegan-view name="vegan"></vegan-view>
+        <debutant-view name="debutant" user-basket="{{userBasketDetail}}"></debutant-view>
+        <temps-view name="temps" user-basket="{{userBasketDetail}}"></temps-view>
+        <prix-view name="prix" user-basket="{{userBasketDetail}}"></prix-view>
+        <vegan-view name="vegan" user-basket="{{userBasketDetail}}"></vegan-view>
         <!-- Single view -->
         <recette-view name="recette" user-id="{{userInfo.uid}}"></recette-view>
         <bar-view name="bar"></bar-view>
@@ -747,7 +747,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <evento-view name="evento"></evento-view>
 
         <!-- All recipes view -->
-        <recettes-view name="recettes"></recettes-view>
+        <recettes-view name="recettes" user-basket="{{userBasketDetail}}"></recettes-view>
 
         <publicar-view name="publicar" route="{{subroute}}"></publicar-view>
 
