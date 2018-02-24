@@ -9,6 +9,7 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/communication-icons.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-meta/iron-meta.html">
 
 <link rel="import" href="../shared-styles.html">
 
@@ -65,6 +66,8 @@
         }
       }
     </style>
+
+    <iron-meta id="metaUser"></iron-meta>
 
     <firebase-storage-ref
       app-name="mapetitecuisine"
@@ -171,10 +174,10 @@
       _save: function () {
         var recipeName = this.url.replace('recette/','');
 
-        if (this.existRecipe.indexOf("noUser") > -1) {
-          this.fire('show-logintoast');
-        } else {
+        if (this.$.metaUser.byKey('userData') != null) {
           this.fire('save-recipe', recipeName);
+        } else {
+          this.fire('show-logintoast');
         }
       },
       _remove: function () {

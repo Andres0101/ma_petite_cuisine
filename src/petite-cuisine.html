@@ -25,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-icons/places-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-meta/iron-meta.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
@@ -508,6 +509,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <iron-meta key="userData" value="{{userInfo}}"></iron-meta>
+
     <!-- Ajax para el autocompletado -->
     <byutv-jsonp
       id="ajax"
@@ -924,7 +927,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         userBasketDetail: {
           type: Array,
-          value: ["noUser"]
+          value: []
         },
         target: {
           type: Object,
@@ -1373,7 +1376,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // Sign-out successful.
           self.$.pc_toast.text = "Déconnexion réussie";
           self.$.pc_toast.show();
-          self.set("userBasketDetail", ["noUser"]);
         }).catch(function(error) {});
       },
 
