@@ -1,8 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../../bower_components/dom-repeat-n/dom-repeat-n.html">
+
+<link rel="import" href="../shared-styles.html">
+
 <dom-module id="placeholder-card">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: inherit;
         width: 100%;
@@ -60,15 +64,21 @@
         margin-top: 8px;
         height: 18px;
       }
-      #description {
+      #categories {
         width: 100%;
-        height: 17px;
-        margin-top: 10px;
+        height: 28px;
+        padding: 6px 0;
       }
-      #location {
-        width: 80%;
-        height: 17px;
-        margin-top: 10px;
+      .categories_load {
+        width: 60px;
+        height: auto;
+        border-radius: 20px;
+        margin: 2px;
+      }
+      #button {
+        width: 100%;
+        height: 44px;
+        border-radius: 20px;
       }
 
       @media (max-width: 900px) {
@@ -85,8 +95,12 @@
       <div class="card_content">
         <div id="title" class="loading"></div>
         <div id="rating" class="loading"></div>
-        <div id="description" class="loading"></div>
-        <div id="location" class="loading"></div>
+        <div id="categories" class="layout horizontal">
+          <template is="dom-repeat-n" count="4">
+            <div class="categories_load loading"></div>
+          </template>
+        </div>
+        <div id="button" class="loading"></div>
       </div>
     </div>
 
