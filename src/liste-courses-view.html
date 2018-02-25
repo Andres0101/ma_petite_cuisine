@@ -148,7 +148,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <span>You dont have recipes</span>
     </template>
 
-    <iron-list id="list" items="[[recipeDetail]]" scroll-target="document">
+    <iron-list id="list" items="{{recipeData}}" scroll-target="document">
       <template>
         <div class="container">
           <div class="title">[[item.name]]</div>
@@ -182,6 +182,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         recipeDetail:{
           type: Array,
           observer: '_recipeDetail'
+        },
+        recipeData: {
+          type: Array,
+          value: []
         }
       },
 
@@ -218,6 +222,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (newData.length > 0) {
           this.isLoading = false;
           this.fire('show-progress', false);
+
+          for (var i = 0; i < newData.length; i++) {
+            if (this.recipeData.length === 0) {
+              this.push('recipeData', newData[i]);
+            } else {
+              if (!this.containsObject(newData[i], this.recipeData)) {
+                this.push('recipeData', newData[i]);
+              }
+            }
+          }
         }
       },
 
@@ -231,6 +245,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         return list;
       },
+
+      // Valide s'il y a des objets égaux dans le tableau
+      containsObject: function (obj, list) {
+        for (var i = 0; i < list.length; i++) {
+          if (list[i]['$key'] === obj['$key']) {
+            return true;
+          }
+        }
+        return false;
+      }
     });
   </script>
 </dom-module>
