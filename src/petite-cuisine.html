@@ -1071,15 +1071,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _saveRecipe: function (event) {
         var recipeName = event.detail;
-        this.$$('#doc').data[recipeName] = true;
-
-        this.$$('#doc').saveValue("basket/", this.userInfo.uid);
+        this.$$('#doc').ref.child(recipeName).set(true);
       },
       _deleteRecipe: function (event) {
         var recipeName = event.detail;
-        delete this.$$('#doc').data[recipeName];
-
-        this.$$('#doc').saveValue("basket/", this.userInfo.uid);
+        this.$$('#doc').ref.child(recipeName).remove();
       },
 
       _showLoginDialog: function () {
