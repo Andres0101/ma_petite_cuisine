@@ -131,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="module_title_subtitle paper-font-body1">Petite discription de la liste de courses</div>
         </div>
         <span class="flex"></span>
-        <paper-button class="view-more-recipe">Télécharger ma liste</paper-button>
+        <paper-button class="view-more-recipe" on-tap="_download">Télécharger ma liste</paper-button>
       </div>
     </div>
 
@@ -233,6 +233,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           }
         }
+      },
+
+      _download: function () {
+        var docDefinition = {
+          content: [
+            {
+        			stack: [
+        				'Ma liste de courses',
+        				{text: 'by Ma Petite Cuisine', style: 'subheader'},
+        			],
+        			style: 'header'
+        		}
+          ],
+        	styles: {
+        		header: {
+        			fontSize: 18,
+        			bold: true,
+        			alignment: 'right'
+        		},
+        		subheader: {
+        			fontSize: 14
+        		},
+        		recipeName: {
+        			bold: true,
+        			fontSize: 15
+        		}
+        	},
+        	defaultStyle: {
+        		fontSize: 12
+        	}
+        };
+
+        for (var i = 0; i < this.recipeData.length; i++) {
+          docDefinition.content.push(
+            {
+              text: '\n' + this.recipeData[i].name,
+              style: 'recipeName'
+            }, {
+              ul: this._getIngredients(this.recipeData[i].ingredients)
+            }
+          );
+        }
+
+        pdfMake.createPdf(docDefinition).download('ma_liste_de_courses.pdf');
       },
 
       _getIngredients: function (ingredients) {

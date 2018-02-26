@@ -60,7 +60,8 @@
     "paper-input-location": "Koada-os/paper-input-location#^2.0.0",
     "paper-input-autocomplete-chips": "WebPaperElements/paper-input-autocomplete-chips#^0.30.4",
     "polymerfire": "firebase/polymerfire#^2.2.1",
-    "iron-meta": "PolymerElements/iron-meta#^2.1.0"
+    "iron-meta": "PolymerElements/iron-meta#^2.1.0",
+    "pdfmake": "^0.1.36"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
