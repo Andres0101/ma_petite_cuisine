@@ -1072,10 +1072,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _saveRecipe: function (event) {
         var recipeName = event.detail;
         this.$$('#doc').ref.child(recipeName).set(true);
+
+        this.$.pc_toast.text = "Ajoutée à ma liste";
+        this.$.pc_toast.show();
       },
       _deleteRecipe: function (event) {
         var recipeName = event.detail;
         this.$$('#doc').ref.child(recipeName).remove();
+
+        this.$.pc_toast.text = "Supprimée de ma liste";
+        this.$.pc_toast.show();
       },
 
       _showLoginDialog: function () {
