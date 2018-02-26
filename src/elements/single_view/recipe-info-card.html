@@ -40,7 +40,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles"></style>
     <style include="shared-info-card-styles">
       #video {
-        width: 100%;
+        width: 80%;
       }
       #cover {
         min-width: 180px;
@@ -118,6 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Obtenir les details de la recette -->
     <firebase-query
+      id="recipeQuery"
       app-name="mapetitecuisine"
       path="/recipes"
       equal-to="{{url}}"
@@ -126,6 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Obtenir la note de la recette -->
     <firebase-document
+      id="ratingQuery"
       app-name="mapetitecuisine"
       path="/rating/{{url}}"
       data="{{recipeRating}}">
@@ -211,8 +213,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-dialog id="rating_dialog" with-backdrop on-iron-overlay-opened="patchOverlay" on-iron-overlay-closed="_restoreDocumentScrolling">
       <div class="layout vertical center">
-        <iron-image id="review_image" src="https://source.unsplash.com/random/60x60" preload fade sizing="cover"></iron-image>
-        <div class="paper-font-body1">Votre notation</div>
+        <!-- <iron-image id="review_image" src="https://source.unsplash.com/random/60x60" preload fade sizing="cover"></iron-image>
+        <div class="paper-font-body1">Votre notation</div> -->
         <paper-rating id="review_rating" rating="0"></paper-rating>
       </div>
       <div class="buttons">
@@ -293,7 +295,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _submitRating: function () {
         if (this.$.review_rating.rating != 0) {
-          console.log("Envoyer note", this.$.review_rating.rating);
+          var recipeName = "";
+          var countPeopleRated = 0;
+          var rating = 0;
+
+          var starNumber = "";
+          var star = 0;
+          var count = 0;
+
+          for (var i = 0; i < this.recipeInfo.length; i++) {
+            recipeName = this.recipeInfo[i].url;
+            recipeName = recipeName.replace('recette/','');
+
+            countPeopleRated = this.recipeInfo[i].countPeopleRated;
+            rating = this.recipeInfo[i].rating;
+          }
+
+          for (var i = 0; i < this.ratingByStars.length; i++) {
+            // console.log(this.ratingByStars[i]);
+            if (this.ratingByStars[i].stars == this.$.review_rating.rating) {
+              star = this.ratingByStars[i].stars;
+              count = this.ratingByStars[i].count;
+            }
+            // this.ratingByStars[i].stars;
+          }
+
+          countPeopleRated = countPeopleRated + 1;
+          rating = (rating + this.$.review_rating.rating) / countPeopleRated;
+          count = count + 1;
+          if (star == 1) {
+            starNumber = "one";
+          } else if (star == 2) {
+            starNumber = "two";
+          } else if (star == 3) {
+            starNumber = "three";
+          } else if (star == 4) {
+            starNumber = "four";
+          } else if (star == 5) {
+            starNumber = "five";
+          }
+
+          var updates = {};
+          updates[recipeName + '/countPeopleRated'] = countPeopleRated;
+          updates[recipeName + '/rating'] = rating;
+
+          var updateRating = {};
+          updateRating[starNumber + '/count'] = count;
+
+          this.$$('#recipeQuery').ref.update(updates);
+          this.$$('#ratingQuery').ref.update(updateRating);
+
           this.$.rating_dialog.close();
           this.$.review_rating.rating = 0;
         } else {
