@@ -11,7 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../../../bower_components/polymerfire/firebase-storage-ref.html">
-<link rel="import" href="../../../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
@@ -32,6 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../bower_components/paper-rating/paper-rating.html">
 
 <link rel="import" href="basic-info.html">
+<link rel="import" href="step-info.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../shared-info-card-styles.html">
 
@@ -112,18 +112,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Obtenir l'image de la recette -->
     <firebase-storage-ref
       app-name="mapetitecuisine"
-      path="[[recipeInfo.0.image]]"
+      path="[[recipeInfo.image]]"
       download-url="{{imageUrl}}" >
     </firebase-storage-ref>
 
     <!-- Obtenir les details de la recette -->
-    <firebase-query
+    <firebase-document
       id="recipeQuery"
       app-name="mapetitecuisine"
-      path="/recipes"
-      equal-to="{{url}}"
-      data="{{recipeInfo}}" >
-    </firebase-query>
+      path="/recipes/{{url}}"
+      data="{{recipeInfo}}">
+    </firebase-document>
 
     <!-- Obtenir la note de la recette -->
     <firebase-document
@@ -139,7 +138,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="cards_container layout vertical center">
         <google-youtube
           id="video"
-          video-id="[[recipeInfo.0.videoId]]"
+          video-id="[[recipeInfo.videoId]]"
           iv_load_policy="3"
           rel="0"
           showinfo="0"
@@ -149,25 +148,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <iron-image id="cover" src="[[imageUrl]]" preload fade sizing="cover"></iron-image>
           <div id="recipe_text" class="layout vertical">
             <div class="layout vertical end">
-              <paper-rating rating="[[recipeInfo.0.rating]]" disabled></paper-rating>
+              <paper-rating rating="[[recipeInfo.rating]]" disabled></paper-rating>
             </div>
-            <div id="title" class="paper-font-headline">[[recipeInfo.0.name]]</div>
+            <div id="title" class="paper-font-headline">[[recipeInfo.name]]</div>
             <div id="description_title" class="paper-font-subhead">Description</div>
-            <div id="description_text" class="paper-font-body1">[[recipeInfo.0.description]]</div>
+            <div id="description_text" class="paper-font-body1">[[recipeInfo.description]]</div>
             <br>
             <div id="rating_count_cover" class="cover_item paper-font-body1">
-              <template is="dom-repeat-n" count="[[recipeInfo.0.details.numPeople]]">
+              <template is="dom-repeat-n" count="[[recipeInfo.details.numPeople]]">
                 <iron-icon icon="social:person"></iron-icon>
               </template>
-              [[recipeInfo.0.details.numPeople]]
+              [[recipeInfo.details.numPeople]]
             </div>
             <div class="layout horizontal center">
               <div id="details_title" class="paper-font-subhead">Préparation: &nbsp;</div>
-              <div id="description_text" class="paper-font-body1">[[recipeInfo.0.details.preparation]]</div>
+              <div id="description_text" class="paper-font-body1">[[recipeInfo.details.preparation]]</div>
             </div>
             <div class="layout horizontal center">
               <div id="details_title" class="paper-font-subhead">Cuisson: &nbsp;</div>
-              <div id="description_text" class="paper-font-body1">[[recipeInfo.0.details.cooking]]</div>
+              <div id="description_text" class="paper-font-body1">[[recipeInfo.details.cooking]]</div>
             </div>
           </div>
         </div>
@@ -176,10 +175,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Info de la recette -->
     <basic-info
-      categories="[[_getCategories(recipeInfo.0.categories)]]"
-      ingredients="[[_getIngredients(recipeInfo.0.ingredients)]]"
-      utensils="[[_getUtensils(recipeInfo.0.utensils)]]" >
+      categories="[[_convertArrayByKey(recipeInfo.categories)]]"
+      ingredients="[[_convertArrayByValue(recipeInfo.ingredients)]]"
+      utensils="[[_convertArrayByKey(recipeInfo.utensils)]]" >
     </basic-info>
+
+    <hr>
+
+    <!-- Etapes de la recette -->
+    <step-info
+      steps="[[_convertArrayByValue(recipeInfo.steps)]]">
+    </step-info>
 
     <hr>
 
@@ -193,15 +199,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="ratingScore" class="layout horizontal center">
           <div>
             <div id="ratingText" class="layout horizontal end">
-              <div class="paper-font-display3">[[recipeInfo.0.rating]]</div>
+              <div class="paper-font-display3">[[recipeInfo.rating]]</div>
               <div class="paper-font-display1">/ 5</div>
             </div>
-            <paper-rating rating="[[recipeInfo.0.rating]]" disabled></paper-rating>
+            <paper-rating rating="[[recipeInfo.rating]]" disabled></paper-rating>
           </div>
           <span class="flex"></span>
           <paper-button raised class="raised_button" on-tap="_openRating">Noter</paper-button>
         </div>
-        <material-progress-bars max="[[recipeInfo.0.countPeopleRated]]" bar-height="18" animated legend-label="[[recipeInfo.0.countPeopleRated]] notes">
+        <material-progress-bars max="[[recipeInfo.countPeopleRated]]" bar-height="18" animated legend-label="[[recipeInfo.countPeopleRated]] notes">
           <template is="dom-repeat" items="[[ratingByStars]]" as="rating">
             <div class$="bar rating_bar[[rating.stars]]" data-value$="[[rating.count]]" data-legend$="[[_getLegend(rating.stars)]]">
               <span>[[rating.count]]</span>
@@ -234,14 +240,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'recipe-info-card',
 
       properties: {
-        recipeRating: {
-          type: Object,
-          observer: '_getRating'
-        },
         user:{
           type: String
         }
       },
+
+      observers: [
+        '_getRecipe(recipeInfo.*)',
+        '_getRating(recipeRating.*)'
+      ],
 
       attached: function () {
         this._updateGridStyles = this._updateGridStyles || function() {
@@ -252,13 +259,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       detached: function() {
         window.removeEventListener('resize', this._updateGridStyles);
       },
-      _getRating: function (newData, oldData) {
+
+      _getRecipe: function (data) {
+        this.recipeInfo = data.base;
+      },
+      _getRating: function (data) {
         var list = [];
-
-        for (var key in newData) {
-          list.push(newData[key]);
+        for (var key in data.base) {
+          list.push(data.base[key]);
         }
-
         this.ratingByStars = list;
       },
       _toggleFavorite: function (e) {
@@ -295,34 +304,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _submitRating: function () {
         if (this.$.review_rating.rating != 0) {
-          var recipeName = "";
-          var countPeopleRated = 0;
-          var rating = 0;
+          var countPeopleRated = this.recipeInfo.countPeopleRated;
+          countPeopleRated = countPeopleRated + 1;
+
+          var rating = this.recipeInfo.rating;
+          rating = (rating + this.$.review_rating.rating) / countPeopleRated;
 
           var starNumber = "";
           var star = 0;
           var count = 0;
 
-          for (var i = 0; i < this.recipeInfo.length; i++) {
-            recipeName = this.recipeInfo[i].url;
-            recipeName = recipeName.replace('recette/','');
-
-            countPeopleRated = this.recipeInfo[i].countPeopleRated;
-            rating = this.recipeInfo[i].rating;
-          }
-
-          for (var i = 0; i < this.ratingByStars.length; i++) {
-            // console.log(this.ratingByStars[i]);
-            if (this.ratingByStars[i].stars == this.$.review_rating.rating) {
-              star = this.ratingByStars[i].stars;
-              count = this.ratingByStars[i].count;
+          if (this.ratingByStars.length != 0) {
+            for (var i = 0; i < this.ratingByStars.length; i++) {
+              if (this.ratingByStars[i].stars == this.$.review_rating.rating) {
+                star = this.ratingByStars[i].stars;
+                count = this.ratingByStars[i].count;
+              } else {
+                star = this.$.review_rating.rating;
+                count = 1;
+              }
             }
-            // this.ratingByStars[i].stars;
+            count = count + 1;
+          } else {
+            star = this.$.review_rating.rating;
+            count = 1;
           }
 
-          countPeopleRated = countPeopleRated + 1;
-          rating = (rating + this.$.review_rating.rating) / countPeopleRated;
-          count = count + 1;
           if (star == 1) {
             starNumber = "one";
           } else if (star == 2) {
@@ -336,11 +343,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           var updates = {};
-          updates[recipeName + '/countPeopleRated'] = countPeopleRated;
-          updates[recipeName + '/rating'] = rating;
+          updates['/countPeopleRated'] = countPeopleRated;
+          updates['/rating'] = rating;
 
           var updateRating = {};
           updateRating[starNumber + '/count'] = count;
+          updateRating[starNumber + '/stars'] = star;
 
           this.$$('#recipeQuery').ref.update(updates);
           this.$$('#ratingQuery').ref.update(updateRating);
@@ -351,34 +359,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.toast.text = "Eliminado de favoritos";
           this.$.toast.show();
         }
-        // TODO: Enviar review y mostrar un ícono de carga en el diálogo
       },
-      _getCategories: function (categories) {
+      _convertArrayByKey: function (object) {
         var list = [];
 
-        for (var key in categories) {
-          if (categories.hasOwnProperty(key)) {
+        for (var key in object) {
+          if (object.hasOwnProperty(key)) {
             list.push(key);
           }
         }
         return list;
       },
-      _getIngredients: function (ingredients) {
+      _convertArrayByValue: function (object) {
         var list = [];
 
-        for (var key in ingredients) {
-          if (ingredients.hasOwnProperty(key)) {
-            list.push(ingredients[key]);
-          }
-        }
-        return list;
-      },
-      _getUtensils: function (utensils) {
-        var list = [];
-
-        for (var key in utensils) {
-          if (utensils.hasOwnProperty(key)) {
-            list.push(key);
+        for (var key in object) {
+          if (object.hasOwnProperty(key)) {
+            list.push(object[key]);
           }
         }
         return list;
