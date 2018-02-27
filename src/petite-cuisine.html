@@ -735,10 +735,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Boolean,
           value: false
         },
-        userBasket: {
-          type: Object,
-          observer: '_userBasket'
-        },
         userBasketDetail: {
           type: Array,
           value: []
@@ -747,6 +743,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       observers: [
         '_routePageChanged(routeData.page)',
+        '_userBasket(userBasket.*)'
       ],
 
       listeners: {
@@ -817,13 +814,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.closeLoginDialog();
         }
       },
-      _userBasket: function (newData, oldData) {
+      _userBasket: function (data) {
         var list = [];
 
-        if (this.isEmpty(newData)) {
+        if (this.isEmpty(data.base)) {
           list.push("empty");
         } else {
-          for (var key in newData) {
+          for (var key in data.base) {
             list.push(key);
           }
         }
