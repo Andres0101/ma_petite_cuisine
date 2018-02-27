@@ -12,7 +12,7 @@
 
 <link rel="import" href="../shared-styles.html">
 
-<dom-module id="plan-card">
+<dom-module id="recipe-card">
   <template>
     <style include="shared-styles">
       .plan_card {
@@ -23,25 +23,25 @@
         overflow: hidden;
         @apply(--shadow-elevation-2dp);
         @apply(--shadow-transition);
-        @apply(--plan-card);
+        @apply(--recipe-card);
         border-bottom: 2px solid var(--app-secondary-color);
       }
       .plan_card:hover {
         @apply(--shadow-elevation-6dp);
-        @apply(--plan-card-hover);
+        @apply(--recipe-card-hover);
       }
       .image {
-        @apply(--plan-card-image);
+        @apply(--recipe-card-image);
       }
       .card_title {
         color: #444;
         line-height: 16px;
         font-size: 16px;
-        @apply(--plan-card-title);
+        @apply(--recipe-card-title);
       }
       .card_content {
         padding: 12px 16px 0;
-        @apply(--plan-card-content);
+        @apply(--recipe-card-content);
       }
       .categories-recipe {
         padding: 6px 0;
@@ -116,7 +116,7 @@
   </template>
   <script>
     Polymer({
-      is: "plan-card",
+      is: "recipe-card",
 
       properties: {
         url:{

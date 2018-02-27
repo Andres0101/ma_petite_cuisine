@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
 <link rel="import" href="elements/placeholder-card.html">
-<link rel="import" href="elements/plan-card.html">
+<link rel="import" href="elements/recipe-card.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="prix-view">
@@ -97,7 +97,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="cards_container">
       <div class="app-grid">
         <template is="dom-repeat" items="{{recipesPrix}}" as="recipe">
-          <plan-card
+          <recipe-card
             url="[[recipe.url]]"
             image="[[recipe.image]]"
             title="[[recipe.name]]"
@@ -107,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             description="[[recipe.description]]"
             categories="[[_getCategories(recipe.categories)]]"
             exist-recipe="{{userBasket}}">
-          </plan-card>
+          </recipe-card>
         </template>
       </div>
     </div>
