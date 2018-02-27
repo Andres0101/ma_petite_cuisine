@@ -62,59 +62,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: white;
       }
 
-      #header{
+      #header {
         background: linear-gradient(rgba(40, 40, 40, 0.7), rgba(40, 40, 40, 0.7)), url('http://source.unsplash.com/1350x266/?food') no-repeat center center;
         background-size: cover;
         color: #fff;
       }
 
       /*Buscador*/
-      #autocomplete_wrapper {
-        position: relative;
-        @apply(--shadow-elevation-2dp);
-        background-color: white;
-        color: var(--secondary-text-color);
-        width: 80%;
-        max-width: 500px;
-        border-radius: 3px;
-        will-change: transform;
-      }
-      #search_toolbar iron-icon[prefix] {
-        color: #9B9B9B;
-        padding: 8px;
-        margin-left: 8px;
-      }
-      #search_clear {
-        color: #9B9B9B;
-        --paper-icon-button-ink-color: #888;
-      }
-      #search_button{
-        margin: 0;
-        padding: 8px 24px;
-        border-radius: 0;
-      }
-
-      #buttons_toolbar{
+      #buttons_toolbar {
         height: 60px;
       }
-      #logo_toolbar{
+      #logo_toolbar {
         height: 250px;
         padding: 0 24%;
         box-sizing: border-box;
       }
-      #search_toolbar{
-        height: 50px;
-        margin-bottom: 20px;
-      }
-      app-toolbar paper-button{
+      app-toolbar paper-button {
         margin: 2px 4px;
       }
-      #main_logo{
+      #main_logo {
         width: 280px;
         height: 70px;
         margin-bottom: 10px;
       }
-      #header_logo{
+      #header_logo {
         width: 100px;
         height: 50px;
         margin-top: 10px;
@@ -137,7 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 45px;
         margin-top: 6px;
       }
-      #user_picture{
+      #user_picture {
         background-color: #eee;
         width: 100px;
         height: 100px;
@@ -148,71 +119,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 10px 0;
         text-align: center;
       }
-      #user_bio{
-        max-width: 250px;
-        width: 80%;
-        text-align: center;
-        color: rgba(255, 255, 255, 0.8);
-      }
-      #user_social_links{
-        margin: 12px 0;
-        color: rgba(255, 255, 255, 0.6);
-      }
-      #user_social_inputs{
-        width: 80%;
-        max-width: 380px;
-        margin: 12px 0;
-        color: rgba(255, 255, 255, 0.6);
-      }
-      /* -> Editar dashboard */
-      #dashboard_name_input{
-        text-align: center;
-        max-width: 280px;
-        width: 80%;
-        --paper-input-container-input-color: white;
-        --paper-input-container-color: rgba(255,255,255,0.6);
-        --paper-input-container-input:{
-          @apply(--paper-font-headline);
-        }
-        --paper-input-container-label:{
-          @apply(--paper-font-headline);
-        }
-      }
-      #dashboard_bio_input {
-        text-align: center;
-        max-width: 250px;
-        width: 80%;
-        --paper-input-container-input-color: rgba(255, 255, 255, 0.9);
-        --paper-input-container-color: rgba(255,255,255,0.8);
-        --paper-input-container-input:{
-          @apply(--paper-font-body1);
-        }
-        --paper-input-container-label:{
-          @apply(--paper-font-body1);
-          margin-top: 10px;
-        }
-      }
-      #user_social_inputs paper-input {
-        width: 180px;
-        --paper-input-container-input-color: rgba(255, 255, 255, 0.9);
-        --paper-input-container-color: rgba(255,255,255,0.7);
-        --paper-input-container-label:{
-          margin-top: 5px;
-        }
-        --paper-input-prefix:{
-          width: 18px;
-          height: 18px;
-          color: rgba(255, 255, 255, 0.8);
-          padding: 8px;
-        }
-      }
-      #preferences_button{
-        margin-top: 8px;
-        margin-bottom: 24px;
-      }
 
       /* Dashboard tabs */
-      #dashboard_tabs{
+      #dashboard_tabs {
         padding: 0 20%;
       }
       #dashboard_tabs paper-tabs {
@@ -229,12 +138,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /* Usuario con sesión activa */
-      #logged_user{
+      #logged_user {
         margin: 0px;
         padding: 3px 6px;
         text-transform: none;
       }
-      #logged_user iron-image{
+      #logged_user iron-image {
         width: 40px;
         height: 40px;
         margin-right: 8px;
@@ -242,20 +151,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-radius: 50%;
         will-change: transform;
       }
-      #logged_off_user span {
-        display: inline;
+      #logged_off_user {
+        color: #66bb6a;
+        border: 2px solid #66bb6a;
       }
-      #user_dropdown{
+      #user_dropdown {
         --paper-menu-button-content:{
           cursor: pointer;
           width: auto;
         }
       }
-      #logout_button{
+      #logout_button {
         margin: 8px;
       }
 
-      #logout_button iron-icon{
+      #logout_button iron-icon {
         display: none;
         margin-right: 0;
       }
@@ -267,7 +177,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /*Tabs*/
-      #header_tabs{
+      #header_tabs {
         padding: 0 20%;
       }
       #header_tabs paper-tabs {
@@ -294,7 +204,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: var(--app-primary-color);
         display: none;
       }
-      #bottom_nav_toolbar{
+      #bottom_nav_toolbar {
         height: 50px;
       }
       bottom-tab {
@@ -312,7 +222,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /*Contenido*/
-      #main_pages{
+      #main_pages {
         background-color: var(--app-background-color);
       }
       #main_pages *{
@@ -331,29 +241,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           overflow-y: auto;
         }
       }
-      #close_login_dialog_icon{
+      #close_login_dialog_icon {
         position: absolute;
         top: 10px;
         left: 10px;
         color: white;
       }
-      #login_button{
+      #login_button {
         margin: 24px 0;
         background-color: #e8e8e8;
       }
-      .dialog_image{
+      .dialog_image {
         background-color: #eee;
         width: 100%;
         height: 300px;
       }
-      .dialog_container{
+      .dialog_container {
         padding: 24px;
         line-height: 1.2em;
       }
-      .dialog_button{
+      .dialog_button {
         margin: 16px 0;
       }
-      .terms_and_conditions_link{
+      .terms_and_conditions_link {
         color: var(--app-secondary-color);
         line-height: 1em;
       }
@@ -363,7 +273,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 4px;
         color: #888;
       }
-      #promotions_checkbox{
+      #promotions_checkbox {
         margin-top: 20px;
         margin-bottom: 10px;
       }
@@ -394,7 +304,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       @media (max-width: 960px) {
         #header_tabs,
-        #dashboard_tabs{
+        #dashboard_tabs {
           padding: 0 24px;
         }
       }
@@ -408,17 +318,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           padding: 0;
           height: 100px;
         }
-        #dashboard_header{
+        #dashboard_header {
           margin-bottom: 0;
         }
-        #logo_toolbar{
+        #logo_toolbar {
           display: none;
         }
         #header_tabs paper-tabs {
           display: none;
         }
         #header_tabs,
-        #dashboard_tabs{
+        #dashboard_tabs {
           padding: 0;
         }
         #logged_off_user iron-icon {
@@ -429,31 +339,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         /*Ocultar nombre del usuario en el dropdown*/
-        #user_dropdown{
+        #user_dropdown {
           padding: 0;
         }
-        #logged_user iron-image{
+        #logged_user iron-image {
           margin-right: 0;
         }
-        #logged_user div{
+        #logged_user div {
           display: none;
         }
 
-        #logout_button iron-icon{
+        #logout_button iron-icon {
           display: inline-block;
         }
-        #logout_button span{
+        #logout_button span {
           display: none;
-        }
-
-        #autocomplete_wrapper {
-          width: 100%;
-        }
-        #search_toolbar{
-          margin-bottom: 5px;
-        }
-        #search_button{
-          padding: 8px;
         }
 
         #main_pages {
@@ -484,24 +384,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #dashboard_tabs paper-tabs {
           font-size: 10px;
         }
-        .dialog_container{
+        .dialog_container {
           padding: 10px;
         }
-        .dialog_container paper-button{
+        .dialog_container paper-button {
           font-size: 12px;
         }
       }
     </style>
 
     <iron-meta key="userData" value="{{userInfo}}"></iron-meta>
-
-    <!-- Ajax para actualizar perfil del usuario -->
-    <iron-ajax
-      id="updateUser"
-      method="PUT"
-      url="http://localhost:8000/api/v1/user-update"
-      on-response="handleResponseUpdateUser">
-    </iron-ajax>
 
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
@@ -630,41 +522,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <span>Déconnexion</span>
               </paper-button>
             </template>
-
-            <!-- Sesión no iniciada: Botones de Publicar / Ingresar -->
-            <template is="dom-if" if="[[!userInfo]]" restamp="true">
-              <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
-                <!-- Indicador de carga de información del usuario -->
-                <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
-                  <paper-spinner-lite alt="Chargement du profil" active></paper-spinner-lite>
-                </template>
-                <!-- Botón de ingresar -->
-                <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
-                  <iron-icon icon="social:person"></iron-icon>
-                  <span>Ingresar</span>
-                </template>
-              </paper-button>
-            </template>
           </app-toolbar>
 
           <app-toolbar id="dashboard_header" class="middle layout vertical center flex">
             <!-- Montrer l'info de l'utilisateur -->
             <iron-image id="user_picture" src="{{user.avatar}}" preload fade sizing="contain"></iron-image>
             <div id="user_full_name" class="paper-font-headline">{{user.name}}</div>
-            <div id="user_social_links">
-              <a href="https://facebook.com/{{userInfo.user.facebook_profile}}" hidden="{{!userInfo.user.facebook_profile}}" target="_blank" rel="noopener" class="link">
-                <paper-icon-button icon="my-icons:facebook"></paper-icon-button>
-              </a>
-              <a href="https://instagram.com/{{userInfo.user.instagram_profile}}" hidden="{{!userInfo.user.instagram_profile}}" target="_blank" rel="noopener" class="link">
-                <paper-icon-button icon="my-icons:instagram"></paper-icon-button>
-              </a>
-              <a href="https://twitter.com/{{userInfo.user.twitter_profile}}" hidden="{{!userInfo.user.twitter_profile}}" target="_blank" rel="noopener" class="link">
-                <paper-icon-button icon="my-icons:twitter"></paper-icon-button>
-              </a>
-              <a href="https://snapchat.com/add/{{userInfo.user.snapchat_profile}}" hidden="{{!userInfo.user.snapchat_profile}}" target="_blank" rel="noopener" class="link">
-                <paper-icon-button icon="my-icons:snapchat"></paper-icon-button>
-              </a>
-            </div>
           </app-toolbar>
 
           <!-- Ongles -->
@@ -1142,34 +1005,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         this.checkingUserInfo = false; // Spinner
-      },
-
-      // ====================== Actualizar info de usuario ======================
-      _updateUserInfo: function () {
-        this.$.updateUser.params = {
-          'id': this.userInfo.user.id,
-          'token': this.userInfo.token,
-          'description': this.$$('#dashboard_bio_input').value,
-          'facebook_profile': this.$$('#dashboard_fb_input').value,
-          'instagram_profile': this.$$('#dashboard_instagram_input').value,
-          'name': this.$$('#dashboard_name_input').value,
-          'snapchat_profile': this.$$('#dashboard_snap_input').value,
-          'twitter_profile': this.$$('#dashboard_twitter_input').value
-        };
-        this.$.updateUser.generateRequest();
-      },
-
-      // ====================== Respuesta del update info =======================
-      handleResponseUpdateUser: function (event) {
-        this.set('userInfo.user.description', this.$.updateUser.params.description);
-        this.set('userInfo.user.facebook_profile', this.$.updateUser.params.facebook_profile);
-        this.set('userInfo.user.instagram_profile', this.$.updateUser.params.instagram_profile);
-        this.set('userInfo.user.snapchat_profile', this.$.updateUser.params.snapchat_profile);
-        this.set('userInfo.user.twitter_profile', this.$.updateUser.params.twitter_profile);
-        this.set('userInfo.user.name', this.$.updateUser.params.name);
-
-        this.$.pc_toast.text = "Perfil actualizado";
-        this.$.pc_toast.show();
       },
 
       // ===================== Respuesta del reset password =====================
