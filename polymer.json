@@ -17,7 +17,6 @@
     "src/cines-view.html",
     "src/favoritos-view.html",
     "src/calificaciones-view.html",
-    "src/publicar-evento-view.html",
     "src/error-view.html"
   ],
   "sourceGlobs": [
