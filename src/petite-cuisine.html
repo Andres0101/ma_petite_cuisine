@@ -49,7 +49,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 
 <link rel="import" href="../bower_components/bottom-nav/bottom-nav.html">
-<link rel="import" href="../bower_components/byutv-jsonp/byutv-jsonp.html">
 <link rel="import" href="../bower_components/moment-element/moment-element.html">
 <link rel="import" href="../bower_components/moment-element/moment-with-locales-import.html">
 
@@ -81,20 +80,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         max-width: 500px;
         border-radius: 3px;
         will-change: transform;
-      }
-      #search_input {
-        --paper-input-container: {
-          padding: 0;
-        }
-        --paper-input-container-input: {
-          padding: 12px 0;
-        }
-        --paper-input-container-label:{
-          padding-top: 12px;
-        }
-        --paper-input-container-underline:{
-          border-color: white;
-        }
       }
       #search_toolbar iron-icon[prefix] {
         color: #9B9B9B;
@@ -512,13 +497,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <iron-meta key="userData" value="{{userInfo}}"></iron-meta>
 
-    <!-- Ajax para el autocompletado -->
-    <byutv-jsonp
-      id="ajax"
-      url="https://clients1.google.com/complete/search"
-      on-response="handleResponse">
-    </byutv-jsonp>
-
     <!-- Ajax para actualizar perfil del usuario -->
     <iron-ajax
       id="updateUser"
@@ -602,25 +580,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <app-toolbar id="logo_toolbar" class="layout vertical center-center flex">
               <h2 id="slogan">Choissis tes recettes, crée ta liste de course et commande les ingrédients</h2>
             </app-toolbar>
-
-            <!-- Key press events
-            <iron-a11y-keys id="a11y" target="[[target]]" keys="enter" on-keys-pressed="_buscar"></iron-a11y-keys>
-            <!-- Fila del buscador del header
-            <app-toolbar id="search_toolbar" class="layout vertical center flex">
-              <div id="autocomplete_wrapper" class="layout horizontal">
-                <div class="flex">
-                  <paper-input id="search_input" label="Eventos, restaurantes, bares..." on-value-changed="_valueChanged" class="flex" no-label-float>
-                    <iron-icon icon="search" prefix></iron-icon>
-                    <!-- Mostrar el botón de limpiar búsqueda cuando hay algo escrito
-                    <template is="dom-if" if="{{showClearButton}}" restamp="true">
-                      <paper-icon-button id="search_clear" icon="clear" on-tap="_clearSearch" suffix></paper-icon-button>
-                    </template>
-                  </paper-input>
-                  <paper-autocomplete-suggestions for="search_input" id="autocomplete" source="[[suggestions]]" on-autocomplete-selected="_buscar"></paper-autocomplete-suggestions>
-                </div>
-                <paper-button id="search_button" on-tap="_buscar">Buscar</paper-button>
-              </div>
-            </app-toolbar> -->
 
             <!-- Ongles -->
             <div id="header_tabs" sticky>
@@ -754,7 +713,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- User view -->
         <utilisateur-view name="utilisateur" route="{{subroute}}" user-id="{{userInfo.uid}}"></utilisateur-view>
-        <resultado-view name="resultado"></resultado-view>
         <error-view name="error"></error-view>
       </iron-pages>
 
@@ -929,12 +887,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         userBasketDetail: {
           type: Array,
           value: []
-        },
-        target: {
-          type: Object,
-          value: function() {
-            return this.$.search_input;
-          }
         }
       },
 
@@ -1252,56 +1204,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _sendEmailError: function (error) {
         this.$.pc_toast.text = error.detail.request.response.response;
         this.$.pc_toast.show();
-      },
-
-      // =============================== Buscador ===============================
-      _buscar: function () {
-        if (this.$$('#search_input').value.length != 0) {
-          this.fire('show-progress', true);
-
-          this.set("route.path", 'resultado');
-          this.$$('resultado-view').searchText = this.$$('#search_input').value;
-        }
-      },
-      _valueChanged: function () {
-        this.async(function(){
-          // Validar el length del value para mostrar el botón clear
-          if (this.$$('#search_input').value.length != 0) {
-            this.showClearButton = true;
-          } else {
-            this.showClearButton = false;
-          }
-
-          this.debounce('doSomething', function () {
-            if (this.$$('#search_input').value.length >= 3) {
-              this.$.ajax.params = {
-                'q': this.$$('#search_input').value,
-                "hl":"en",
-                "client": "partner",
-                "source": "gcsc",
-                "partnerid":"006793829028880044258:oe9ehpmo3eo",
-                "ds":"cse"
-              }
-              this.$.ajax.generateRequest();
-            }
-          }, 400);
-        }.bind(this), 50);
-      },
-      // Obtener la respuesta del ajax jsonp
-      handleResponse: function(response){
-        this.suggestions = [];
-        if (response.detail) {
-          for (var i = 0; i < response.detail[1].length; i++) {
-            this.suggestions.push(response.detail[1][i][0]);
-          }
-        }
-      },
-      _clearSearch: function () {
-        this.async(function(){
-          this.$$('#search_input').value = '';
-          this.$$('#search_input').inputElement.focus();
-          this.$$('#search_input').inputElement.blur();
-        });
       },
 
       // ============================ Info Facebook =============================
