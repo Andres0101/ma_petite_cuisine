@@ -12,7 +12,6 @@
     "src/utilisateur-view.html",
     "src/fiche-recettes-view.html",
     "src/liste-courses-view.html",
-    "src/bar-view.html",
     "src/cines-view.html",
     "src/error-view.html"
   ],
