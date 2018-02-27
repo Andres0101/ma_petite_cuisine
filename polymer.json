@@ -14,7 +14,6 @@
     "src/liste-courses-view.html",
     "src/bar-view.html",
     "src/cines-view.html",
-    "src/calificaciones-view.html",
     "src/error-view.html"
   ],
   "sourceGlobs": [
