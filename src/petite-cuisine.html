@@ -49,8 +49,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 
 <link rel="import" href="../bower_components/bottom-nav/bottom-nav.html">
-<link rel="import" href="../bower_components/moment-element/moment-element.html">
-<link rel="import" href="../bower_components/moment-element/moment-with-locales-import.html">
 
 <link rel="import" href="my-icons.html">
 <link rel="import" href="shared-styles.html">
@@ -897,14 +895,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       attached: function () {
-        moment.locale('es');
-        var __months = moment.months().map(function (m) {
-          var test = m.charAt(0).toUpperCase() + m.slice(1);
-          return test.substring(0, 3); //Recortar a 3 caracteres
-          return test;
-        });
-        moment.updateLocale('es', { months : __months });
-
         var self = this;
         this._userWantToConnect = false;
         this._resetLoginFb = false;

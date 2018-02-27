@@ -13,11 +13,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/app-layout/app-box/app-box.html">
 
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-
 <link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
 <link rel="import" href="elements/placeholder-card.html">
-<link rel="import" href="elements/module-element.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="home-view">
@@ -70,13 +67,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
     </style>
-
-    <iron-ajax
-      url="../data/home.json"
-      auto
-      handle-as="json"
-      on-response="handleResponse">
-    </iron-ajax>
 
     <firebase-query
       app-name="mapetitecuisine"
@@ -148,15 +138,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </app-box>
 
-    <!-- <template is="dom-repeat" items="{{homeData}}" as="module">
-      <module-element
-        has-title="[[_hasTitle(module.template)]]"
-        parallax="[[_isParallax(module.template)]]"
-        recomendado="[[_moduleRecomendado(module.template)]]"
-        data="[[module]]">
-      </module-element>
-    </template> -->
-
   </template>
 
   <script>
@@ -164,10 +145,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'home-view',
 
       properties: {
-        homeData: {
-          type: Object,
-          value: []
-        },
         recipes: {
           type: Array,
           observer: '_recipeChanged'
@@ -211,9 +188,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         } else {
           return false;
         }
-      },
-      handleResponse: function (data) {
-        this.homeData = data.detail.response;
       },
       _recipeChanged: function (newData, oldData) {
         if (newData.length > 0) {
