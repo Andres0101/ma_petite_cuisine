@@ -15,7 +15,6 @@
     "src/bar-view.html",
     "src/discoteca-view.html",
     "src/cines-view.html",
-    "src/favoritos-view.html",
     "src/calificaciones-view.html",
     "src/error-view.html"
   ],
