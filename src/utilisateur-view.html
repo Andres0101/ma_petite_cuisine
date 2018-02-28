@@ -9,7 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../bower_components/app-route/app-route.html">
 
@@ -25,18 +24,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <firebase-query
-      app-name="mapetitecuisine"
-      path="/basket/{{userId}}"
-      data="{{userBasket}}" >
-    </firebase-query>
-
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
     <!-- Contenu -->
     <iron-pages selected="[[page]]" attr-for-selected="name">
-      <fiche-recettes-view name="fiche-recettes" user-basket-recipes="{{userBasketRecipes}}" no-data="{{data}}"></fiche-recettes-view>
-      <liste-courses-view name="liste-courses" user-basket-recipes="{{userBasketRecipes}}" no-data="{{data}}"></liste-courses-view>
+      <fiche-recettes-view name="fiche-recettes" user-basket-recipes="{{userBasket}}"></fiche-recettes-view>
+      <liste-courses-view name="liste-courses" user-basket-recipes="{{userBasket}}"></liste-courses-view>
     </iron-pages>
   </template>
 
@@ -52,17 +45,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         route:{
           type: Object
         },
-        userId:{
-          type: String
-        },
-        userBasket:{
-          type: Array,
-          observer: '_userBasket'
+        userBasket: {
+          type: Array
         }
       },
 
       observers: [
         '_routePageChanged(routeData.page)',
+        '_userBasket(userBasket.*)'
       ],
 
       _routePageChanged: function(page) {
@@ -75,27 +65,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },
 
-      _userBasket: function (newData, oldData) {
-        var list = [];
-
-        if (newData.length != 0) {
-          this.data = false;
-          
-          for (var i = 0; i < newData.length; i++) {
-            for (var key in newData[i]) {
-              if (newData[i].hasOwnProperty(key)) {
-                if (key == "$key") {
-                  var obj = newData[i][key];
-                  list.push(obj);
-                }
-              }
-            }
-          }
-        } else {
-          this.data = true;
-        }
-
-        this.userBasketRecipes = list;
+      _userBasket: function (data) {
+        this.userBasket = data.base;
       },
 
       _showPage404: function() {

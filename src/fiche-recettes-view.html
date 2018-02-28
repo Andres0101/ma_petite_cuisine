@@ -112,7 +112,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             rating="[[recipe.rating]]"
             price="[[recipe.price_range]]"
             description="[[recipe.description]]"
-            categories="[[_getCategories(recipe.categories)]]">
+            categories="[[_getCategories(recipe.categories)]]"
+            exist-recipe="{{userBasketRecipes}}" >
           </recipe-card>
         </template>
       </div>
@@ -129,21 +130,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: true
         },
         noData:{
-          type: Boolean,
-          observer: '_noDataChanged'
+          type: Boolean
         },
-        userBasketRecipes:{
+        userBasketRecipes: {
           type: Array
-        },
-        recipeDetail:{
-          type: Array,
-          observer: '_recipeDetail'
         },
         recipeData: {
           type: Array,
           value: []
         }
       },
+
+      observers: [
+        '_emptyBasket(userBasketRecipes.*)',
+        '_recipeDetail(recipeDetail.*)'
+      ],
 
       ready: function () {
         if (this.isLoading) {
@@ -164,27 +165,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.removeEventListener('resize', this._updateGridStyles);
       },
 
-      _noDataChanged: function () {
-        if (this.noData) {
-          this.isLoading = false;
-          this.fire('show-progress', false);
-        } else {
-          this.isLoading = true;
-          this.fire('show-progress', true);
+      _emptyBasket: function (data) {
+        for (var i = 0; i < data.base.length; i++) {
+          if (data.base[i] === "empty") {
+            this.noData = true;
+            this.isLoading = false;
+            this.fire('show-progress', false);
+          } else {
+            this.noData = false;
+          }
         }
       },
 
-      _recipeDetail: function (newData, oldData) {
-        if (newData.length > 0) {
+      _recipeDetail: function (data) {
+        if (data.base.length > 0) {
           this.isLoading = false;
           this.fire('show-progress', false);
-
-          for (var i = 0; i < newData.length; i++) {
+          
+          for (var i = 0; i < data.base.length; i++) {
             if (this.recipeData.length === 0) {
-              this.push('recipeData', newData[i]);
+              this.push('recipeData', data.base[i]);
             } else {
-              if (!this.containsObject(newData[i], this.recipeData)) {
-                this.push('recipeData', newData[i]);
+              if (!this.containsObject(data.base[i], this.recipeData)) {
+                this.push('recipeData', data.base[i]);
               }
             }
           }
