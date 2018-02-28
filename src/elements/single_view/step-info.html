@@ -1,0 +1,110 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/places-icons.html">
+
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="step-info">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 20px;
+      }
+
+      .step_content {
+        margin: 10px 0;
+      }
+
+      .section_title {
+        color: var(--paper-grey-800);
+        margin: 12px 0;
+      }
+      .section_title iron-icon {
+        margin-right: 12px;
+      }
+      .section_title div {
+        font-weight: 500;
+      }
+      .info_row {
+        @apply(--layout-horizontal);
+      }
+      .info_item{
+        padding: 10px 5px;
+      }
+      .info_item p {
+        width: 100%;
+        max-width: 600px;
+        color: #666;
+      }
+      .ingredient_utensil_content {
+        color: var(--paper-grey-600);
+      }
+      .ingredient_utensil_content iron-icon {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        margin: 0 12px 0 35px;
+      }
+
+      @media (max-width: 600px) {
+        :host {
+          padding: 10px;
+        }
+        .info_row {
+          @apply(--layout-vertical);
+        }
+      }
+    </style>
+
+    <!-- Etapes -->
+    <div class="info_row">
+      <div class="info_item flex">
+        <div class="section_title layout horizontal center">
+          <iron-icon icon="bookmark"></iron-icon>
+          <div class="paper-font-subhead">Pas à pas</div>
+        </div>
+        <template is="dom-repeat" items="[[steps]]" as="step">
+          <div class="step_content layout vertical">
+            <span>Etape [[_getIndex(index)]]</span>
+            <div class="ingredient_utensil_content layout horizontal paper-font-body1">
+              <!-- <iron-icon icon="arrow-forward"></iron-icon> -->
+              [[step]]
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'step-info',
+
+      properties: {
+        steps: Array
+      },
+
+      _getIndex: function (index) {
+        return index + 1;
+      }
+    });
+  </script>
+</dom-module>
