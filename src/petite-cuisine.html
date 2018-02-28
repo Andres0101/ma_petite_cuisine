@@ -280,26 +280,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /*Footer*/
       footer {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
         padding: 30px 100px;
         box-sizing: border-box;
         width: 100%;
         background-color: var(--app-primary-color);
-        color: #BBB;
+        color: white;
       }
       footer a {
+        color: white;
+        text-align: center;
         text-decoration: none;
-        color: #777;
       }
       footer a:hover {
-        color: #555;
-      }
-      footer span {
-        color: #777;
+        color: var(--app-secondary-color);
       }
       #footer_logo {
-        width: 80px;
-        height: 50px;
-        margin-bottom: 16px;
+        width: 90px;
+        height: 70px;
       }
 
       @media (max-width: 960px) {
@@ -377,6 +376,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #header_tabs paper-tabs,
         #dashboard_tabs paper-tabs {
           font-size: 12px;
+        }
+      }
+      @media (max-width: 400px) {
+        footer {
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+        }
+        #footer_logo {
+          margin-bottom: 10px;
         }
       }
       @media (max-width: 300px) {
@@ -593,22 +601,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </bottom-nav>
 
       <!-- Footer -->
-      <footer class="layout horizontal">
-        <div class="layout vertical flex">
-          <iron-image id="footer_logo" src="../images/logo_white.svg" preload sizing="contain"></iron-image>
-          <!-- Termes et conditions -->
-          <div class="paper-font-caption">Ma Petite Cuisine | Lyon, France</div>
-          <a href="#" class="paper-font-caption">Politique et traitement des données</a>
+      <footer>
+        <!-- Logo -->
+        <iron-image id="footer_logo" src="../images/logo_white.svg" preload sizing="contain"></iron-image>
+        <!-- Mentions légales -->
+        <div class="layout horizontal center-center flex">
+          <a href="#" class="paper-font-caption">Mentions légales</a>
+          <span>&nbsp; • &nbsp;</span>
+          <a href="#" class="paper-font-caption">CGU</a>
         </div>
 
-        <!-- Redes sociales -->
+        <!-- Réseaux sociaux -->
         <div class="social_container layout horizontal center-center">
-          <a href="https://facebook.com/planciudad" target="_blank" rel="noopener" tabindex="-1">
+          <a href="https://www.facebook.com/Ma-Petite-Cuisine-1774222086219810/" target="_blank" rel="noopener" tabindex="-1">
             <paper-icon-button icon="my-icons:facebook" class="social_icon fb"></paper-icon-button>
           </a>
-          <a href="http://cdg.elisalagan.net/" target="_blank" rel="noopener" tabindex="-1">
+          <!-- <a href="http://cdg.elisalagan.net/" target="_blank" rel="noopener" tabindex="-1">
             <paper-icon-button icon="communication:chat" class="social_icon blog"></paper-icon-button>
-          </a>
+          </a> -->
           <a href="https://youtube.com/channel/UCQgUw3-Ic6ubMNna04ylFug" target="_blank" rel="noopener" tabindex="-1">
             <paper-icon-button icon="my-icons:youtube" class="social_icon youtube"></paper-icon-button>
           </a>

@@ -20,9 +20,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning app-grid-style"></style>
     <style>
       :host {
-        --app-primary-color: #333;
+        --app-primary-color: var(--paper-green-400);
         --app-secondary-color: var(--paper-deep-purple-500);
-        --app-button-color: var(--paper-green-400);
         --app-background-color: #F2F2F2;
 
         /*Redes sociales*/
@@ -67,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .blog {
         --paper-icon-button-hover: {
-          color: var(--app-button-color);
+          color: var(--app-primary-color);
         }
       }
       .twitter {
@@ -114,8 +113,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 10px 5px 20px;
       }
       .view-more-recipe {
-        color: var(--app-button-color);
-        border: 2px solid var(--app-button-color);
+        color: var(--app-primary-color);
+        border: 2px solid var(--app-primary-color);
       }
       .add_recette,
       .delete_recette {
