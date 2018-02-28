@@ -65,9 +65,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
       .blog {
-        --paper-icon-button-hover: {
-          color: var(--app-primary-color);
-        }
+        margin: 0 20px;
+        text-decoration: none;
+      }
+      .blog paper-icon-button {
+        display: none;
+      }
+      .blog paper-icon-button:hover {
+        color: var(--app-primary-color);
       }
       .twitter {
         --paper-icon-button-hover: {
@@ -460,6 +465,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /* Módulos home - subhomes */
         .module_title {
           padding-left: 4px;
+        }
+        .blog span {
+          display: none;
+        }
+        .blog paper-icon-button {
+          display: inherit;
         }
       }
     </style>
