@@ -67,6 +67,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-size: cover;
         color: #fff;
       }
+      #header_user {
+        background-image: url("/images/headerUser.png");
+        background-size: cover;
+        color: #fff;
+      }
 
       /*Buscador*/
       #buttons_toolbar {
@@ -102,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /* Dashboard */
       #dashboard_header {
-        height: 100%;
+        height: 250px;
       }
       #dashboard_logo {
         width: 100px;
@@ -152,7 +157,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-radius: 50%;
         will-change: transform;
       }
-      #logged_off_user {
+      #logged_off_user,
+      #logout_button {
         color: #66bb6a;
         border: 2px solid #66bb6a;
       }
@@ -433,113 +439,110 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div id="header_layout">
       <!-- Header du site -->
-      <template is="dom-if" if="{{!userDashboard}}" restamp="true">
-        <template is="dom-if" if="{{!hideHeader}}" restamp="true">
-          <!-- Header: connexion, logo, etc -->
-          <app-toolbar id="buttons_toolbar">
-            <a href="/">
-              <iron-image id="header_logo" src="../images/logo.svg" preload sizing="contain"></iron-image>
-            </a>
-            <span class="flex"></span>
+      <!-- <template is="dom-if" if="{{!userDashboard}}" restamp="true">
+        <template is="dom-if" if="{{!hideHeader}}" restamp="true"> -->
+      <!-- Header: connexion, logo, etc -->
+      <app-toolbar id="buttons_toolbar">
+        <a href="/">
+          <iron-image id="header_logo" src="../images/logo.svg" preload sizing="contain"></iron-image>
+        </a>
+        <span class="flex"></span>
 
+        <a href="http://cdg.elisalagan.net/" class="blog" target="_blank" rel="noopener" tabindex="-1">
+          <span class="paper-font-subhead">Trucs et astuces</span>
+          <paper-icon-button icon="communication:chat"></paper-icon-button>
+        </a>
 
-            <a href="http://cdg.elisalagan.net/" class="blog" target="_blank" rel="noopener" tabindex="-1">
-              <span class="paper-font-subhead">Trucs et astuces</span>
-              <paper-icon-button icon="communication:chat"></paper-icon-button>
-            </a>
-
-            <!-- Session démarrée: Afficher les informations utilisateur avec une liste déroulante -->
-            <template is="dom-if" if="[[userInfo]]" restamp="true">
-              <paper-menu-button id="user_dropdown" horizontal-align="right" horizontal-offset="9" vertical-offset="10">
-                <paper-button id="logged_user" class="transparent_button dropdown-trigger layout horizontal center">
-                  <iron-image src="{{user.avatar}}" preload fade sizing="cover"></iron-image>
-                  <div class="paper-font-body1">{{user.name}}</div>
-                  <iron-icon icon="arrow-drop-down"></iron-icon>
-                </paper-button>
-                <paper-menu class="dropdown-content">
-                  <a href="/utilisateur/fiche-recettes" class="link">
-                    <paper-item>Mon compte</paper-item>
-                  </a>
-                  <hr>
-                  <paper-item on-tap="_userLogout">Déconnexion</paper-item>
-                </paper-menu>
-              </paper-menu-button>
-            </template>
-
-            <!-- Session non démarrée: bouton de connexion -->
-            <template is="dom-if" if="[[!userInfo]]" restamp="true">
-              <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
-                <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
-                  <iron-icon icon="social:person"></iron-icon>
-                  <span>Connexion</span>
-                </template>
-                <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
-                  <paper-spinner-lite alt="Chargement du profil" active></paper-spinner-lite>
-                </template>
+        <template is="dom-if" if="{{!userDashboard}}" restamp="true">
+          <!-- Session démarrée: Afficher les informations utilisateur avec une liste déroulante -->
+          <template is="dom-if" if="[[userInfo]]" restamp="true">
+            <paper-menu-button id="user_dropdown" horizontal-align="right" horizontal-offset="9" vertical-offset="10">
+              <paper-button id="logged_user" class="transparent_button dropdown-trigger layout horizontal center">
+                <iron-image src="{{user.avatar}}" preload fade sizing="cover"></iron-image>
+                <div class="paper-font-body1">{{user.name}}</div>
+                <iron-icon icon="arrow-drop-down"></iron-icon>
               </paper-button>
-            </template>
-          </app-toolbar>
+              <paper-menu class="dropdown-content">
+                <a href="/utilisateur/fiche-recettes" class="link">
+                  <paper-item>Mon compte</paper-item>
+                </a>
+                <hr>
+                <paper-item on-tap="_userLogout">Déconnexion</paper-item>
+              </paper-menu>
+            </paper-menu-button>
+          </template>
 
-          <div id="header">
-            <!-- Rangée du slogan du header -->
-            <app-toolbar id="logo_toolbar" class="layout vertical center-center flex">
-              <h2 id="slogan">Choissis tes recettes, crée ta liste de course et commande les ingrédients</h2>
-            </app-toolbar>
-
-            <!-- Ongles -->
-            <div id="header_tabs" sticky>
-              <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation">
-                <paper-tab name="debutant" link>
-                  <a class="link layout vertical center" href="/debutant" tabindex="-1">
-                    <iron-icon icon="face"></iron-icon>
-                    Débutant
-                  </a>
-                </paper-tab>
-                <paper-tab name="temps" link>
-                  <a class="link layout vertical center" href="/temps" tabindex="-1">
-                    <iron-icon icon="schedule"></iron-icon>
-                    Temps
-                  </a>
-                </paper-tab>
-                <paper-tab name="prix" link>
-                  <a class="link layout vertical center" href="/prix" tabindex="-1">
-                    <iron-icon icon="euro-symbol"></iron-icon>
-                    Prix
-                  </a>
-                </paper-tab>
-                <paper-tab name="vegan" link>
-                  <a class="link layout vertical center" href="/vegan" tabindex="-1">
-                    <iron-icon icon="places:spa"></iron-icon>
-                    Vegan
-                  </a>
-                </paper-tab>
-              </paper-tabs>
-            </div>
-          </div>
+          <!-- Session non démarrée: bouton de connexion -->
+          <template is="dom-if" if="[[!userInfo]]" restamp="true">
+            <paper-button id="logged_off_user" class="transparent_button" on-tap="_showLoginDialog">
+              <template is="dom-if" if="{{!checkingUserInfo}}" restamp="true">
+                <iron-icon icon="social:person"></iron-icon>
+                <span>Connexion</span>
+              </template>
+              <template is="dom-if" if="{{checkingUserInfo}}" restamp="true">
+                <paper-spinner-lite alt="Chargement du profil" active></paper-spinner-lite>
+              </template>
+            </paper-button>
+          </template>
         </template>
-      </template>
 
-      <!-- Header de mon compte -->
-      <template is="dom-if" if="{{userDashboard}}" restamp="true">
-        <!-- Header -->
+        <template is="dom-if" if="{{userDashboard}}" restamp="true">
+          <!-- Connexion de l'utilisateur -->
+          <template is="dom-if" if="[[userInfo]]" restamp="true">
+            <!-- Bouton de déconnexion -->
+            <paper-button id="logout_button" class="transparent_button" on-tap="_userLogout">
+              <iron-icon icon="exit-to-app"></iron-icon>
+              <span>Déconnexion</span>
+            </paper-button>
+          </template>
+        </template>
+      </app-toolbar>
+
+      <template is="dom-if" if="{{!userDashboard}}" restamp="true">
         <div id="header">
-          <app-toolbar id="buttons_toolbar">
-            <a href="/">
-              <iron-image id="dashboard_logo" src="../images/logo_white.svg" preload sizing="contain"></iron-image>
-            </a>
-            <span class="flex"></span>
-
-            <!-- Connexion de l'utilisateur -->
-            <template is="dom-if" if="[[userInfo]]" restamp="true">
-              <!-- Bouton de déconnexion -->
-              <paper-button id="logout_button" class="transparent_button" on-tap="_userLogout">
-                <iron-icon icon="exit-to-app"></iron-icon>
-                <span>Déconnexion</span>
-              </paper-button>
-            </template>
+          <!-- Rangée du slogan du header -->
+          <app-toolbar id="logo_toolbar" class="layout vertical center-center flex">
+            <h2 id="slogan">Choissis tes recettes, crée ta liste de course et commande les ingrédients</h2>
           </app-toolbar>
 
-          <app-toolbar id="dashboard_header" class="middle layout vertical center flex">
+          <!-- Ongles -->
+          <div id="header_tabs" sticky>
+            <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation">
+              <paper-tab name="debutant" link>
+                <a class="link layout vertical center" href="/debutant" tabindex="-1">
+                  <iron-icon icon="face"></iron-icon>
+                  Débutant
+                </a>
+              </paper-tab>
+              <paper-tab name="temps" link>
+                <a class="link layout vertical center" href="/temps" tabindex="-1">
+                  <iron-icon icon="schedule"></iron-icon>
+                  Temps
+                </a>
+              </paper-tab>
+              <paper-tab name="prix" link>
+                <a class="link layout vertical center" href="/prix" tabindex="-1">
+                  <iron-icon icon="euro-symbol"></iron-icon>
+                  Prix
+                </a>
+              </paper-tab>
+              <paper-tab name="vegan" link>
+                <a class="link layout vertical center" href="/vegan" tabindex="-1">
+                  <iron-icon icon="places:spa"></iron-icon>
+                  Vegan
+                </a>
+              </paper-tab>
+            </paper-tabs>
+          </div>
+        </div>
+      </template>
+        <!-- </template>
+      </template> -->
+
+      <!-- Header user account -->
+      <template is="dom-if" if="{{userDashboard}}" restamp="true">
+        <div id="header_user">
+          <app-toolbar id="dashboard_header" class="middle layout vertical center-center flex">
             <!-- Montrer l'info de l'utilisateur -->
             <iron-image id="user_picture" src="{{user.avatar}}" preload fade sizing="contain"></iron-image>
             <div id="user_full_name" class="paper-font-headline">{{user.name}}</div>
@@ -554,9 +557,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-tab name="/liste-courses" link>
                 <a class="link" href="/utilisateur/liste-courses" tabindex="-1">Liste de courses</a>
               </paper-tab>
-              <!-- <paper-tab name="/favoritos" link>
-                <a class="link" href="/usuario/favoritos" tabindex="-1">Favoritos</a>
-              </paper-tab> -->
             </paper-tabs>
           </div>
         </div>
