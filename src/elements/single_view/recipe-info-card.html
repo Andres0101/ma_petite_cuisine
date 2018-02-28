@@ -303,22 +303,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
       _submitRating: function () {
+        var self = this;
         if (this.$.review_rating.rating != 0) {
           var countPeopleRated = this.recipeInfo.countPeopleRated;
           countPeopleRated = countPeopleRated + 1;
 
-          var rating = this.recipeInfo.rating;
-          rating = (rating + this.$.review_rating.rating) / countPeopleRated;
+          var ratingGlobal = this.recipeInfo.ratingGlobal;
+
+          var rating = (ratingGlobal + this.$.review_rating.rating) / countPeopleRated;
+          var factor = Math.pow(10, 1);
+          rating = Math.round(rating * factor) / factor;
 
           var starNumber = "";
           var star = 0;
           var count = 0;
 
           if (this.ratingByStars.length != 0) {
+            var found = this.ratingByStars.some(function (el) {
+              return el.stars === self.$.review_rating.rating;
+            });
             for (var i = 0; i < this.ratingByStars.length; i++) {
-              if (this.ratingByStars[i].stars == this.$.review_rating.rating) {
-                star = this.ratingByStars[i].stars;
-                count = this.ratingByStars[i].count;
+              if (found) {
+                if (this.ratingByStars[i].stars == this.$.review_rating.rating) {
+                  star = this.ratingByStars[i].stars;
+                  count = this.ratingByStars[i].count;
+                }
               } else {
                 star = this.$.review_rating.rating;
                 count = 1;
@@ -345,6 +354,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var updates = {};
           updates['/countPeopleRated'] = countPeopleRated;
           updates['/rating'] = rating;
+          updates['/ratingGlobal'] = ratingGlobal + this.$.review_rating.rating;
 
           var updateRating = {};
           updateRating[starNumber + '/count'] = count;
