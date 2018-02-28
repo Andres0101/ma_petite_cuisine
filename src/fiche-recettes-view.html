@@ -27,7 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 0 auto;
         position: relative;
         --app-grid-columns: 5;
-        --app-grid-gutter: 5px;
+        --app-grid-gutter: 8px;
       }
 
       .module_title {
@@ -41,26 +41,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       @media (max-width: 1000px) {
         :host {
-          --app-grid-columns: 3;
+          --app-grid-columns: 4;
         }
       }
-      @media (max-width: 750px) {
+      @media (max-width: 800px) {
         :host {
-          --app-grid-columns: 2;
-          padding: 10px;
-        }
-        .module_title {
-          font-size: 18px;
+          --app-grid-columns: 3;
         }
       }
       @media (max-width: 500px) {
         :host {
+          --app-grid-columns: 1;
           padding: 5px;
         }
       }
       @media (max-width: 400px) {
         :host {
-          --app-grid-gutter: 1px;
           padding-left: 0;
           padding-right: 0;
         }
