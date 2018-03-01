@@ -56,10 +56,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="petite-cuisine">
   <template>
     <style include="shared-styles">
-
       /*Header*/
       #header_layout {
-        background-color: white;
+        background-color: var(--app-background-color);
       }
 
       #header {
@@ -135,12 +134,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-height: 54px;
         @apply(--paper-font-button);
         --paper-tabs-selection-bar:{
-          border-bottom: 3px solid var(--app-secondary-color);
+          border-bottom: 3px solid var(--app-primary-color);
         }
       }
       #dashboard_tabs paper-tab {
         --paper-tab-ink: #aaa;
         width: 100%;
+      }
+      #dashboard_tabs paper-tab.iron-selected {
+        color: var(--app-primary-color);
       }
 
       /* Usuario con sesión activa */
@@ -185,19 +187,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /*Tabs*/
       #header_tabs {
-        padding: 0 20%;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
       }
       #header_tabs paper-tabs {
+        padding: 0 20%;
+        box-sizing: border-box;
         width: 100%;
         min-height: 54px;
         @apply(--paper-font-button);
         --paper-tabs-selection-bar:{
-          border-bottom: 3px solid var(--app-secondary-color);
+          border-bottom: 3px solid var(--app-primary-color);
         }
       }
       #header_tabs paper-tab {
+        color: var(--app-secondary-color);
         --paper-tab-ink: #aaa;
         width: 100%;
+      }
+      #header_tabs paper-tab.iron-selected {
+        color: var(--app-primary-color);
       }
 
       /*Progress bar*/
@@ -437,10 +446,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </firebase-document>
     </template>
 
+    <!-- Afficher paper-progress lorsque les résultats sont obtenus -->
+    <template is="dom-if" if="{{progress}}" restamp="true">
+      <paper-progress id="site_progress" indeterminate></paper-progress>
+    </template>
+
     <div id="header_layout">
       <!-- Header du site -->
-      <!-- <template is="dom-if" if="{{!userDashboard}}" restamp="true">
-        <template is="dom-if" if="{{!hideHeader}}" restamp="true"> -->
       <!-- Header: connexion, logo, etc -->
       <app-toolbar id="buttons_toolbar">
         <a href="/">
@@ -504,40 +516,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar id="logo_toolbar" class="layout vertical center-center flex">
             <h2 id="slogan">Choissis tes recettes, crée ta liste de course et commande les ingrédients</h2>
           </app-toolbar>
+        </div>
 
-          <!-- Ongles -->
-          <div id="header_tabs" sticky>
-            <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation">
-              <paper-tab name="debutant" link>
-                <a class="link layout vertical center" href="/debutant" tabindex="-1">
-                  <iron-icon icon="face"></iron-icon>
-                  Débutant
-                </a>
-              </paper-tab>
-              <paper-tab name="temps" link>
-                <a class="link layout vertical center" href="/temps" tabindex="-1">
-                  <iron-icon icon="schedule"></iron-icon>
-                  Temps
-                </a>
-              </paper-tab>
-              <paper-tab name="prix" link>
-                <a class="link layout vertical center" href="/prix" tabindex="-1">
-                  <iron-icon icon="euro-symbol"></iron-icon>
-                  Prix
-                </a>
-              </paper-tab>
-              <paper-tab name="vegan" link>
-                <a class="link layout vertical center" href="/vegan" tabindex="-1">
-                  <iron-icon icon="places:spa"></iron-icon>
-                  Vegan
-                </a>
-              </paper-tab>
-            </paper-tabs>
+        <!-- Filtres -->
+        <div id="header_tabs" sticky>
+          <div class="cards_container">
+            <div class="module_title">
+              <div class="module_title_title paper-font-headline">Filtre tes recettes</div>
+            </div>
           </div>
+
+          <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation">
+            <paper-tab name="debutant" link>
+              <a class="link layout vertical center" href="/debutant" tabindex="-1">
+                <iron-icon icon="face"></iron-icon>
+                Débutant
+              </a>
+            </paper-tab>
+            <paper-tab name="temps" link>
+              <a class="link layout vertical center" href="/temps" tabindex="-1">
+                <iron-icon icon="schedule"></iron-icon>
+                Temps
+              </a>
+            </paper-tab>
+            <paper-tab name="prix" link>
+              <a class="link layout vertical center" href="/prix" tabindex="-1">
+                <iron-icon icon="euro-symbol"></iron-icon>
+                Petite prix
+              </a>
+            </paper-tab>
+            <paper-tab name="vegan" link>
+              <a class="link layout vertical center" href="/vegan" tabindex="-1">
+                <iron-icon icon="places:spa"></iron-icon>
+                Végan
+              </a>
+            </paper-tab>
+          </paper-tabs>
         </div>
       </template>
-        <!-- </template>
-      </template> -->
 
       <!-- Header user account -->
       <template is="dom-if" if="{{userDashboard}}" restamp="true">
@@ -560,11 +576,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-tabs>
           </div>
         </div>
-      </template>
-
-      <!-- Mostrar paper-progress mientras se obtienen los resultados -->
-      <template is="dom-if" if="{{progress}}" restamp="true">
-        <paper-progress id="site_progress" indeterminate></paper-progress>
       </template>
 
       <!-- Contenu -->
