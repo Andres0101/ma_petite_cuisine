@@ -122,6 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #user_full_name{
         margin: 10px 0;
         text-align: center;
+        font-family: 'Quicksand', sans-serif;
       }
 
       /* Dashboard tabs */
@@ -131,7 +132,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #dashboard_tabs paper-tabs {
         width: 100%;
         min-height: 54px;
-        @apply(--paper-font-button);
+        font-family: 'Quicksand', sans-serif;
+        font-size: 16px;
         --paper-tabs-selection-bar:{
           border-bottom: 3px solid var(--app-primary-color);
         }
@@ -162,6 +164,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #logout_button {
         color: #66bb6a;
         border: 2px solid #66bb6a;
+      }
+      #logged_off_user span,
+      #logged_user div,
+      #user_dropdown paper-item {
+        font-family: 'Quicksand', sans-serif;
       }
       #user_dropdown {
         --paper-menu-button-content:{
@@ -194,7 +201,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         box-sizing: border-box;
         width: 100%;
         min-height: 54px;
-        @apply(--paper-font-button);
+        font-family: 'Quicksand', sans-serif;
+        font-size: 16px;
         --paper-tabs-selection-bar:{
           border-bottom: 3px solid var(--app-primary-color);
         }
@@ -206,6 +214,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #header_tabs paper-tab.iron-selected {
         color: var(--app-primary-color);
+      }
+
+      #login_dialog paper-button {
+        font-family: 'Quicksand', sans-serif;
       }
 
       /*Progress bar*/
@@ -307,6 +319,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: white;
         text-align: center;
         text-decoration: none;
+        font-family: 'Anonymous Pro', monospace;
       }
       footer a:hover {
         color: var(--app-secondary-color);
