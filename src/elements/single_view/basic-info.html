@@ -30,14 +30,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .section_title {
-        color: var(--paper-grey-800);
+        color: var(--app-secondary-color);
         margin: 12px 0;
       }
       .section_title iron-icon {
+        color: var(--app-secondary-color);
         margin-right: 12px;
       }
       .section_title div {
-        font-weight: 500;
+        font-family: 'Quicksand', sans-serif;
       }
       .info_row {
         @apply(--layout-horizontal);
@@ -50,8 +51,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         max-width: 600px;
         color: #666;
       }
+      .category_test {
+        font-family: 'Anonymous Pro', monospace;
+      }
       .ingredient_utensil_content {
         color: var(--paper-grey-600);
+        font-family: 'Anonymous Pro', monospace;
       }
       .ingredient_utensil_content iron-icon {
         width: 20px;
@@ -96,11 +101,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="info_item flex">
         <div class="section_title layout horizontal center">
           <iron-icon icon="bookmark"></iron-icon>
-          <div class="paper-font-subhead">Catégories</div>
+          <div class="paper-font-title">Catégories</div>
         </div>
         <div class="layout horizontal wrap">
           <template is="dom-repeat" items="[[categoryDetail]]" as="category">
-            <div class="noselect chip_item paper-font-body1">
+            <div class="category_test noselect chip_item paper-font-body1">
               <iron-icon icon="[[category.icon]]"></iron-icon>
               [[category.name]]
             </div>
@@ -114,7 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="info_item flex">
         <div class="section_title layout horizontal center">
           <iron-icon icon="places:room-service"></iron-icon>
-          <div class="paper-font-subhead">Ingrédients</div>
+          <div class="paper-font-title">Ingrédients</div>
         </div>
         <template is="dom-repeat" items="[[ingredients]]" as="ingredient">
           <div class="ingredient_utensil_content layout horizontal paper-font-body1">
@@ -127,7 +132,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="info_item flex">
         <div class="section_title layout horizontal center">
           <iron-icon icon="maps:restaurant"></iron-icon>
-          <div class="paper-font-subhead">Ustensils</div>
+          <div class="paper-font-title">Ustensils</div>
         </div>
         <div class="layout horizontal wrap">
           <template is="dom-repeat" items="[[utensilDetail]]" as="utensil">

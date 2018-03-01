@@ -27,19 +27,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 20px;
       }
 
-      .step_content {
-        margin: 10px 0;
-      }
-
       .section_title {
-        color: var(--paper-grey-800);
+        color: var(--app-secondary-color);
         margin: 12px 0;
       }
       .section_title iron-icon {
         margin-right: 12px;
+        color: var(--app-secondary-color);
       }
       .section_title div {
-        font-weight: 500;
+        font-family: 'Quicksand', sans-serif;
+      }
+
+      .step_content {
+        margin: 10px 0;
+      }
+      .step_content span {
+        color: var(--app-primary-color);
+        font-family: 'Quicksand', sans-serif;
       }
       .info_row {
         @apply(--layout-horizontal);
@@ -54,6 +59,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .ingredient_utensil_content {
         color: var(--paper-grey-600);
+        font-family: 'Anonymous Pro', monospace;
       }
       .ingredient_utensil_content iron-icon {
         width: 20px;
@@ -78,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="info_item flex">
         <div class="section_title layout horizontal center">
           <iron-icon icon="bookmark"></iron-icon>
-          <div class="paper-font-subhead">Pas à pas</div>
+          <div class="paper-font-title">Pas à pas</div>
         </div>
         <template is="dom-repeat" items="[[steps]]" as="step">
           <div class="step_content layout vertical">

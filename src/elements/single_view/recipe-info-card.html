@@ -59,22 +59,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #title {
         color: var(--paper-grey-800);
         margin-bottom: 14px;
+        font-family: 'Quicksand', sans-serif;
       }
       #description_title,
       #details_title {
         color: var(--paper-grey-700);
+        font-family: 'Quicksand', sans-serif;
       }
       #description_title {
         margin-bottom: 4px;
       }
       #description_text {
         color: var(--paper-grey-600);
+        font-family: 'Anonymous Pro', monospace;
+      }
+
+      .section_title iron-icon {
+        color: var(--app-secondary-color);
+      }
+      .section_title div {
+        font-family: 'Quicksand', sans-serif;
       }
       #buttons {
         margin-top: 16px;
       }
       #buttons paper-button {
         margin-right: 6px;
+        font-family: 'Quicksand', sans-serif;
       }
       #toast {
         z-index: 999 !important;
@@ -194,7 +205,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="info_item">
         <div class="section_title layout horizontal center">
           <iron-icon icon="stars"></iron-icon>
-          <div class="paper-font-subhead">Notations</div>
+          <div class="paper-font-title">Notations</div>
         </div>
         <div id="ratingScore" class="layout horizontal center">
           <div>
@@ -219,13 +230,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-dialog id="rating_dialog" with-backdrop on-iron-overlay-opened="patchOverlay" on-iron-overlay-closed="_restoreDocumentScrolling">
       <div class="layout vertical center">
-        <!-- <iron-image id="review_image" src="https://source.unsplash.com/random/60x60" preload fade sizing="cover"></iron-image>
-        <div class="paper-font-body1">Votre notation</div> -->
         <paper-rating id="review_rating" rating="0"></paper-rating>
       </div>
       <div class="buttons">
-        <paper-button noink dialog-dismiss>Annuler</paper-button>
-        <paper-button noink on-tap="_submitRating">Envoyer</paper-button>
+        <paper-button dialog-dismiss>Annuler</paper-button>
+        <paper-button on-tap="_submitRating">Envoyer</paper-button>
       </div>
     </paper-dialog>
 
