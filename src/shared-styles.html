@@ -53,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /* Redes sociales */
       .social_container {
-        margin: 16px 0;
+        margin: 0;
       }
       .fb {
         --paper-button:{
@@ -74,9 +74,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .blog paper-icon-button:hover {
         color: var(--app-primary-color);
       }
-      .twitter {
+      .instagram {
         --paper-icon-button-hover: {
-          color: var(--social-twitter-color);
+          color: var(--social-instagram-color);
         }
       }
       .youtube {
@@ -459,6 +459,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           border-radius: 0;
           margin: 0;
           margin-bottom: 50px;
+        }
+      }
+      @media (max-width: 450px) {
+        .social_container {
+          margin: 16px 0 0;
         }
       }
       @media (max-width: 400px) {
