@@ -806,28 +806,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       attached: function () {
-        var self = this;
         this._userWantToConnect = false;
-        this._resetLoginFb = false;
         this._passwordVisible = false;
         this.checkingUserInfo = false; // Spinner
         this.isSignupFb = false; // Inputs hidden para Fb
-
-        // var list = [];
-        // var self = this;
-        // firebase.database().ref('recipes').once('value').then(function(snapshot) {
-        //   snapshot.forEach(function(childSnapshot) {
-        //     var item = childSnapshot.val();
-        //     item.key = childSnapshot.key;
-        //
-        //     list.push(item);
-        //   });
-        //
-        //   self.recipes = list;
-        //   console.log("Home");
-        //   console.log(self.recipes);
-        //   // self.recipesDone();
-        // });
       },
 
       _routePageChanged: function(page) {
@@ -1055,40 +1037,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.checkingUserInfo = false; // Spinner
       },
 
-      // ===================== Respuesta del reset password =====================
-      _sendEmailSuccess: function (event) {
-        var message = event.detail.response;
-        // Validar si tiene cuenta con Facebook
-        if (message.response.indexOf("Facebook") !== -1) {
-          this.$.pc_toast.text = message.response;
-          this.$.pc_toast.duration = 0;
-          this._resetLoginFb = true;
-          this.$.pc_toast.show();
-        } else {
-          console.log("Correo enviado");
-        }
-      },
-      _sendEmailError: function (error) {
-        this.$.pc_toast.text = error.detail.request.response.response;
-        this.$.pc_toast.show();
-      },
-
-      // ============================ Info Facebook =============================
-      _getFbUserData: function (userToken) {
-        var self = this;
-        this.checkingUserInfo = true; // Spinner
-
-        FB.api('/me?fields=name,first_name,picture.height(150),email', function(response) {
-          self.$.token_short_facebook.value = userToken;
-          self.$.kind_login.value = "facebook";
-          self.$.loginEmail.value = response.email;
-          self.$.login_form.submit();
-        });
-      },
-
       // ============================ Métodos extra =============================
       resetToast: function () {
-        this._resetLoginFb = false;
         this.$.pc_toast.duration = 3000;
         this.$.pc_toast.close();
 
