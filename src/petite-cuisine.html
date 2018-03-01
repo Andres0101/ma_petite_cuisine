@@ -62,12 +62,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #header {
-        background-image: url("/images/headerImage.png");
+        background-image: url("/images/header/header.png");
         background-size: cover;
         color: #fff;
       }
       #header_user {
-        background-image: url("/images/headerUser.png");
+        background-image: url("/images/header/headerUser.png");
         background-size: cover;
         color: #fff;
       }
@@ -76,7 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #buttons_toolbar {
         height: 60px;
       }
-      #logo_toolbar {
+      #slogan_toolbar {
         height: 250px;
         padding: 0 24%;
         box-sizing: border-box;
@@ -333,13 +333,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           padding: 0;
           height: 100px;
         }
+        #header {
+          background-image: url("/images/header/headerMobile.png");
+        }
+        #header_user {
+          background-image: url("/images/header/headerUserMobile.png");
+        }
         #dashboard_header {
           margin-bottom: 0;
+          height: 170px;
         }
-        #logo_toolbar {
-          display: none;
+        #slogan_toolbar {
+          height: 170px;
+          padding: 0 10%;
         }
-        #header_tabs paper-tabs {
+        #slogan {
+          font-size: 16px;
+        }
+        #header_tabs paper-tabs,
+        #header_tabs .cards_container {
           display: none;
         }
         #header_tabs,
@@ -513,7 +525,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-if" if="{{!userDashboard}}" restamp="true">
         <div id="header">
           <!-- Rangée du slogan du header -->
-          <app-toolbar id="logo_toolbar" class="layout vertical center-center flex">
+          <app-toolbar id="slogan_toolbar" class="layout vertical center-center flex">
             <h2 id="slogan">Choissis tes recettes, crée ta liste de course et commande les ingrédients</h2>
           </app-toolbar>
         </div>
@@ -603,7 +615,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <bottom-tab label="Accueil" name="home" icon="home" link>
             <a href="/"></a>
           </bottom-tab>
-          <bottom-tab label="Débutant" name="debutant" icon="face" link>
+          <bottom-tab label="Débutant" name="debutant" icon="social:sentiment-satisfied" link>
             <a href="/debutant"></a>
           </bottom-tab>
           <bottom-tab label="Temps" name="temps" icon="schedule" link>
@@ -646,7 +658,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-dialog-scrollable>
         <iron-pages selected="{{login_page}}" attr-for-selected="name">
           <div name="info">
-            <iron-image class="dialog_image" src="http://source.unsplash.com/500x500/?food" preload fade sizing="cover"></iron-image>
+            <iron-image class="dialog_image" src="/images/login.png" preload fade sizing="cover"></iron-image>
             <paper-icon-button id="close_login_dialog_icon" icon="close" dialog-dismiss></paper-icon-button>
             <div class="dialog_container">
               <paper-button raised class="fb full_width" on-tap="_openFbDialog">
