@@ -1148,8 +1148,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // Sign-out successful.
           self.$.pc_toast.text = "Déconnexion réussie";
           self.$.pc_toast.show();
-          if (window.location.pathname != "/") {
-            location.replace("https://mapetitecuisine-6466d.firebaseapp.com/");
+          if (location.pathname != "/") {
+            location.href = "https://mapetitecuisine-6466d.firebaseapp.com/";
           }
         }).catch(function(error) {});
       }
