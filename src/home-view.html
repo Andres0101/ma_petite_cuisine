@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="../bower_components/app-layout/app-box/app-box.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 
 <link rel="import" href="../bower_components/dom-repeat-n/dom-repeat-n.html">
 <link rel="import" href="elements/placeholder-card.html">
@@ -56,6 +57,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 8px 24px;
       }
 
+      .faireCourses_container div {
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      .petitsPois {
+        width: 90px;
+        height: 80px;
+      }
+      .deligreens,
+      .villeLyon {
+        width: 200px;
+        height: 80px;
+      }
+      .faireCourses_title,
+      .faireCourses_description {
+        color: var(--app-secondary-color);
+        text-align: center;
+      }
+      .faireCourses_title {
+        font-weight: 600;
+        margin: 10px 0;
+      }
+      .faireCourses_description {
+      }
+
       @media (max-width: 900px) {
         :host {
           --app-grid-columns: 3;
@@ -67,6 +93,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
     </style>
+
+    <iron-media-query query="(max-width: 700px)" query-matches="{{isMobile}}"></iron-media-query>
 
     <firebase-query
       app-name="mapetitecuisine"
@@ -136,6 +164,79 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </div>
     </app-box>
+
+    <!-- Où faire ses courses? -->
+    <div class="cards_container">
+      <div class="module_title">
+        <div class="module_title_title paper-font-headline">Où faireses courses?</div>
+      </div>
+
+      <template is="dom-if" if="{{!isMobile}}" restamp="true">
+        <div class="faireCourses_container layout horizontal">
+          <div class="layout vertical center flex">
+            <iron-image class="petitsPois" src="/images/faireCourses/petitsPois.png" preload fade sizing="cover"></iron-image>
+            <div class="faireCourses_title">Epicerie les 3 p'tits pois</div>
+            <div class="faireCourses_description">
+              3 p’tits pois est une épicerie bio et locale, créée en 2010 par Olivier et Julien.
+              Cette épicerie de quartier situé au 124 rue Sébatien Gryphe dans le 7ème arrondissement de Lyon vend principalement des produits en vrac,
+              du riz au muesli, du vinaigre au huile, de la purée de sésame à la chocolade, venez avec vos bocaux réapprovisionner vos armoires
+              et garde-mangers!
+            </div>
+          </div>
+          <div class="layout vertical center flex">
+            <iron-image class="deligreens" src="/images/faireCourses/deligreens.png" preload fade sizing="cover"></iron-image>
+            <div class="faireCourses_title">Déligreens</div>
+            <div class="faireCourses_description">
+              Epicerie en ligne de produits biologiques et locaux dans la région lyonnaise.
+              Simplifier l’accès à une nourriture locale, biologique et humaine, au moyen d’un service de livraison urbain,
+              et d’une organisation durable, exemplaire et inspirante pour l’écosystème dans lequel nous évoluons.
+            </div>
+          </div>
+          <div class="layout vertical center flex">
+            <iron-image class="villeLyon" src="/images/faireCourses/villeLyon.png" preload fade sizing="cover"></iron-image>
+            <div class="faireCourses_title">Les marchés lyonnais</div>
+            <div class="faireCourses_description">
+              Lieu de détente et de promenade, le marché restitue à lui seul l'ambiance des places de villages et renforce l'animation
+              et la personnalité d'un quartier. Très prisés par les citadins, les marchés restent toujours les sites privilégiés de flâneries,
+              de rencontres et de bonnes affaires... A découvrir ou redécouvrir!
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template is="dom-if" if="{{isMobile}}" restamp="true">
+        <div class="faireCourses_container layout vertical">
+          <div class="layout vertical center flex-auto">
+            <iron-image class="petitsPois" src="/images/faireCourses/petitsPois.png" preload fade sizing="cover"></iron-image>
+            <div class="faireCourses_title">Epicerie les 3 p'tits pois</div>
+            <div class="faireCourses_description">
+              3 p’tits pois est une épicerie bio et locale, créée en 2010 par Olivier et Julien.
+              Cette épicerie de quartier situé au 124 rue Sébatien Gryphe dans le 7ème arrondissement de Lyon vend principalement des produits en vrac,
+              du riz au muesli, du vinaigre au huile, de la purée de sésame à la chocolade, venez avec vos bocaux réapprovisionner vos armoires
+              et garde-mangers!
+            </div>
+          </div>
+          <div class="layout vertical center flex-auto">
+            <iron-image class="deligreens" src="/images/faireCourses/deligreens.png" preload fade sizing="cover"></iron-image>
+            <div class="faireCourses_title">Déligreens</div>
+            <div class="faireCourses_description">
+              Epicerie en ligne de produits biologiques et locaux dans la région lyonnaise.
+              Simplifier l’accès à une nourriture locale, biologique et humaine, au moyen d’un service de livraison urbain,
+              et d’une organisation durable, exemplaire et inspirante pour l’écosystème dans lequel nous évoluons.
+            </div>
+          </div>
+          <div class="layout vertical center flex-auto">
+            <iron-image class="villeLyon" src="/images/faireCourses/villeLyon.png" preload fade sizing="cover"></iron-image>
+            <div class="faireCourses_title">Les marchés lyonnais</div>
+            <div class="faireCourses_description">
+              Lieu de détente et de promenade, le marché restitue à lui seul l'ambiance des places de villages et renforce l'animation
+              et la personnalité d'un quartier. Très prisés par les citadins, les marchés restent toujours les sites privilégiés de flâneries,
+              de rencontres et de bonnes affaires... A découvrir ou redécouvrir!
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
 
   </template>
 
