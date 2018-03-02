@@ -33,6 +33,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .module_title {
         padding: 25px 5px;
       }
+      .no_recettes iron-icon {
+        width: 100px;
+        height: 100px;
+      }
+      .no_recettes .text {
+        margin: 10px 0 30px;
+      }
+      .ajouter_accueil {
+        color: #66bb6a;
+        border: 2px solid #66bb6a;
+      }
 
       #list {
         --iron-list-items-container: {
@@ -125,7 +136,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="module_title_title paper-font-headline">Ma liste de courses</div>
         </div>
         <span class="flex"></span>
-        <paper-button class="view-more-recipe" on-tap="_download">Télécharger ma liste</paper-button>
+        <template is="dom-if" if="{{!noData}}" restamp="true">
+          <paper-button class="view-more-recipe" on-tap="_download">Télécharger ma liste</paper-button>
+        </template>
       </div>
     </div>
 
@@ -139,7 +152,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
 
     <template is="dom-if" if="{{noData}}" restamp="true">
-      <span>You dont have recipes</span>
+      <div class="no_recettes layout vertical center">
+        <iron-icon icon="social:sentiment-dissatisfied"></iron-icon>
+        <span class="text">Tu n'as pas encore des recettes. Ajoutes un cliquant ci-dessous.</span>
+
+        <a href="/" class="blog" rel="noopener" tabindex="-1">
+          <paper-button class="ajouter_accueil transparent_button">
+            <span>Ajouter des recettes</span>
+          </paper-button>
+        </a>
+      </div>
     </template>
 
     <iron-list id="list" items="{{recipeData}}" scroll-target="document">
